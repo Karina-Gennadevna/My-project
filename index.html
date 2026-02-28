@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-операционный директор — управление командой без хаоса</title>
+  <meta name="description" content="Собирает ежедневные отчёты, отслеживает KPI и предупреждает о рисках до срыва сроков. Внедрение за 7 дней.">
+  <meta property="og:title" content="AI-операционный директор">
+  <meta property="og:description" content="Управленческая отчётность для малых команд. Внедрение за 7 дней.">
+  <meta property="og:type" content="website">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background: #080B12;
+      color: #CBD5E1;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Nav blur */
+    .nav-blur {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* Card hover */
+    .card-hover { transition: border-color 0.2s, box-shadow 0.2s; }
+    .card-hover:hover {
+      border-color: rgba(59,130,246,0.25) !important;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.08);
+    }
+
+    /* Blue button */
+    .btn-primary {
+      background: #2563EB;
+      color: #fff;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background: #1D4ED8; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* Ghost button */
+    .btn-ghost {
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #94A3B8;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: #E2E8F0; }
+
+    /* Stepper line */
+    .step-wrap { position: relative; }
+    .step-wrap:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 42px;
+      height: calc(100% - 10px);
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(59,130,246,0.35), rgba(59,130,246,0.04));
+    }
+
+    /* Progress bar */
+    .bar-track { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.07); overflow: hidden; }
+    .bar-fill   { height: 100%; border-radius: 3px; }
+
+    /* Form fields */
+    .field {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #E2E8F0;
+      border-radius: 10px;
+      padding: 13px 16px;
+      width: 100%;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field:focus  { border-color: rgba(59,130,246,0.5); }
+    .field::placeholder { color: #475569; }
+    .field.invalid { border-color: rgba(239,68,68,0.5); }
+    select.field option { background: #0F1420; color: #E2E8F0; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #080B12; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
+
+    /* Telegram card gradient */
+    .tg-card {
+      background: linear-gradient(135deg, #0e2233 0%, #091929 100%);
+      border: 1px solid rgba(41,182,246,0.2);
+    }
+
+    /* Table alternating rows */
+    .tbl-row-a { background: #0B0F1A; }
+    .tbl-row-b { background: #0D1220; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav class="fixed top-0 left-0 right-0 z-50 nav-blur"
+     style="background: rgba(8,11,18,0.88); border-bottom: 1px solid rgba(255,255,255,0.06);">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+    <div class="flex items-center gap-2.5">
+      <!-- Icon: LayoutDashboard -->
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span class="text-white font-semibold text-sm tracking-wide">AI-OpDir</span>
+    </div>
+
+    <div class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+      <a href="#how"        class="hover:text-white transition-colors">Как работает</a>
+      <a href="#difference" class="hover:text-white transition-colors">Отличия</a>
+      <a href="#form"       class="hover:text-white transition-colors">Заявка</a>
+    </div>
+
+    <a href="#form"
+       class="btn-primary text-sm font-semibold px-5 py-2 rounded-lg hidden sm:block">
+      Внедрить за 7 дней
+    </a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<section class="pt-36 pb-28 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+
+      <!-- LEFT: copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 text-blue-400 text-xs font-medium
+                    tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full"
+             style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+          Внедрение за 7 дней
+        </div>
+
+        <h1 class="text-4xl lg:text-[52px] font-bold text-white leading-tight mb-5"
+            style="letter-spacing: -0.025em; line-height: 1.15;">
+          AI-операционный директор<br>для малых команд
+        </h1>
+
+        <p class="text-slate-400 text-lg leading-relaxed mb-3">
+          Собирает ежедневные отчёты, отслеживает KPI и предупреждает о рисках до срыва сроков.
+        </p>
+        <p class="text-slate-300 text-base mb-10">
+          Вы видите, что происходит в команде. Каждый день.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="#form"
+             class="btn-primary font-semibold px-8 py-3.5 rounded-xl text-center text-base">
+            Внедрить за 7 дней
+          </a>
+          <a href="#how"
+             class="btn-ghost font-medium px-8 py-3.5 rounded-xl text-center text-base">
+            Как это работает
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT: dashboard mockup -->
+      <div class="rounded-2xl p-5 space-y-3 max-w-sm mx-auto lg:mx-0 w-full"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.08);">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 mb-1"
+             style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div class="text-white font-semibold text-sm">Управленческая сводка</div>
+            <div class="text-slate-500 text-xs mt-0.5">Пн 28 февраля · 09:00</div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="text-slate-500 text-xs">Активна</span>
+          </div>
+        </div>
+
+        <!-- KPI cards -->
+        <div class="grid grid-cols-3 gap-2">
+          <div class="rounded-xl p-3"
+               style="background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2);">
+            <div class="text-slate-500 text-xs mb-1">Маркетинг</div>
+            <div class="text-emerald-400 font-bold text-xl">92%</div>
+            <div class="bar-track mt-2">
+              <div class="bar-fill bg-emerald-500" style="width: 92%"></div>
+            </div>
+          </div>
+          <div class="rounded-xl p-3"
+               style="background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);">
+            <div class="text-slate-500 text-xs mb-1">Продажи</div>
+            <div class="text-amber-400 font-bold text-xl">78%</div>
+            <div class="bar-track mt-2">
+              <div class="bar-fill bg-amber-400" style="width: 78%"></div>
+            </div>
+          </div>
+          <div class="rounded-xl p-3"
+               style="background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2);">
+            <div class="text-slate-500 text-xs mb-1">Операционка</div>
+            <div class="text-red-400 font-bold text-xl">61%</div>
+            <div class="bar-track mt-2">
+              <div class="bar-fill bg-red-500" style="width: 61%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health score -->
+        <div class="rounded-xl p-3.5 flex items-center justify-between"
+             style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+          <div>
+            <div class="text-slate-500 text-xs mb-0.5">Health Score</div>
+            <div class="text-white font-bold text-2xl">
+              72<span class="text-slate-600 text-sm font-normal">/100</span>
+            </div>
+          </div>
+          <!-- Circular progress -->
+          <svg viewBox="0 0 36 36" class="w-14 h-14" style="transform: rotate(-90deg);">
+            <circle cx="18" cy="18" r="15.9" fill="none"
+                    stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15.9" fill="none"
+                    stroke="#3B82F6" stroke-width="3"
+                    stroke-dasharray="72 28" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- Risk alert -->
+        <div class="rounded-xl p-3 flex items-start gap-2.5"
+             style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18);">
+          <!-- Icon: AlertTriangle -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="flex-shrink-0 mt-0.5">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div>
+            <div class="text-red-400 text-xs font-semibold mb-0.5">Риск</div>
+            <div class="text-slate-300 text-xs">Высокий риск срыва дедлайна: Запуск кампании</div>
+          </div>
+        </div>
+
+        <!-- Telegram notification -->
+        <div class="tg-card rounded-xl p-3 flex items-start gap-2.5">
+          <div class="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
+               style="background: rgba(41,182,246,0.25);">
+            <!-- Telegram icon -->
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#29B6F6">
+              <path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 0 1-2.849 1.09c-.42.147-.99.332-1.473.901-.728.968.193 1.798.919 2.286 1.61.516 3.275 1.009 4.654 1.472.509 1.793 1.019 3.585 1.517 5.38.244.961.735 1.232 1.22 1.274a1.502 1.502 0 0 0 1.062-.384c.327-.285 4.688-4.542 5.081-4.92l3.729 2.747c.886.654 1.978.271 2.237-.743l2.957-12.126c.265-1.065-.498-2.078-1.699-2.532z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-sky-400 text-xs font-semibold mb-0.5">AI-OpDir · только что</div>
+            <!-- Icon: MessageCircle -->
+            <div class="text-slate-300 text-xs">Обнаружены повторяющиеся блокеры в маркетинге</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ PROBLEM ═══════════════════════════════ -->
+<section id="problem" class="py-24 px-6" style="background: #0A0E17;">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="mb-12">
+      <p class="text-slate-500 text-xs font-medium tracking-widest uppercase mb-3">Узнаёте?</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-white" style="letter-spacing: -0.015em;">
+        Если у вас сейчас так —<br>вам нужен операционный контроль.
+      </h2>
+    </div>
+
+    <div class="space-y-3">
+
+      <!-- Pain 1 -->
+      <div class="flex items-start gap-4 p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+             style="background: rgba(239,68,68,0.1);">
+          <!-- Icon: CheckCircle2 crossed -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-white font-medium text-[15px]">Задачи ставятся, но не доводятся</div>
+          <div class="text-slate-500 text-sm mt-0.5">Процесс теряется между постановкой и результатом</div>
+        </div>
+      </div>
+
+      <!-- Pain 2 -->
+      <div class="flex items-start gap-4 p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+             style="background: rgba(239,68,68,0.1);">
+          <!-- Icon: BarChart disconnected -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6"  y1="20" x2="6"  y2="14"/>
+            <line x1="2" y1="2" x2="22" y2="22"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-white font-medium text-[15px]">KPI существуют отдельно от реальной работы</div>
+          <div class="text-slate-500 text-sm mt-0.5">Цифры есть — связи с задачами нет</div>
+        </div>
+      </div>
+
+      <!-- Pain 3 -->
+      <div class="flex items-start gap-4 p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+             style="background: rgba(239,68,68,0.1);">
+          <!-- Icon: FileText -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-white font-medium text-[15px]">Отчёты формальные</div>
+          <div class="text-slate-500 text-sm mt-0.5">Всё зелёное на бумаге — красное в реальности</div>
+        </div>
+      </div>
+
+      <!-- Pain 4 -->
+      <div class="flex items-start gap-4 p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+             style="background: rgba(239,68,68,0.1);">
+          <!-- Icon: AlertTriangle -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9"  x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-white font-medium text-[15px]">Блокеры всплывают слишком поздно</div>
+          <div class="text-slate-500 text-sm mt-0.5">Узнаёте о проблеме, когда дедлайн уже сорван</div>
+        </div>
+      </div>
+
+      <!-- Pain 5 -->
+      <div class="flex items-start gap-4 p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+             style="background: rgba(239,68,68,0.1);">
+          <!-- Icon: Brain -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"/>
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-white font-medium text-[15px]">Руководитель держит всё в голове</div>
+          <div class="text-slate-500 text-sm mt-0.5">Операционная нагрузка не снижается — растёт</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ HOW IT WORKS ══════════════════════════ -->
+<section id="how" class="py-24 px-6">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="mb-14">
+      <p class="text-blue-500 text-xs font-medium tracking-widest uppercase mb-3">Процесс</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-white" style="letter-spacing: -0.015em;">
+        Просто. Без сложных систем.
+      </h2>
+    </div>
+
+    <div class="space-y-0">
+
+      <!-- Step 1 -->
+      <div class="step-wrap flex gap-5 pb-10">
+        <div class="flex-shrink-0 flex flex-col items-center" style="width: 40px;">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center
+                      text-blue-400 font-bold text-sm z-10"
+               style="background: #0D1220; border: 2px solid rgba(59,130,246,0.45);">1</div>
+        </div>
+        <div class="pt-1.5">
+          <div class="flex items-center gap-2.5 mb-1.5">
+            <!-- Icon: MessageCircle -->
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span class="text-white font-semibold">Команда заполняет короткий чек-ин в Telegram</span>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed">
+            3 вопроса раз в день. Занимает 2 минуты. Без новых инструментов.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-wrap flex gap-5 pb-10">
+        <div class="flex-shrink-0 flex flex-col items-center" style="width: 40px;">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center
+                      text-blue-400 font-bold text-sm z-10"
+               style="background: #0D1220; border: 2px solid rgba(59,130,246,0.45);">2</div>
+        </div>
+        <div class="pt-1.5">
+          <div class="flex items-center gap-2.5 mb-1.5">
+            <!-- Icon: Link -->
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="text-white font-semibold">Система связывает задачи с KPI</span>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed">
+            Автоматически сопоставляет ответы с целями и текущими приоритетами команды.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-wrap flex gap-5 pb-10">
+        <div class="flex-shrink-0 flex flex-col items-center" style="width: 40px;">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center
+                      text-blue-400 font-bold text-sm z-10"
+               style="background: #0D1220; border: 2px solid rgba(59,130,246,0.45);">3</div>
+        </div>
+        <div class="pt-1.5">
+          <div class="flex items-center gap-2.5 mb-1.5">
+            <!-- Icon: Cpu -->
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+              <rect x="9" y="9" width="6" height="6"/>
+              <line x1="9" y1="1" x2="9" y2="4"/>
+              <line x1="15" y1="1" x2="15" y2="4"/>
+              <line x1="9" y1="20" x2="9" y2="23"/>
+              <line x1="15" y1="20" x2="15" y2="23"/>
+              <line x1="20" y1="9" x2="23" y2="9"/>
+              <line x1="20" y1="14" x2="23" y2="14"/>
+              <line x1="1" y1="9" x2="4" y2="9"/>
+              <line x1="1" y1="14" x2="4" y2="14"/>
+            </svg>
+            <span class="text-white font-semibold">AI анализирует риски и повторяющиеся блокеры</span>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed">
+            Выявляет паттерны: где команда буксует системно, а не случайно.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4 (no line) -->
+      <div class="flex gap-5">
+        <div class="flex-shrink-0 flex flex-col items-center" style="width: 40px;">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center
+                      text-blue-400 font-bold text-sm z-10"
+               style="background: #0D1220; border: 2px solid rgba(59,130,246,0.45);">4</div>
+        </div>
+        <div class="pt-1.5">
+          <div class="flex items-center gap-2.5 mb-1.5">
+            <!-- Icon: FileText -->
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span class="text-white font-semibold">Руководитель получает управленческую сводку</span>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed">
+            Каждое утро — чёткая картина: что в норме, что под угрозой, что делать.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ BENEFITS ══════════════════════════════ -->
+<section id="benefits" class="py-24 px-6" style="background: #0A0E17;">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="mb-12">
+      <p class="text-blue-500 text-xs font-medium tracking-widest uppercase mb-3">Сводка</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-white" style="letter-spacing: -0.015em;">
+        Не статусы. А решения.
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- Card 1 -->
+      <div class="p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+             style="background: rgba(239,68,68,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div class="text-white font-semibold mb-1.5">KPI в зоне риска</div>
+        <div class="text-slate-500 text-sm">Видите, какие метрики падают и почему</div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+             style="background: rgba(245,158,11,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="text-white font-semibold mb-1.5">Просроченные задачи</div>
+        <div class="text-slate-500 text-sm">Не просто список — контекст и причина</div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+             style="background: rgba(239,68,68,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9"  x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="text-white font-semibold mb-1.5">Повторяющиеся блокеры</div>
+        <div class="text-slate-500 text-sm">Паттерны, которые тормозят команду системно</div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="p-5 rounded-xl card-hover"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+             style="background: rgba(59,130,246,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="text-white font-semibold mb-1.5">Health Score команды</div>
+        <div class="text-slate-500 text-sm">Единая метрика операционного здоровья</div>
+      </div>
+
+      <!-- Card 5: wide — actions -->
+      <div class="p-5 rounded-xl card-hover md:col-span-2"
+           style="background: #0D1220; border: 1px solid rgba(59,130,246,0.18);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+             style="background: rgba(59,130,246,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div class="text-white font-semibold mb-3">3 конкретных управленческих действия</div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-2.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+            <span class="text-slate-300 text-sm">Снять блокер: согласование бюджета</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+            <span class="text-slate-300 text-sm">Перераспределить ресурс на задачу X</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+            <span class="text-slate-300 text-sm">Понизить приоритет задачи Y</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ DIFFERENCE FROM TASK-MANAGERS ═════════════ -->
+<section id="difference" class="py-24 px-6">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="mb-12">
+      <p class="text-blue-500 text-xs font-medium tracking-widest uppercase mb-3">Позиционирование</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-white" style="letter-spacing: -0.015em;">
+        Чем это отличается от таск-менеджеров
+      </h2>
+    </div>
+
+    <div class="rounded-2xl overflow-hidden"
+         style="border: 1px solid rgba(255,255,255,0.08);">
+
+      <!-- Column headers -->
+      <div class="grid grid-cols-2">
+        <div class="p-5 text-slate-500 text-sm font-medium"
+             style="background: #0D1220; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          Таск-менеджеры
+        </div>
+        <div class="p-5 text-blue-400 text-sm font-medium flex items-center gap-2"
+             style="background: rgba(59,130,246,0.06);
+                    border-bottom: 1px solid rgba(59,130,246,0.15);
+                    border-left: 1px solid rgba(255,255,255,0.06);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          AI-операционный директор
+        </div>
+      </div>
+
+      <!-- Row 1 -->
+      <div class="grid grid-cols-2">
+        <div class="p-5 text-slate-400 text-sm tbl-row-a"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          Список задач
+        </div>
+        <div class="p-5 text-slate-200 text-sm font-medium tbl-row-a"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);
+                    border-left: 1px solid rgba(255,255,255,0.06);">
+          Управленческая картина
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="grid grid-cols-2">
+        <div class="p-5 text-slate-400 text-sm tbl-row-b"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          Статусы
+        </div>
+        <div class="p-5 text-slate-200 text-sm font-medium tbl-row-b"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);
+                    border-left: 1px solid rgba(255,255,255,0.06);">
+          Раннее предупреждение
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="grid grid-cols-2">
+        <div class="p-5 text-slate-400 text-sm tbl-row-a"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          Отчёты
+        </div>
+        <div class="p-5 text-slate-200 text-sm font-medium tbl-row-a"
+             style="border-bottom: 1px solid rgba(255,255,255,0.04);
+                    border-left: 1px solid rgba(255,255,255,0.06);">
+          Конкретные решения
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="grid grid-cols-2">
+        <div class="p-5 text-slate-400 text-sm tbl-row-b">
+          Контроль вручную
+        </div>
+        <div class="p-5 text-slate-200 text-sm font-medium tbl-row-b"
+             style="border-left: 1px solid rgba(255,255,255,0.06);">
+          Автоматическая сводка
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ RESULT ════════════════════════════════ -->
+<section id="result" class="py-24 px-6" style="background: #0A0E17;">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="mb-12">
+      <p class="text-blue-500 text-xs font-medium tracking-widest uppercase mb-3">Результат</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-white" style="letter-spacing: -0.015em;">
+        Через 7 дней вы увидите:
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-3 mb-10">
+
+      <div class="flex items-start gap-3 p-5 rounded-xl"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="flex-shrink-0 mt-0.5">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="text-slate-300 text-sm">Где теряется эффективность</span>
+      </div>
+
+      <div class="flex items-start gap-3 p-5 rounded-xl"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="flex-shrink-0 mt-0.5">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="text-slate-300 text-sm">Какие KPI проседают</span>
+      </div>
+
+      <div class="flex items-start gap-3 p-5 rounded-xl"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="flex-shrink-0 mt-0.5">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="text-slate-300 text-sm">Где узкое место</span>
+      </div>
+
+      <div class="flex items-start gap-3 p-5 rounded-xl"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.07);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="flex-shrink-0 mt-0.5">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="text-slate-300 text-sm">Какие решения нужно принять</span>
+      </div>
+
+    </div>
+
+    <div class="inline-block border-b-2 border-blue-500 pb-1">
+      <span class="text-blue-400 font-semibold text-lg">Без внедрения сложных систем.</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ LEAD FORM ═════════════════════════════ -->
+<section id="form" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+      <!-- LEFT: copy + next steps -->
+      <div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4"
+            style="letter-spacing: -0.015em;">
+          Перестаньте держать всё в голове.
+        </h2>
+        <p class="text-slate-400 text-lg leading-relaxed mb-12">
+          Оставьте заявку — покажу, как это будет работать на вашей команде.
+        </p>
+
+        <p class="text-slate-500 text-xs font-medium tracking-widest uppercase mb-6">
+          Что будет дальше
+        </p>
+
+        <div class="space-y-5">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-600
+                        flex items-center justify-center text-white text-xs font-bold">1</div>
+            <p class="text-slate-300 text-sm pt-0.5 leading-relaxed">
+              15 минут — уточняем контекст вашей команды
+            </p>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-600
+                        flex items-center justify-center text-white text-xs font-bold">2</div>
+            <p class="text-slate-300 text-sm pt-0.5 leading-relaxed">
+              Настраиваем KPI-контур под вашу структуру
+            </p>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-600
+                        flex items-center justify-center text-white text-xs font-bold">3</div>
+            <p class="text-slate-300 text-sm pt-0.5 leading-relaxed">
+              Запускаем ежедневные чек-ины
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: form card -->
+      <div class="rounded-2xl p-8"
+           style="background: #0D1220; border: 1px solid rgba(255,255,255,0.08);">
+
+        <form id="leadForm" novalidate>
+          <div class="space-y-4 mb-6">
+
+            <!-- Name -->
+            <div>
+              <label class="block text-slate-400 text-sm mb-1.5" for="fieldName">Имя</label>
+              <input type="text" id="fieldName" name="name"
+                     placeholder="Как вас зовут?" class="field" required>
+              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Введите имя</p>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-slate-400 text-sm mb-1.5" for="fieldEmail">Email</label>
+              <input type="email" id="fieldEmail" name="email"
+                     placeholder="your@company.com" class="field" required>
+              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Введите корректный email</p>
+            </div>
+
+            <!-- Team size -->
+            <div>
+              <label class="block text-slate-400 text-sm mb-1.5" for="fieldTeam">Размер команды</label>
+              <select id="fieldTeam" name="teamSize" class="field" required>
+                <option value="" disabled selected>Выберите...</option>
+                <option value="3-5">3–5 человек</option>
+                <option value="6-10">6–10 человек</option>
+                <option value="11-15">11–15 человек</option>
+                <option value="15+">15+ человек</option>
+              </select>
+              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Выберите размер команды</p>
+            </div>
+
+          </div>
+
+          <button type="submit"
+                  class="btn-primary w-full font-semibold py-3.5 rounded-xl text-base">
+            Получить внедрение
+          </button>
+        </form>
+
+        <!-- Success state -->
+        <div id="successState" class="hidden text-center py-6">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+               style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="text-white font-semibold mb-2">Заявка отправлена</div>
+          <div class="text-slate-400 text-sm">
+            Спасибо. Мы свяжемся с вами в течение 24 часов.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="py-12 px-6" style="border-top: 1px solid rgba(255,255,255,0.06);">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-start md:items-center
+                justify-between gap-6">
+      <div>
+        <div class="text-white font-semibold mb-1">AI-операционный директор</div>
+        <div class="text-slate-500 text-sm">
+          Система управленческой отчётности для малых команд.
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500">
+        <a href="#how"        class="hover:text-slate-300 transition-colors">Как работает</a>
+        <a href="#difference" class="hover:text-slate-300 transition-colors">Отличия</a>
+        <a href="#form"       class="hover:text-slate-300 transition-colors">Заявка</a>
+        <a href="#"           class="hover:text-slate-300 transition-colors">Политика</a>
+        <a href="#"           class="hover:text-slate-300 transition-colors">Оферта</a>
+      </div>
+    </div>
+    <div class="mt-8 text-slate-600 text-xs">© 2026 AI-операционный директор</div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════ FORM SCRIPT ══════════════════════════════ -->
+<script>
+(function () {
+  const form         = document.getElementById('leadForm');
+  const successState = document.getElementById('successState');
+
+  const fieldName  = document.getElementById('fieldName');
+  const fieldEmail = document.getElementById('fieldEmail');
+  const fieldTeam  = document.getElementById('fieldTeam');
+
+  const fields = [fieldName, fieldEmail, fieldTeam];
+
+  // Clear error on change
+  fields.forEach(el => {
+    el.addEventListener('input',  () => clearErr(el));
+    el.addEventListener('change', () => clearErr(el));
+  });
+
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+
+  function setErr(el) {
+    el.classList.add('invalid');
+    el.nextElementSibling.classList.remove('hidden');
+  }
+
+  function clearErr(el) {
+    el.classList.remove('invalid');
+    el.nextElementSibling.classList.add('hidden');
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    let ok = true;
+
+    if (!fieldName.value.trim())         { setErr(fieldName);  ok = false; }
+    if (!isValidEmail(fieldEmail.value)) { setErr(fieldEmail); ok = false; }
+    if (!fieldTeam.value)                { setErr(fieldTeam);  ok = false; }
+
+    if (!ok) return;
+
+    const payload = {
+      name:      fieldName.value.trim(),
+      email:     fieldEmail.value.trim(),
+      teamSize:  fieldTeam.value,
+      source:    'landing',
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log('[Lead]', payload);
+
+    /*
+     * ── Подключение реального вебхука ─────────────────────────────────
+     *
+     * Вариант 1: n8n / Make / Zapier
+     *   Замените '/api/lead' на URL вашего вебхука:
+     *   const WEBHOOK = 'https://your-n8n.com/webhook/lead';
+     *
+     * Вариант 2: Telegram-бот
+     *   Отправьте fetch на Telegram Bot API:
+     *   fetch(`https://api.telegram.org/bot<TOKEN>/sendMessage`, {
+     *     method: 'POST',
+     *     headers: { 'Content-Type': 'application/json' },
+     *     body: JSON.stringify({ chat_id: '<CHAT_ID>', text: JSON.stringify(payload) })
+     *   });
+     *
+     * Вариант 3: Next.js API route (если перейдёте на Next.js)
+     *   Создайте app/api/lead/route.ts:
+     *   export async function POST(req) {
+     *     const data = await req.json();
+     *     // обработка...
+     *     return Response.json({ ok: true });
+     *   }
+     * ──────────────────────────────────────────────────────────────────
+     */
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      // В статичном/локальном режиме запрос упадёт — это нормально.
+      // Данные уже залогированы в консоль выше.
+    }
+
+    // Show success
+    form.style.display = 'none';
+    successState.classList.remove('hidden');
+  });
+})();
+</script>
+
+</body>
+</html>
