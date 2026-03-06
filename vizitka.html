@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Карабут Карина</title>
+  <title>Карабут Карина — AI-операционный директор</title>
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+
+  <!-- SEO & Social -->
+  <meta name="description" content="Карабут Карина — эксперт по AI-интеграции. Структура. Порядок. Управляемый рост.">
+  <meta property="og:type"        content="profile">
+  <meta property="og:title"       content="Карабут Карина — AI-операционный директор">
+  <meta property="og:description" content="Структура. Порядок. Управляемый рост.">
+  <meta property="og:image"       content="https://YOUR_DOMAIN/og-vizitka.png">
+  <meta property="og:url"         content="https://YOUR_DOMAIN/vizitka.html">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
@@ -168,7 +180,7 @@
     .footer {
       margin-top: 48px;
       font-size: 12px;
-      color: #6B7076;
+      color: #9DA3A8; /* raised from #6B7076 to pass WCAG AA on #14171A */
       letter-spacing: 0.03em;
       opacity: 0;
       animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.74s forwards;
@@ -179,6 +191,14 @@
       .name  { font-size: 34px; }
       .lead  { font-size: 18px; }
     }
+
+    /* Accessibility: respect system motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .avatar, .name, .line, .lead, .body, .btn, .footer {
+        animation: none;
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -186,10 +206,10 @@
   <div class="card">
 
     <div class="avatar">
-      <img src="Фотосет/_2twpzfz0ytb4w05f3e75_0.png" alt="Карабут Карина" />
+      <img src="Фотосет/_2twpzfz0ytb4w05f3e75_0.png" alt="Карабут Карина" width="92" height="92" />
     </div>
 
-    <h1 class="name"><span class="surname">Карабут</span> <span class="firstname">Карина</span></h1>
+    <h1 class="name">Карабут Карина</h1>
 
     <div class="line"></div>
 
@@ -201,7 +221,7 @@
       <p>Управляемый рост.</p>
     </div>
 
-    <a class="btn" href="https://t.me/KKarinaGen" target="_blank" rel="noopener">
+    <a class="btn" href="https://t.me/KKarinaGen" target="_blank" rel="noopener noreferrer">
       Обсудить
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

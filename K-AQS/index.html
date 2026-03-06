@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Карина — основатель системы K-A-Q-S™. Диагностирую, где ломается управление. Строю систему, в которой бизнес работает без ручного режима.">
+  <meta property="og:title" content="K-A-Q-S™ — Архитектор управляемого бизнеса">
+  <meta property="og:description" content="Методология диагностики и архитектуры управления. 4 модуля, 36 точек. Конкретный план на 90 дней.">
+  <title>K-A-Q-S™ — Архитектор управляемого бизнеса</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: #0D0F11;
+      color: #F1F5F9;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    ul { list-style: none; }
+
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:         #0D0F11;
+      --bg-alt:     #111316;
+      --bg-card:    #161819;
+      --text:       #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-dim:   #64748B;
+      --accent:     #00CDD4;
+      --accent-h:   #22D8DF;
+      --border:     rgba(255,255,255,0.07);
+      --border-h:   rgba(0,205,212,0.35);
+      --green:      #22C55E;
+      --red:        #EF4444;
+      --radius:     12px;
+      --radius-sm:  8px;
+      --shadow:     0 4px 24px rgba(0,0,0,0.4);
+      --shadow-lg:  0 8px 48px rgba(0,0,0,0.6);
+      --max-w:      1160px;
+      --pad:        clamp(1.25rem, 5vw, 5rem);
+    }
+
+    /* ─── TYPOGRAPHY ─── */
+    h1, h2, h3, h4 {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    h1 { font-size: clamp(2.25rem, 6vw, 4.25rem); }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
+    h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 600; }
+    p { color: var(--text-muted); }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* ─── LAYOUT ─── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 4vw, 2rem);
+    }
+    section { padding: clamp(4rem, 8vw, 7rem) 0; }
+    .section-alt { background: var(--bg-alt); }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0D0F11;
+    }
+    .btn-primary:hover {
+      background: var(--accent-h);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-sm { padding: 0.625rem 1.25rem; font-size: 0.875rem; }
+    .btn-full { width: 100%; justify-content: center; }
+
+    /* ─── HEADER ─── */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 clamp(1rem, 4vw, 2rem);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(13,15,17,0.82);
+      border-bottom: 1px solid var(--border);
+      transition: transform 0.35s ease;
+    }
+    .header.hidden { transform: translateY(-100%); }
+    .header-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--accent); }
+    .nav { display: flex; align-items: center; gap: 0.25rem; }
+    .nav a {
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .burger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .drawer-overlay.open { opacity: 1; }
+    .drawer {
+      position: fixed;
+      top: 0; right: -320px;
+      width: min(320px, 85vw);
+      height: 100%;
+      background: #161819;
+      border-left: 1px solid var(--border);
+      z-index: 201;
+      padding: 2rem 1.5rem;
+      transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .drawer.open { right: 0; }
+    .drawer-close {
+      align-self: flex-end;
+      padding: 0.5rem;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .drawer a {
+      display: block;
+      padding: 0.875rem 1rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 1rem;
+      transition: color 0.2s, background 0.2s;
+    }
+    .drawer a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .drawer .btn { margin-top: 1rem; }
+
+    /* ─── HERO ─── */
+    #hero {
+      padding-top: calc(64px + clamp(3rem, 8vw, 6rem));
+      padding-bottom: clamp(4rem, 8vw, 7rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,205,212,0.08) 0%, transparent 65%);
+      border-radius: 50%;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 80% 50%, black, transparent);
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem 4rem;
+      align-items: center;
+      position: relative;
+    }
+    .hero-content { max-width: 620px; }
+    .hero-content .eyebrow { margin-bottom: 1.25rem; }
+    .hero-content h1 { margin-bottom: 1.25rem; }
+    .hero-content h1 em {
+      font-style: normal;
+    }
+    .hero-lead {
+      font-size: clamp(1rem, 2.5vw, 1.1875rem);
+      color: var(--text-muted);
+      margin-bottom: 0.875rem;
+      max-width: 520px;
+    }
+    .hero-descriptor {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin-bottom: 2.25rem;
+      max-width: 480px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.875rem;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.8125rem;
+      color: var(--text-dim);
+      margin-top: 2rem;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* KAQS diagram */
+    .kaqs-diagram {
+      flex-shrink: 0;
+      width: 280px;
+    }
+    .kaqs-diagram svg { width: 100%; height: auto; }
+
+    /* ─── PROBLEM ─── */
+    #problem { background: var(--bg-alt); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem 5rem;
+      align-items: start;
+    }
+    .problem-text h2 { margin-bottom: 1.25rem; }
+    .problem-text p { margin-bottom: 1rem; }
+    .problem-text .conclusion {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(0,205,212,0.06);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      color: var(--text);
+      font-size: 0.9375rem;
+    }
+    .pain-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
+    .pain-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .pain-item:hover { border-color: var(--border-h); transform: translateX(4px); }
+    .pain-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      padding-top: 0.125rem;
+      flex-shrink: 0;
+    }
+    .pain-item p { color: var(--text); font-size: 0.9375rem; margin: 0; }
+
+    /* ─── SYSTEM ─── */
+    #system { }
+    .section-header { text-align: center; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+    .section-header .eyebrow { margin-bottom: 0.875rem; }
+    .section-header h2 { margin-bottom: 1rem; }
+    .section-header p { max-width: 560px; margin: 0 auto; font-size: 1.0625rem; }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .module-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,205,212,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .module-card:hover { border-color: var(--border-h); transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,205,212,0.1); }
+    .module-card:hover::before { opacity: 1; }
+    .module-letter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      transition: text-shadow 0.25s;
+    }
+    .module-card:hover .module-letter { text-shadow: 0 0 20px rgba(0,205,212,0.5); }
+    .module-name {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 1.0625rem;
+      color: var(--text);
+      margin-bottom: 0.625rem;
+    }
+    .module-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+    .system-footer {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    .system-result {
+      flex: 1;
+      min-width: 260px;
+      padding: 1.5rem 2rem;
+      background: linear-gradient(135deg, rgba(0,205,212,0.12), rgba(249,115,22,0.04));
+      border: 1px solid rgba(0,205,212,0.25);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .system-result-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .system-result p { margin: 0; color: var(--text); font-size: 0.9375rem; }
+    .system-vs {
+      flex: 2;
+      min-width: 260px;
+      padding: 1.5rem 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .system-vs strong { color: var(--text); }
+
+    /* ─── HOW IT WORKS ─── */
+    #how { background: var(--bg-alt); }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.75rem;
+      position: relative;
+    }
+    .step-card::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1.25rem;
+      width: 1rem;
+      height: 1px;
+      background: var(--border);
+    }
+    .step-card:last-child::after { display: none; }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .step-card h3 { font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--text); }
+    .step-card p { font-size: 0.875rem; margin: 0; }
+    .steps-note {
+      margin-top: 2rem;
+      padding: 1.25rem 1.75rem;
+      background: rgba(0,205,212,0.06);
+      border: 1px solid rgba(0,205,212,0.2);
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+    .steps-note strong { color: var(--text); }
+    .personal-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .personal-step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .personal-step-arrow {
+      padding: 0.5rem 0;
+      color: var(--accent);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .personal-step-card {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+    }
+    .personal-step-card h3 { font-size: 1rem; margin-bottom: 0.375rem; color: var(--text); }
+    .personal-step-card p { font-size: 0.875rem; margin: 0; }
+
+    /* ─── CASES ─── */
+    #cases { }
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .case-card:hover { border-color: var(--border-h); transform: translateY(-4px); }
+    .case-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+    .case-row { display: flex; flex-direction: column; gap: 0.25rem; }
+    .case-label { font-size: 0.75rem; color: var(--text-dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+    .case-text { font-size: 0.9375rem; color: var(--text-muted); }
+    .case-result {
+      margin-top: auto;
+      padding: 1rem 1.25rem;
+      background: rgba(34,197,94,0.06);
+      border: 1px solid rgba(34,197,94,0.18);
+      border-radius: var(--radius-sm);
+    }
+    .case-result .case-label { color: var(--green); }
+    .case-result .case-text { color: var(--text); font-weight: 500; }
+
+    /* ─── PROOF ─── */
+    #proof { background: var(--bg-alt); }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 4rem;
+    }
+    .stat-item {
+      background: var(--bg-card);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-value .stat-accent { color: var(--accent); }
+    .stat-label { font-size: 0.875rem; color: var(--text-muted); }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .review-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+    }
+    .review-quote {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .review-quote::before {
+      content: '\201C';
+      font-size: 2.5rem;
+      color: var(--accent);
+      line-height: 0;
+      vertical-align: -0.5em;
+      margin-right: 0.25rem;
+      font-family: Georgia, serif;
+    }
+    .review-author { display: flex; align-items: center; gap: 0.875rem; }
+    .review-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e2024, #2a2d32);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .review-name { font-weight: 600; font-size: 0.9375rem; color: var(--text); }
+    .review-role { font-size: 0.8125rem; color: var(--text-dim); }
+
+    /* ─── ABOUT ─── */
+    #about { }
+    .about-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-photo {
+      width: 280px;
+      flex-shrink: 0;
+    }
+    .photo-placeholder {
+      width: 280px;
+      height: 340px;
+      background: linear-gradient(160deg, #1a1d20 0%, #141618 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--text-dim);
+      font-size: 0.8125rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-placeholder::before {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,205,212,0.06), transparent 70%);
+      border-radius: 50%;
+    }
+    .photo-icon {
+      width: 56px; height: 56px;
+      border: 2px dashed var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .about-content h2 { margin-bottom: 1.5rem; }
+    .about-content p { margin-bottom: 1rem; font-size: 1.0625rem; }
+    .about-creds {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .cred-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      padding: 0.875rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+    .cred-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.45em;
+    }
+
+    /* ─── OFFER ─── */
+    #offer { background: var(--bg-alt); }
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .offer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: border-color 0.25s;
+    }
+    .offer-card.featured {
+      border-color: rgba(0,205,212,0.35);
+      background: linear-gradient(160deg, rgba(0,205,212,0.06), var(--bg-card));
+      position: relative;
+    }
+    .offer-badge {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #0D0F11;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.875rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .offer-card-top { flex: 1; }
+    .offer-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .offer-card h3 { font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem; }
+    .offer-sub { font-size: 0.875rem; color: var(--text-dim); margin-bottom: 1.25rem; }
+    .offer-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0;
+    }
+    .offer-feat {
+      display: flex;
+      gap: 0.625rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      align-items: flex-start;
+    }
+    .offer-feat::before {
+      content: '—';
+      color: var(--accent);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      margin-top: 0.1em;
+    }
+
+    /* ─── FORM ─── */
+    .mini-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-field label { font-size: 0.8125rem; color: var(--text-dim); font-weight: 500; }
+    .form-field input,
+    .form-field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-size: 0.9375rem;
+      font-family: inherit;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+      resize: none;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: rgba(0,205,212,0.5);
+      background: rgba(0,205,212,0.04);
+    }
+    .form-field input.error,
+    .form-field textarea.error { border-color: var(--red); }
+    .form-error-text { font-size: 0.75rem; color: var(--red); display: none; }
+    .form-field.has-error .form-error-text { display: block; }
+    .form-success {
+      display: none;
+      padding: 1rem 1.25rem;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: var(--radius-sm);
+      color: var(--green);
+      font-size: 0.9375rem;
+      text-align: center;
+    }
+    .form-success.visible { display: block; }
+
+    /* ─── FAQ ─── */
+    #faq { }
+    .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.25s;
+    }
+    .faq-item.open { border-color: rgba(0,205,212,0.25); }
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .faq-q:hover { color: var(--accent); }
+    .faq-icon {
+      width: 24px; height: 24px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+      color: var(--accent);
+      transition: transform 0.3s, background 0.2s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: rgba(0,205,212,0.1); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a-inner {
+      padding: 0 1.5rem 1.25rem;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── CTA ─── */
+    #cta { background: var(--bg-alt); }
+    .cta-box {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .cta-box .eyebrow { margin-bottom: 1rem; }
+    .cta-box h2 { margin-bottom: 1rem; }
+    .cta-box p { font-size: 1.0625rem; margin-bottom: 2.5rem; }
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #0A0C0E;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-left { display: flex; flex-direction: column; gap: 0.375rem; }
+    .footer-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-sub { font-size: 0.8125rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: var(--text-dim); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 0.8125rem; color: var(--text-dim); text-align: right; }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left  { opacity: 0; transform: translateX(-36px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(36px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-scale { opacity: 0; transform: scale(0.93); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.34s; }
+
+    /* ── Animated gradient text (hero h1 em) ── */
+    @keyframes gradShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero-content h1 em {
+      background: linear-gradient(120deg, #00CDD4, #22D8DF, #80EFFF, #00CDD4);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradShift 5s ease infinite;
+    }
+
+    /* ── Hero parallax layer ── */
+    .hero-glow { will-change: transform; }
+
+    /* ── Cursor glow ── */
+    #cursor-glow {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,205,212,0.07) 0%, transparent 70%);
+      transform: translate(-50%,-50%);
+      z-index: 0;
+      transition: transform 0.08s linear;
+      will-change: transform;
+    }
+
+    /* ── Button shine sweep ── */
+    .btn-primary { position: relative; overflow: hidden; }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -120%;
+      width: 60%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.5s ease;
+    }
+    .btn-primary:hover::after { left: 160%; }
+
+    /* ── Card glow shadow on hover ── */
+    .case-card:hover  { box-shadow: 0 16px 48px rgba(0,205,212,0.12); }
+    .review-card { transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; }
+    .review-card:hover { border-color: var(--border-h); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,205,212,0.1); }
+    .offer-card { transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; }
+    .offer-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,205,212,0.08); }
+    .step-card { transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; }
+    .step-card:hover { border-color: var(--border-h); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,205,212,0.08); }
+
+    /* ── Section heading underline ── */
+    .section-header h2 { position: relative; display: inline-block; }
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px; left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 48px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transform-origin: center;
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.3s;
+    }
+    .section-header.visible h2::after { transform: translateX(-50%) scaleX(1); }
+
+    /* ── Animated CTA background rings ── */
+    #cta { position: relative; overflow: hidden; }
+    .cta-rings {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes ringPulse {
+      0%   { transform: scale(0.85); opacity: 0.18; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .cta-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(0,205,212,0.25);
+    }
+    .cta-ring:nth-child(1) { width: 300px; height: 300px; animation: ringPulse 3.5s ease-out infinite; }
+    .cta-ring:nth-child(2) { width: 300px; height: 300px; animation: ringPulse 3.5s ease-out 1.1s infinite; }
+    .cta-ring:nth-child(3) { width: 300px; height: 300px; animation: ringPulse 3.5s ease-out 2.2s infinite; }
+
+    /* ── Nav active link ── */
+    .nav a.active { color: var(--accent); }
+
+    /* ── Hero badge pulse dot ── */
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+      50%       { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    }
+    .hero-badge::before { animation: dotPulse 2.5s ease infinite; }
+
+    /* ── Stat item hover ── */
+    .stat-item { transition: background 0.25s; cursor: default; }
+    .stat-item:hover { background: rgba(0,205,212,0.05); }
+
+    /* ── Smooth scroll offset for fixed header ── */
+    [id] { scroll-margin-top: 80px; }
+
+    /* ─── BACK TO TOP ─── */
+    #back-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 90;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      pointer-events: none;
+    }
+    #back-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    #back-top:hover {
+      border-color: var(--accent);
+      background: rgba(0,205,212,0.08);
+      box-shadow: 0 0 20px rgba(0,205,212,0.2);
+    }
+    #back-top svg { width: 20px; height: 20px; }
+
+    /* ─── CONTACT SECTION ─── */
+    #contact { }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .contact-info h2 { margin-bottom: 1rem; }
+    .contact-info p { font-size: 1.0625rem; margin-bottom: 1.5rem; }
+    .contact-details { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
+    .contact-detail {
+      display: flex; align-items: center; gap: 0.875rem;
+      font-size: 0.9375rem; color: var(--text-muted);
+    }
+    .contact-detail-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,205,212,0.08);
+      border: 1px solid rgba(0,205,212,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+    .contact-detail-icon svg { width: 16px; height: 16px; }
+
+    /* Contact form card */
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+    }
+    .contact-form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; transition: opacity 0.4s, transform 0.4s; }
+    .contact-form.hidden { opacity: 0; transform: translateY(-10px); pointer-events: none; position: absolute; }
+    .contact-form h3 { font-size: 1.25rem; color: var(--text); margin-bottom: 0.25rem; }
+    .contact-form .form-sub { font-size: 0.875rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    /* Success state */
+    .contact-success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1rem;
+      position: absolute;
+      inset: 2.5rem;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
+      pointer-events: none;
+    }
+    .contact-success.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .success-ring {
+      position: relative;
+      width: 80px; height: 80px;
+      flex-shrink: 0;
+    }
+    .success-ring svg { width: 80px; height: 80px; }
+    .success-circle {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      stroke-dasharray: 226;
+      stroke-dashoffset: 226;
+      transform-origin: center;
+      transform: rotate(-90deg);
+      transition: stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s;
+    }
+    .contact-success.visible .success-circle { stroke-dashoffset: 0; }
+    .success-check {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      transition: stroke-dashoffset 0.4s cubic-bezier(0.22,1,0.36,1) 0.9s;
+    }
+    .contact-success.visible .success-check { stroke-dashoffset: 0; }
+    .success-title { font-family: 'Manrope', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .success-text { font-size: 0.9375rem; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+    .success-reset {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      background: none; border: none; font-family: inherit;
+      transition: color 0.2s;
+    }
+    .success-reset:hover { color: var(--accent); }
+
+    /* Confetti */
+    .confetti-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    @keyframes confettiFly {
+      0%   { opacity: 1; transform: translate(0,0) rotate(0deg); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
+    }
+    .confetto {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 6px; height: 6px;
+      border-radius: 1px;
+      animation: confettiFly 0.9s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* Mobile fixes */
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      #back-top { bottom: 1.25rem; right: 1.25rem; }
+    }
+
+    /* Disable parallax & cursor on touch/mobile */
+    @media (hover: none) {
+      #cursor-glow { display: none; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* Touch tap highlight remove */
+    a, button { -webkit-tap-highlight-color: transparent; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .modules-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo { width: 100%; }
+      .photo-placeholder { width: 100%; max-width: 320px; }
+    }
+    @media (max-width: 768px) {
+      .nav { display: none; }
+      .header-inner .btn { display: none; }
+      .burger { display: flex; }
+      .drawer-overlay { display: block; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .kaqs-diagram { display: none; }
+      .problem-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .cases-grid { grid-template-columns: 1fr; }
+      .offer-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .step-card::after { display: none; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .tabs { overflow-x: auto; }
+    }
+    @media (max-width: 480px) {
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .cta-actions .btn { width: 100%; justify-content: center; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-copy { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor-glow" aria-hidden="true"></div>
+
+<!-- ─── HEADER ─── -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="#hero" class="logo">K<span>-</span>A<span>-</span>Q<span>-</span>S<span>™</span></a>
+    <nav class="nav">
+      <a href="#system">Методология</a>
+      <a href="#cases">Кейсы</a>
+      <a href="#about">О себе</a>
+      <a href="#offer">Форматы</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a href="#offer" class="btn btn-primary btn-sm">Пройти диагностику</a>
+    <button class="burger" id="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile drawer -->
+<div class="drawer-overlay" id="overlay"></div>
+<nav class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <a href="#system" class="drawer-link">Методология</a>
+  <a href="#cases" class="drawer-link">Кейсы</a>
+  <a href="#about" class="drawer-link">О себе</a>
+  <a href="#offer" class="drawer-link">Форматы</a>
+  <a href="#faq" class="drawer-link">FAQ</a>
+  <a href="#contact" class="drawer-link">Контакты</a>
+  <a href="#offer" class="btn btn-primary btn-full">Пройти диагностику</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="eyebrow reveal">Основатель системы K-A-Q-S™</p>
+        <h1 class="reveal reveal-d1">Архитектор<br><em>управляемого</em><br>бизнеса</h1>
+        <p class="hero-lead reveal reveal-d2">
+          Диагностирую, где ломается управление. Строю систему, в которой бизнес работает без ручного режима.
+        </p>
+        <p class="hero-descriptor reveal reveal-d2">
+          Методология K-A-Q-S™ — 4 модуля, 36 точек диагностики.<br>
+          Не консалтинг общего профиля. Конкретная архитектура конкретной компании.
+        </p>
+        <div class="hero-actions reveal reveal-d3">
+          <a href="#offer" class="btn btn-primary">Пройти бесплатную диагностику</a>
+          <a href="#offer" class="btn btn-ghost">Записаться на разбор</a>
+        </div>
+        <div class="hero-badge reveal reveal-d4">
+          Принимаю новые проекты
+        </div>
+      </div>
+
+      <!-- KAQS SVG diagram -->
+      <div class="kaqs-diagram reveal reveal-d2">
+        <svg viewBox="0 0 280 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Lines connecting boxes -->
+          <line x1="140" y1="70" x2="140" y2="115" stroke="rgba(0,205,212,0.25)" stroke-width="1" stroke-dasharray="4 3"
+                class="svg-line" style="stroke-dashoffset:45; transition: stroke-dashoffset 1.5s ease 0.8s"/>
+          <line x1="140" y1="185" x2="140" y2="230" stroke="rgba(0,205,212,0.25)" stroke-width="1" stroke-dasharray="4 3"
+                class="svg-line" style="stroke-dashoffset:45; transition: stroke-dashoffset 1.5s ease 1.4s"/>
+          <line x1="70" y1="150" x2="110" y2="150" stroke="rgba(0,205,212,0.25)" stroke-width="1" stroke-dasharray="4 3"
+                class="svg-line" style="stroke-dashoffset:40; transition: stroke-dashoffset 1.5s ease 1.1s"/>
+          <line x1="170" y1="150" x2="210" y2="150" stroke="rgba(0,205,212,0.25)" stroke-width="1" stroke-dasharray="4 3"
+                class="svg-line" style="stroke-dashoffset:40; transition: stroke-dashoffset 1.5s ease 1.7s"/>
+
+          <!-- K box top -->
+          <rect x="90" y="10" width="100" height="60" rx="8" fill="#161819" stroke="rgba(0,205,212,0.3)" stroke-width="1"
+                class="svg-box" style="opacity:0; transition: opacity 0.4s ease 0.2s"/>
+          <text x="140" y="45" text-anchor="middle" fill="#00CDD4" font-family="JetBrains Mono" font-size="22" font-weight="500"
+                filter="url(#glow)" class="svg-text" style="opacity:0; transition: opacity 0.4s ease 0.4s">K</text>
+          <text x="140" y="60" text-anchor="middle" fill="#64748B" font-family="Inter" font-size="9">Knowledge</text>
+
+          <!-- A box left -->
+          <rect x="10" y="115" width="100" height="60" rx="8" fill="#161819" stroke="rgba(0,205,212,0.3)" stroke-width="1"
+                class="svg-box" style="opacity:0; transition: opacity 0.4s ease 0.6s"/>
+          <text x="60" y="150" text-anchor="middle" fill="#00CDD4" font-family="JetBrains Mono" font-size="22" font-weight="500"
+                filter="url(#glow)" class="svg-text" style="opacity:0; transition: opacity 0.4s ease 0.8s">A</text>
+          <text x="60" y="165" text-anchor="middle" fill="#64748B" font-family="Inter" font-size="9">Architecture</text>
+
+          <!-- center ring -->
+          <circle cx="140" cy="150" r="24" fill="rgba(0,205,212,0.06)" stroke="rgba(0,205,212,0.2)" stroke-width="1"
+                  style="opacity:0; transition: opacity 0.4s ease 1s" class="svg-box"/>
+          <text x="140" y="154" text-anchor="middle" fill="rgba(249,115,22,0.6)" font-family="JetBrains Mono" font-size="10">™</text>
+
+          <!-- Q box right -->
+          <rect x="170" y="115" width="100" height="60" rx="8" fill="#161819" stroke="rgba(0,205,212,0.3)" stroke-width="1"
+                class="svg-box" style="opacity:0; transition: opacity 0.4s ease 1.2s"/>
+          <text x="220" y="150" text-anchor="middle" fill="#00CDD4" font-family="JetBrains Mono" font-size="22" font-weight="500"
+                filter="url(#glow)" class="svg-text" style="opacity:0; transition: opacity 0.4s ease 1.4s">Q</text>
+          <text x="220" y="165" text-anchor="middle" fill="#64748B" font-family="Inter" font-size="9">Quality</text>
+
+          <!-- S box bottom -->
+          <rect x="90" y="230" width="100" height="60" rx="8" fill="#161819" stroke="rgba(0,205,212,0.3)" stroke-width="1"
+                class="svg-box" style="opacity:0; transition: opacity 0.4s ease 1.6s"/>
+          <text x="140" y="265" text-anchor="middle" fill="#00CDD4" font-family="JetBrains Mono" font-size="22" font-weight="500"
+                filter="url(#glow)" class="svg-text" style="opacity:0; transition: opacity 0.4s ease 1.8s">S</text>
+          <text x="140" y="280" text-anchor="middle" fill="#64748B" font-family="Inter" font-size="9">Scale</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROBLEM ─── -->
+<section id="problem" class="section-alt">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-text">
+        <p class="eyebrow reveal">Проблема</p>
+        <h2 class="reveal reveal-d1">Бизнес растёт.<br>Управление — нет.</h2>
+        <p class="reveal reveal-d2">
+          Выручка есть. Команда работает. А вы всё равно в операционке с утра до ночи.
+        </p>
+        <p class="reveal reveal-d2">
+          Новые сотрудники не снимают нагрузку — они добавляют согласования. Процессы держатся на людях, а не на системе. Решения принимаете вы — потому что больше некому.
+        </p>
+        <div class="conclusion reveal reveal-d3">
+          Это не проблема людей. Это архитектурная проблема.
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow reveal" style="margin-bottom:1.25rem">Где болит</p>
+        <ul class="pain-list">
+          <li class="pain-item reveal reveal-d1">
+            <span class="pain-num">01</span>
+            <p>Вы — узкое горлышко: без вас ничего не движется</p>
+          </li>
+          <li class="pain-item reveal reveal-d2">
+            <span class="pain-num">02</span>
+            <p>KPI есть, а понимания что реально происходит — нет</p>
+          </li>
+          <li class="pain-item reveal reveal-d3">
+            <span class="pain-num">03</span>
+            <p>Автоматизация покупается хаотично, каждый инструмент сам по себе</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SYSTEM ─── -->
+<section id="system">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">Методология</p>
+      <h2 class="reveal reveal-d1">Система K-A-Q-S™</h2>
+      <p class="reveal reveal-d2">
+        Авторская методология диагностики и проектирования управляемого бизнеса. 4 модуля, которые в сумме дают полную картину.
+      </p>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-card reveal">
+        <div class="module-letter">K</div>
+        <div class="module-name">Knowledge</div>
+        <p class="module-desc">Как компания накапливает и использует знания: процессы, регламенты, принятие решений.</p>
+      </div>
+      <div class="module-card reveal reveal-d1">
+        <div class="module-letter">A</div>
+        <div class="module-name">Architecture</div>
+        <p class="module-desc">Как устроена структура управления: роли, полномочия, уровни принятия решений.</p>
+      </div>
+      <div class="module-card reveal reveal-d2">
+        <div class="module-letter">Q</div>
+        <div class="module-name">Quality</div>
+        <p class="module-desc">Как компания контролирует результат: метрики, обратная связь, стандарты работы.</p>
+      </div>
+      <div class="module-card reveal reveal-d3">
+        <div class="module-letter">S</div>
+        <div class="module-name">Scale</div>
+        <p class="module-desc">Готова ли система к росту: масштабируемость процессов, ресурсы, управление рисками.</p>
+      </div>
+    </div>
+
+    <div class="system-footer">
+      <div class="system-result reveal">
+        <div class="system-result-icon">36</div>
+        <p>точек диагностики. Итог — не балл, а конкретный план на 90 дней: что менять, в какой последовательности, почему именно так.</p>
+      </div>
+      <div class="system-vs reveal reveal-d2">
+        <strong>Чем отличается от Gartner и IBM?</strong><br>
+        Gartner стоит от $30&nbsp;000/год и предназначен для корпораций. Microsoft и Cisco дают «балл» и продают свои продукты. K-A-Q-S™ работает для компаний 20–500 человек, на русском языке, и не продаёт ничего, кроме результата.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section id="how" class="section-alt">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">Как работаем</p>
+      <h2 class="reveal reveal-d1">Как проходит работа</h2>
+    </div>
+
+    <div class="tabs reveal reveal-d2">
+      <button class="tab-btn active" data-tab="platform">Самодиагностика — платформа</button>
+      <button class="tab-btn" data-tab="personal">Индивидуальная работа</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-platform">
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num">ШАГ 01</div>
+          <h3>Диагностика</h3>
+          <p>Онлайн-опросник за 20 минут. 36 вопросов по 4 модулям, шкала 1–5. Автосохранение — можно вернуться позже.</p>
+        </div>
+        <div class="step-card reveal reveal-d1">
+          <div class="step-num">ШАГ 02</div>
+          <h3>Результаты</h3>
+          <p>Разбивка по 4 модулям, диаграммы сильных и слабых мест. PDF-отчёт с методологией — скачать и показать команде или совету.</p>
+        </div>
+        <div class="step-card reveal reveal-d2">
+          <div class="step-num">ШАГ 03</div>
+          <h3>Роадмап</h3>
+          <p>3 приоритета на 90 дней. Конкретные шаги, а не «улучшить процессы». С объяснением почему именно они и в каком порядке.</p>
+        </div>
+      </div>
+      <div class="steps-note reveal reveal-d3">
+        <strong>Не знаете с чего начать?</strong> Начните с бесплатной самодиагностики. Она покажет слабые места без лишних разговоров — и вы поймёте, нужна ли вам индивидуальная работа.
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-personal">
+      <div class="personal-steps">
+        <div class="personal-step reveal">
+          <div class="personal-step-card">
+            <h3>Разбор — 1–2 часа</h3>
+            <p>Созвон с Кариной. Разбираемся в контексте: где вы сейчас, в чём основная боль, что уже пробовали.</p>
+          </div>
+          <div class="personal-step-arrow">→</div>
+        </div>
+        <div class="personal-step reveal reveal-d1">
+          <div class="personal-step-card">
+            <h3>Диагностика компании</h3>
+            <p>Глубокая диагностика по K-A-Q-S™ + интервью с ключевыми людьми команды. Полная картина — не только то, что видно с вершины.</p>
+          </div>
+          <div class="personal-step-arrow">→</div>
+        </div>
+        <div class="personal-step reveal reveal-d2">
+          <div class="personal-step-card">
+            <h3>Архитектура системы</h3>
+            <p>Дорожная карта изменений с приоритетами. Поддержка внедрения 3–6 месяцев — не просто документ, а реальные изменения в работе команды.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CASES ─── -->
+<section id="cases">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">Кейсы</p>
+      <h2 class="reveal reveal-d1">Что изменилось в компаниях</h2>
+      <p class="reveal reveal-d2">Реальные результаты — в цифрах и конкретных изменениях.</p>
+    </div>
+
+    <div class="cases-grid">
+      <div class="case-card reveal">
+        <div class="case-tag">Производство · 120 человек</div>
+        <div class="case-row">
+          <span class="case-label">Было</span>
+          <span class="case-text">CEO принимал все решения по закупкам лично. Любая закупка ждала его подписи — даже рутинная.</span>
+        </div>
+        <div class="case-row">
+          <span class="case-label">Сделали</span>
+          <span class="case-text">Перестроили уровни полномочий (модуль A), ввели регламент закупок с чёткими порогами.</span>
+        </div>
+        <div class="case-result">
+          <span class="case-label">Стало</span>
+          <span class="case-text">Операционный директор закрывает 80% решений без CEO. Время цикла закупки сократилось в 4 раза.</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal reveal-d1">
+        <div class="case-tag">IT-компания · 45 человек</div>
+        <div class="case-row">
+          <span class="case-label">Было</span>
+          <span class="case-text">Непонятно, почему падает маржинальность при росте выручки. Цифры есть, причин нет.</span>
+        </div>
+        <div class="case-row">
+          <span class="case-label">Сделали</span>
+          <span class="case-text">Диагностика модуля Q — нашли 3 точки потери качества: переработки, переделки, неучтённые доработки.</span>
+        </div>
+        <div class="case-result">
+          <span class="case-label">Стало</span>
+          <span class="case-text">Маржа выросла на 7 п.п. за квартал без увеличения команды.</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal reveal-d2">
+        <div class="case-tag">Ритейл · 200 человек</div>
+        <div class="case-row">
+          <span class="case-label">Было</span>
+          <span class="case-text">Не могли масштабироваться — каждый новый магазин требовал ручного запуска и личного участия основателя.</span>
+        </div>
+        <div class="case-row">
+          <span class="case-label">Сделали</span>
+          <span class="case-text">Стандартизация модуля K, создали шаблон запуска точки — чеклисты, роли, сроки, критерии готовности.</span>
+        </div>
+        <div class="case-result">
+          <span class="case-label">Стало</span>
+          <span class="case-text">Время открытия нового магазина сократилось втрое. Первый запуск без основателя прошёл без сбоев.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROOF ─── -->
+<section id="proof" class="section-alt">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">Цифры</p>
+      <h2 class="reveal reveal-d1">Говорят сами за себя</h2>
+    </div>
+
+    <div class="stats-grid reveal reveal-d1">
+      <div class="stat-item">
+        <div class="stat-value"><span class="counter stat-accent" data-target="50">0</span><span class="stat-accent">+</span></div>
+        <div class="stat-label">компаний прошли диагностику</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value"><span class="counter" data-target="20">0</span> <span style="font-size:1.5rem;color:var(--text-muted)">мин</span></div>
+        <div class="stat-label">среднее время самодиагностики</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value"><span class="counter" data-target="90">0</span></div>
+        <div class="stat-label">дней — горизонт первого роадмапа</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value"><span class="counter stat-accent" data-target="4">0</span></div>
+        <div class="stat-label">модуля дают полную картину</div>
+      </div>
+    </div>
+
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <p class="review-quote">
+          До диагностики казалось, что проблема — в людях. После — стало ясно, что структура была выстроена так, что люди просто не могли работать иначе. Поменяли архитектуру — поменялись результаты.
+        </p>
+        <div class="review-author">
+          <div class="review-avatar">ИМ</div>
+          <div>
+            <div class="review-name">Иван М.</div>
+            <div class="review-role">CEO, производственная компания</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-d1">
+        <p class="review-quote">
+          Мне нужен был документ для совета директоров, а не очередная консалтинговая презентация. PDF-отчёт с методологией K-A-Q-S™ — именно то, что нужно. Независимо, структурированно, с конкретными приоритетами.
+        </p>
+        <div class="review-author">
+          <div class="review-avatar">АК</div>
+          <div>
+            <div class="review-name">Анна К.</div>
+            <div class="review-role">CDO, IT-компания</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-photo reveal">
+        <div class="photo-placeholder">
+          <div class="photo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <span>Фото Карины</span>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <p class="eyebrow reveal">Основатель</p>
+        <h2 class="reveal reveal-d1">Кто я</h2>
+        <p class="reveal reveal-d2">
+          Меня зовут Карина. Я занимаюсь архитектурой управления бизнесом — строю системы, в которых компании работают без ручного режима и хаоса.
+        </p>
+        <p class="reveal reveal-d2">
+          K-A-Q-S™ — это методология, которую я разработала на основе практики работы с компаниями разного размера и отрасли. Не теория из книжек. Каждый из 4 модулей проверен на реальных бизнесах.
+        </p>
+        <p class="reveal reveal-d2">
+          Работаю с руководителями, которые хотят выйти из операционки, выстроить команду с настоящими полномочиями и масштабироваться без того, чтобы всё держалось на них лично.
+        </p>
+
+        <div class="about-creds">
+          <div class="cred-item reveal reveal-d3">
+            <div class="cred-dot"></div>
+            Основатель методологии K-A-Q-S™
+          </div>
+          <div class="cred-item reveal reveal-d3">
+            <div class="cred-dot"></div>
+            [X] лет в управленческом консалтинге — заменить реальными данными
+          </div>
+          <div class="cred-item reveal reveal-d3">
+            <div class="cred-dot"></div>
+            Компании от 20 до 500+ человек в различных отраслях
+          </div>
+          <div class="cred-item reveal reveal-d3">
+            <div class="cred-dot"></div>
+            [Добавить выступления, публикации, достижения]
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── OFFER ─── -->
+<section id="offer" class="section-alt">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">Форматы работы</p>
+      <h2 class="reveal reveal-d1">С чего начать</h2>
+      <p class="reveal reveal-d2">Выберите формат в зависимости от того, что вам сейчас нужно.</p>
+    </div>
+
+    <div class="offer-grid">
+      <!-- Card 1: Free -->
+      <div class="offer-card reveal">
+        <div class="offer-card-top">
+          <div class="offer-tag">БЕСПЛАТНО</div>
+          <h3>Самодиагностика</h3>
+          <p class="offer-sub">Онлайн-платформа K-A-Q-S™</p>
+          <ul class="offer-features">
+            <li class="offer-feat">36 вопросов, 20 минут</li>
+            <li class="offer-feat">PDF-отчёт на скачивание</li>
+            <li class="offer-feat">Роадмап на 90 дней</li>
+            <li class="offer-feat">Разбивка по 4 модулям</li>
+            <li class="offer-feat">Автосохранение, можно вернуться</li>
+          </ul>
+        </div>
+        <a href="#" class="btn btn-ghost btn-full">Пройти диагностику</a>
+      </div>
+
+      <!-- Card 2: Razor (featured) -->
+      <div class="offer-card featured reveal reveal-d1">
+        <span class="offer-badge">Популярный старт</span>
+        <div class="offer-card-top">
+          <div class="offer-tag">ИНДИВИДУАЛЬНО</div>
+          <h3>Разбор</h3>
+          <p class="offer-sub">1 сессия, 2 часа</p>
+          <ul class="offer-features">
+            <li class="offer-feat">Созвон с Кариной</li>
+            <li class="offer-feat">Анализ вашей ситуации</li>
+            <li class="offer-feat">Диагностика по K-A-Q-S™</li>
+            <li class="offer-feat">Конкретные приоритеты на выходе</li>
+          </ul>
+        </div>
+        <div class="mini-form" id="form-razor">
+          <div class="form-field">
+            <label for="r-name">Имя *</label>
+            <input type="text" id="r-name" placeholder="Ваше имя">
+            <span class="form-error-text">Введите имя</span>
+          </div>
+          <div class="form-field">
+            <label for="r-contact">Telegram или email *</label>
+            <input type="text" id="r-contact" placeholder="@username или email">
+            <span class="form-error-text">Введите способ связи</span>
+          </div>
+          <div class="form-field">
+            <label for="r-about">О компании (необязательно)</label>
+            <textarea id="r-about" rows="2" placeholder="1–2 строки о вашей ситуации"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary btn-full" onclick="submitForm('razor')">Записаться на разбор</button>
+          <div class="form-success" id="success-razor">Получила. Напишу в течение дня.</div>
+        </div>
+      </div>
+
+      <!-- Card 3: Full project -->
+      <div class="offer-card reveal reveal-d2">
+        <div class="offer-card-top">
+          <div class="offer-tag">ПОЛНЫЙ ПРОЕКТ</div>
+          <h3>Архитектура системы</h3>
+          <p class="offer-sub">3–6 месяцев работы</p>
+          <ul class="offer-features">
+            <li class="offer-feat">Глубокая диагностика + интервью команды</li>
+            <li class="offer-feat">Дорожная карта изменений</li>
+            <li class="offer-feat">Сопровождение внедрения</li>
+            <li class="offer-feat">Работа с командой</li>
+          </ul>
+        </div>
+        <div class="mini-form" id="form-arch">
+          <div class="form-field">
+            <label for="a-name">Имя *</label>
+            <input type="text" id="a-name" placeholder="Ваше имя">
+            <span class="form-error-text">Введите имя</span>
+          </div>
+          <div class="form-field">
+            <label for="a-contact">Telegram или email *</label>
+            <input type="text" id="a-contact" placeholder="@username или email">
+            <span class="form-error-text">Введите способ связи</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-full" onclick="submitForm('arch')">Обсудить проект</button>
+          <div class="form-success" id="success-arch">Получила. Напишу в течение дня.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow reveal">FAQ</p>
+      <h2 class="reveal reveal-d1">Частые вопросы</h2>
+    </div>
+
+    <ul class="faq-list" id="faq-list">
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          Для кого это подходит?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Для компаний 20–500 человек, где уже есть команда, но управление не успевает за ростом. Если вы всё ещё один и только строитесь — приходите через полгода.
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item reveal reveal-d1">
+        <div class="faq-q">
+          Чем K-A-Q-S™ отличается от обычного консалтинга?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Стандартный консалтинг даёт рекомендации. K-A-Q-S™ даёт архитектуру — систему, которую вы внедряете сами или с поддержкой. Не зависимость от консультанта, а самостоятельный бизнес.
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item reveal reveal-d2">
+        <div class="faq-q">
+          Сколько времени занимает самодиагностика?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            20 минут. Можно прерваться — ответы сохраняются автоматически. Возвращайтесь, когда удобно.
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item reveal reveal-d3">
+        <div class="faq-q">
+          Что я получу после диагностики?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Результат по 4 модулям, визуализацию сильных и слабых мест, PDF-отчёт и конкретный роадмап на 90 дней — три приоритета с объяснением почему именно они и в каком порядке.
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item reveal reveal-d3">
+        <div class="faq-q">
+          Это на русском языке?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Да. Все вопросы, отчёты и материалы — на русском. Это осознанный выбор: международные аналоги (Gartner, IBM) работают только на английском и стоят от $30&nbsp;000/год.
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item reveal reveal-d3">
+        <div class="faq-q">
+          Можно ли использовать инструмент для оценки клиентов?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Да, есть формат для консультантов и агентств. Напишите отдельно — обсудим условия.
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section id="cta" class="section-alt">
+  <div class="cta-rings" aria-hidden="true">
+    <div class="cta-ring"></div>
+    <div class="cta-ring"></div>
+    <div class="cta-ring"></div>
+  </div>
+  <div class="container">
+    <div class="cta-box">
+      <p class="eyebrow reveal">Следующий шаг</p>
+      <h2 class="reveal reveal-d1">Один шаг, чтобы понять где вы сейчас</h2>
+      <p class="reveal reveal-d2">
+        Пройдите диагностику по методологии K-A-Q-S™. 20 минут — и вы получите PDF-отчёт с конкретным планом на 90 дней. Бесплатно.
+      </p>
+      <div class="cta-actions reveal reveal-d3">
+        <a href="#offer" class="btn btn-primary">Пройти бесплатную диагностику</a>
+        <a href="#offer" class="btn btn-ghost">Записаться на разбор</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal-left">
+        <p class="eyebrow">Связь</p>
+        <h2>Напишите мне</h2>
+        <p>Есть вопрос, идея или хотите просто познакомиться — пишите. Отвечаю лично, не через ассистента.</p>
+        <div class="contact-details">
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+            </div>
+            <span>Telegram: @karina_kaqs</span>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <span>hello@kaqs.ru</span>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+              </svg>
+            </div>
+            <span>Отвечаю в течение одного рабочего дня</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal-right">
+        <div class="contact-form-card">
+          <div class="confetti-wrap" id="confetti-wrap"></div>
+
+          <div class="contact-form" id="contact-form">
+            <h3>Оставить сообщение</h3>
+            <p class="form-sub">Заполните форму — отвечу лично</p>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="c-name">Имя *</label>
+                <input type="text" id="c-name" placeholder="Ваше имя" autocomplete="given-name">
+                <span class="form-error-text">Введите имя</span>
+              </div>
+              <div class="form-field">
+                <label for="c-email">Email *</label>
+                <input type="email" id="c-email" placeholder="you@email.com" autocomplete="email">
+                <span class="form-error-text">Введите email</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="c-msg">Сообщение *</label>
+              <textarea id="c-msg" rows="4" placeholder="Расскажите о вашей ситуации или задайте вопрос"></textarea>
+              <span class="form-error-text">Напишите сообщение</span>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitContact()">Отправить</button>
+          </div>
+
+          <div class="contact-success" id="contact-success">
+            <div class="success-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="success-circle" cx="40" cy="40" r="36"/>
+                <polyline class="success-check" points="24,40 35,51 56,30"/>
+              </svg>
+            </div>
+            <div class="success-title">Сообщение отправлено!</div>
+            <p class="success-text">Получила ваше письмо. Напишу в ответ в течение одного рабочего дня.</p>
+            <button class="success-reset" onclick="resetContact()">Отправить ещё одно</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BACK TO TOP ─── -->
+<button id="back-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18,15 12,9 6,15"/>
+  </svg>
+</button>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-logo">K<span>-</span>A<span>-</span>Q<span>-</span>S<span style="color:var(--accent)">™</span></div>
+        <div class="footer-sub">Карина — основатель системы K-A-Q-S™</div>
+      </div>
+
+      <div class="footer-links">
+        <a href="#system">Методология</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#about">О себе</a>
+        <a href="#">Telegram</a>
+        <a href="#">Политика конфиденциальности</a>
+        <a href="#">Оферта</a>
+      </div>
+
+      <div class="footer-copy">
+        © 2026 K-A-Q-S™<br>Все права защищены.
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  // ─── CURSOR GLOW (desktop only) ───
+  const cursorGlow = document.getElementById('cursor-glow');
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  if (!isTouch) {
+    let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    let tx = cx, ty = cy;
+    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    (function animCursor() {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      cursorGlow.style.transform = `translate(${cx - 170}px, ${cy - 170}px)`;
+      requestAnimationFrame(animCursor);
+    })();
+  }
+
+  // ─── BACK TO TOP ───
+  const backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('visible', window.scrollY > 500);
+  }, { passive: true });
+
+  // ─── HEADER HIDE/SHOW ───
+  const header = document.getElementById('header');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    header.classList.toggle('hidden', y > lastY && y > 100);
+    lastY = y;
+  }, { passive: true });
+
+  // ─── BURGER / DRAWER ───
+  const burger = document.getElementById('burger');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('overlay');
+  const drawerClose = document.getElementById('drawerClose');
+
+  function openDrawer() {
+    burger.classList.add('open');
+    drawer.classList.add('open');
+    overlay.style.display = 'block';
+    requestAnimationFrame(() => overlay.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    burger.classList.remove('open');
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => { overlay.style.display = ''; }, 300);
+  }
+  burger.addEventListener('click', openDrawer);
+  drawerClose.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
+
+  // ─── PARALLAX (desktop only) ───
+  if (!isTouch) {
+    const heroGlow = document.querySelector('.hero-glow');
+    const heroGrid = document.querySelector('.hero-grid');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (heroGlow) heroGlow.style.transform = `translateY(${y * 0.35}px)`;
+      if (heroGrid) heroGrid.style.transform = `translateY(${y * 0.15}px)`;
+    }, { passive: true });
+  }
+
+  // ─── ACTIVE NAV ───
+  const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+  const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const navObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => navObs.observe(s));
+
+  // ─── SCROLL REVEAL ───
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ─── SECTION HEADER UNDERLINE ───
+  const shObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.section-header').forEach(sh => shObs.observe(sh));
+
+  // ─── KAQS SVG ANIMATION ───
+  function animateSVG() {
+    document.querySelectorAll('.svg-box, .svg-text').forEach(el => {
+      el.style.opacity = '1';
+    });
+    document.querySelectorAll('.svg-line').forEach(el => {
+      el.style.strokeDashoffset = '0';
+    });
+  }
+  const heroObs = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) { animateSVG(); heroObs.disconnect(); }
+  }, { threshold: 0.3 });
+  const diagramEl = document.querySelector('.kaqs-diagram');
+  if (diagramEl) heroObs.observe(diagramEl);
+
+  // ─── COUNTER ANIMATION ───
+  function animateCounter(el, target, duration) {
+    let start = null;
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    function step(ts) {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      el.textContent = Math.round(easeOut(progress) * target);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const counters = document.querySelectorAll('.counter');
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target, parseInt(e.target.dataset.target), 1500);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterObs.observe(c));
+
+  // ─── TABS ───
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    });
+  });
+
+  // ─── FAQ ACCORDION ───
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // ─── FORM SUBMIT ───
+  function submitForm(type) {
+    const prefix = type === 'razor' ? 'r' : 'a';
+    const nameField = document.getElementById(prefix + '-name');
+    const contactField = document.getElementById(prefix + '-contact');
+    let valid = true;
+
+    [nameField, contactField].forEach(field => {
+      const wrapper = field.closest('.form-field');
+      if (!field.value.trim()) {
+        wrapper.classList.add('has-error');
+        field.classList.add('error');
+        valid = false;
+      } else {
+        wrapper.classList.remove('has-error');
+        field.classList.remove('error');
+      }
+      field.addEventListener('input', () => {
+        if (field.value.trim()) {
+          field.closest('.form-field').classList.remove('has-error');
+          field.classList.remove('error');
+        }
+      }, { once: true });
+    });
+
+    if (!valid) return;
+
+    // Stub: log to console, replace with real fetch
+    console.log('Form submit:', type, {
+      name: nameField.value,
+      contact: contactField.value
+    });
+
+    document.getElementById('form-' + (type === 'razor' ? 'razor' : 'arch'))
+      .querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+    document.getElementById('success-' + (type === 'razor' ? 'razor' : 'arch')).classList.add('visible');
+  }
+
+  // ─── CONTACT FORM ───
+  function validateField(field) {
+    const wrapper = field.closest('.form-field');
+    const empty = !field.value.trim();
+    const emailBad = field.type === 'email' && field.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+    const invalid = empty || emailBad;
+    wrapper.classList.toggle('has-error', invalid);
+    field.classList.toggle('error', invalid);
+    return !invalid;
+  }
+
+  function spawnConfetti() {
+    const wrap = document.getElementById('confetti-wrap');
+    wrap.innerHTML = '';
+    const colors = ['#00CDD4','#22D8DF','#80EFFF','#F1F5F9','#22C55E','#A5F3FC'];
+    for (let i = 0; i < 32; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetto';
+      const angle = (i / 32) * 360;
+      const dist = 80 + Math.random() * 120;
+      const rad = angle * Math.PI / 180;
+      const tx = Math.cos(rad) * dist + 'px';
+      const ty = (Math.sin(rad) * dist + 60) + 'px';
+      const rot = (Math.random() * 720 - 360) + 'deg';
+      el.style.cssText = `
+        background:${colors[i % colors.length]};
+        --tx:${tx}; --ty:${ty}; --rot:${rot};
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        width:${4 + Math.random() * 6}px;
+        height:${4 + Math.random() * 6}px;
+        animation-delay:${Math.random() * 0.3}s;
+        animation-duration:${0.7 + Math.random() * 0.5}s;
+        opacity:0;
+      `;
+      // trigger animation after appending
+      wrap.appendChild(el);
+      requestAnimationFrame(() => { el.style.opacity = '1'; });
+    }
+  }
+
+  function submitContact() {
+    const nameF  = document.getElementById('c-name');
+    const emailF = document.getElementById('c-email');
+    const msgF   = document.getElementById('c-msg');
+    const valid = [nameF, emailF, msgF].map(validateField).every(Boolean);
+    [nameF, emailF, msgF].forEach(f => f.addEventListener('input', () => validateField(f), { once: true }));
+    if (!valid) return;
+
+    console.log('Contact form:', { name: nameF.value, email: emailF.value, message: msgF.value });
+
+    const form = document.getElementById('contact-form');
+    const success = document.getElementById('contact-success');
+
+    form.classList.add('hidden');
+    setTimeout(() => {
+      success.classList.add('visible');
+      spawnConfetti();
+    }, 200);
+  }
+
+  function resetContact() {
+    const form = document.getElementById('contact-form');
+    const success = document.getElementById('contact-success');
+    const wrap = document.getElementById('confetti-wrap');
+    success.classList.remove('visible');
+    wrap.innerHTML = '';
+    ['c-name','c-email','c-msg'].forEach(id => { document.getElementById(id).value = ''; });
+    setTimeout(() => { form.classList.remove('hidden'); }, 300);
+  }
+</script>
+</body>
+</html>

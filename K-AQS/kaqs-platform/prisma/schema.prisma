@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String
+  role         String       @default("user") // "user" | "admin"
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  assessments  Assessment[]
+}
+
+model Assessment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      String   @default("draft") // "draft" | "completed"
+  currentStep Int      @default(0) // 0=not started, 1=K, 2=A, 3=Q, 4=S, 5=done
+  answers     String   @default("{}") // JSON: { questionId: value }
+  scores      String?  // JSON: { K: number, A: number, Q: number, S: number, total: number }
+  risks       String?  // JSON: Risk[]
+  maturityLevel String? // "chaotic" | "fragmented" | "managed" | "systemic" | "mature"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

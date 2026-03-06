@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тарифы — Карина Геннадьевна</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0D0F11;
+      --bg2:       #13161A;
+      --bg3:       #1A1D22;
+      --text:      #F1F5F9;
+      --muted:     #94A3B8;
+      --accent:    #F97316;
+      --accent-d:  #EA6C0A;
+      --border:    #232830;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 48px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Cards ── */
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: border-color .2s;
+    }
+
+    .card:hover { border-color: #3a3f4a; }
+
+    .card.featured {
+      border-color: var(--accent);
+      background: var(--bg3);
+    }
+
+    .badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .plan-price {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .plan-desc {
+      font-size: .88rem;
+      color: var(--muted);
+      margin: 12px 0 28px;
+      line-height: 1.55;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      margin-bottom: 32px;
+    }
+
+    .features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .9rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .features li::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border-radius: 50%;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%23F97316' opacity='.15'/%3E%3Cpath d='M4.5 8l2.5 2.5 4.5-5' stroke='%23F97316' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;
+      margin-top: 1px;
+    }
+
+    .features li.muted-item {
+      color: var(--muted);
+    }
+
+    .features li.muted-item::before {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%2394A3B8' opacity='.1'/%3E%3Cpath d='M5 8h6' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+
+    .btn {
+      display: block;
+      text-align: center;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: opacity .2s, background .2s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover { border-color: #4a5060; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-d); }
+
+    /* ── FAQ ── */
+    .faq {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .faq h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+    }
+
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: .95rem;
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p { font-size: .82rem; color: var(--muted); }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: .82rem;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .plans { grid-template-columns: 1fr; max-width: 480px; }
+      .card.featured { order: -1; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .hero { padding: 48px 20px 36px; }
+      footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 380px) {
+      .nav-links { gap: 10px; }
+      .nav-links a { font-size: .8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Карина Г.</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Обо мне</a></li>
+      <li><a href="landing.html">Услуги</a></li>
+      <li><a href="pricing.html" class="active">Тарифы</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <span class="hero-label">Тарифы</span>
+    <h1>Выбери формат работы</h1>
+    <p>Фиксированные форматы — без сюрпризов в счёте. Если нужно что-то нестандартное — пишите, договоримся.</p>
+  </section>
+
+  <div class="plans">
+
+    <!-- Старт -->
+    <div class="card">
+      <p class="plan-name">Старт</p>
+      <p class="plan-price">50 000 <span>₽/мес</span></p>
+      <p class="plan-desc">Для тех, кто только начинает разбираться в AI и хочет понять, с чего вообще начать.</p>
+      <hr class="divider">
+      <ul class="features">
+        <li>Диагностика процессов компании</li>
+        <li>2 стратегических сессии в месяц</li>
+        <li>Дорожная карта внедрения AI</li>
+        <li>Поддержка в Telegram (в рабочее время)</li>
+        <li class="muted-item">Внедрение и настройка</li>
+        <li class="muted-item">Команда на проект</li>
+        <li class="muted-item">Приоритетный ответ</li>
+      </ul>
+      <a href="mailto:hello@example.com" class="btn btn-outline">Написать</a>
+    </div>
+
+    <!-- Про — выделен -->
+    <div class="card featured">
+      <span class="badge">Популярный</span>
+      <p class="plan-name">Про</p>
+      <p class="plan-price">120 000 <span>₽/мес</span></p>
+      <p class="plan-desc">Полное сопровождение: от стратегии до первых работающих инструментов в команде.</p>
+      <hr class="divider">
+      <ul class="features">
+        <li>Всё из тарифа «Старт»</li>
+        <li>Внедрение и настройка AI-инструментов</li>
+        <li>До 4 встреч в месяц</li>
+        <li>Обучение команды</li>
+        <li>Контроль метрик и корректировка</li>
+        <li>Поддержка 7 дней в неделю</li>
+        <li class="muted-item">Выделенная команда на проект</li>
+      </ul>
+      <a href="mailto:hello@example.com" class="btn btn-primary">Начать</a>
+    </div>
+
+    <!-- Кастом -->
+    <div class="card">
+      <p class="plan-name">Кастом</p>
+      <p class="plan-price">По запросу</p>
+      <p class="plan-desc">Для крупных задач, где нужна выделенная команда и глубокое погружение в бизнес.</p>
+      <hr class="divider">
+      <ul class="features">
+        <li>Всё из тарифа «Про»</li>
+        <li>Выделенная команда под проект</li>
+        <li>Интеграция с IT-инфраструктурой</li>
+        <li>NDA и индивидуальный договор</li>
+        <li>Приоритетный ответ 24/7</li>
+        <li>Квартальные бизнес-ревью</li>
+        <li>Гарантия результата по KPI</li>
+      </ul>
+      <a href="mailto:hello@example.com" class="btn btn-outline">Обсудить</a>
+    </div>
+
+  </div>
+
+  <section class="faq">
+    <h2>Частые вопросы</h2>
+
+    <div class="faq-item">
+      <p class="faq-q">Можно попробовать до старта?</p>
+      <p class="faq-a">Да — первая консультация бесплатная. Разберёмся в задаче и поймём, подходим ли друг другу.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Как происходит оплата?</p>
+      <p class="faq-a">Предоплата за месяц вперёд. Работаем по договору, выставляем счёт.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Что если мои задачи не вписываются в тариф?</p>
+      <p class="faq-a">Пишите — обсудим и соберём формат под вас. Жёсткой привязки к пакетам нет.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">С какими компаниями вы работаете?</p>
+      <p class="faq-a">С малым и средним бизнесом, который хочет встроить AI в операционку — без хайпа и лишних инструментов.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Карина Геннадьевна</p>
+    <a href="mailto:hello@example.com">hello@example.com</a>
+  </footer>
+
+</body>
+</html>

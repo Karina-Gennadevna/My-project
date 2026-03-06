@@ -5,9 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI-операционный директор — управление командой без хаоса</title>
   <meta name="description" content="Собирает ежедневные отчёты, отслеживает KPI и предупреждает о рисках до срыва сроков. Внедрение за 7 дней.">
-  <meta property="og:title" content="AI-операционный директор">
+  <meta property="og:title"       content="AI-операционный директор">
   <meta property="og:description" content="Управленческая отчётность для малых команд. Внедрение за 7 дней.">
-  <meta property="og:type" content="website">
+  <meta property="og:type"        content="website">
+  <meta property="og:image"       content="https://YOUR_DOMAIN/og-landing.png">
+  <meta property="og:url"         content="https://YOUR_DOMAIN/">
+  <link rel="canonical"           href="https://YOUR_DOMAIN/">
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+
+  <!-- NOTE: cdn.tailwindcss.com — development CDN (runtime JIT). Before production
+       replace with a compiled Tailwind CSS file via `npx tailwindcss -o style.css --minify` -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -95,6 +104,14 @@
     /* Table alternating rows */
     .tbl-row-a { background: #0B0F1A; }
     .tbl-row-b { background: #0D1220; }
+
+    /* Accessibility: respect system motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -830,29 +847,29 @@
             <div>
               <label class="block text-slate-400 text-sm mb-1.5" for="fieldName">Имя</label>
               <input type="text" id="fieldName" name="name"
-                     placeholder="Как вас зовут?" class="field" required>
-              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Введите имя</p>
+                     placeholder="Как вас зовут?" class="field" required aria-describedby="errName">
+              <p id="errName" class="err-msg text-red-400 text-xs mt-1.5 hidden" role="alert">Введите имя</p>
             </div>
 
             <!-- Email -->
             <div>
               <label class="block text-slate-400 text-sm mb-1.5" for="fieldEmail">Email</label>
               <input type="email" id="fieldEmail" name="email"
-                     placeholder="your@company.com" class="field" required>
-              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Введите корректный email</p>
+                     placeholder="your@company.com" class="field" required aria-describedby="errEmail">
+              <p id="errEmail" class="err-msg text-red-400 text-xs mt-1.5 hidden" role="alert">Введите корректный email</p>
             </div>
 
             <!-- Team size -->
             <div>
               <label class="block text-slate-400 text-sm mb-1.5" for="fieldTeam">Размер команды</label>
-              <select id="fieldTeam" name="teamSize" class="field" required>
+              <select id="fieldTeam" name="teamSize" class="field" required aria-describedby="errTeam">
                 <option value="" disabled selected>Выберите...</option>
                 <option value="3-5">3–5 человек</option>
                 <option value="6-10">6–10 человек</option>
                 <option value="11-15">11–15 человек</option>
                 <option value="15+">15+ человек</option>
               </select>
-              <p class="err-msg text-red-400 text-xs mt-1.5 hidden">Выберите размер команды</p>
+              <p id="errTeam" class="err-msg text-red-400 text-xs mt-1.5 hidden" role="alert">Выберите размер команды</p>
             </div>
 
           </div>
@@ -899,8 +916,9 @@
         <a href="#how"        class="hover:text-slate-300 transition-colors">Как работает</a>
         <a href="#difference" class="hover:text-slate-300 transition-colors">Отличия</a>
         <a href="#form"       class="hover:text-slate-300 transition-colors">Заявка</a>
-        <a href="#"           class="hover:text-slate-300 transition-colors">Политика</a>
-        <a href="#"           class="hover:text-slate-300 transition-colors">Оферта</a>
+        <!-- TODO: добавьте реальные страницы Политики и Оферты перед публикацией -->
+        <span class="text-slate-600">Политика</span>
+        <span class="text-slate-600">Оферта</span>
       </div>
     </div>
     <div class="mt-8 text-slate-600 text-xs">© 2026 AI-операционный директор</div>
@@ -913,92 +931,96 @@
 (function () {
   const form         = document.getElementById('leadForm');
   const successState = document.getElementById('successState');
+  const submitBtn    = form.querySelector('[type="submit"]');
 
   const fieldName  = document.getElementById('fieldName');
   const fieldEmail = document.getElementById('fieldEmail');
   const fieldTeam  = document.getElementById('fieldTeam');
 
-  const fields = [fieldName, fieldEmail, fieldTeam];
+  const errName  = document.getElementById('errName');
+  const errEmail = document.getElementById('errEmail');
+  const errTeam  = document.getElementById('errTeam');
 
   // Clear error on change
-  fields.forEach(el => {
-    el.addEventListener('input',  () => clearErr(el));
-    el.addEventListener('change', () => clearErr(el));
-  });
+  fieldName.addEventListener('input',  () => clearErr(fieldName,  errName));
+  fieldEmail.addEventListener('input', () => clearErr(fieldEmail, errEmail));
+  fieldTeam.addEventListener('change', () => clearErr(fieldTeam,  errTeam));
 
   function isValidEmail(v) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   }
 
-  function setErr(el) {
+  function setErr(el, msg) {
     el.classList.add('invalid');
-    el.nextElementSibling.classList.remove('hidden');
+    el.setAttribute('aria-invalid', 'true');
+    msg.classList.remove('hidden');
   }
 
-  function clearErr(el) {
+  function clearErr(el, msg) {
     el.classList.remove('invalid');
-    el.nextElementSibling.classList.add('hidden');
+    el.removeAttribute('aria-invalid');
+    msg.classList.add('hidden');
   }
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     let ok = true;
-
-    if (!fieldName.value.trim())         { setErr(fieldName);  ok = false; }
-    if (!isValidEmail(fieldEmail.value)) { setErr(fieldEmail); ok = false; }
-    if (!fieldTeam.value)                { setErr(fieldTeam);  ok = false; }
-
+    if (!fieldName.value.trim())         { setErr(fieldName,  errName);  ok = false; }
+    if (!isValidEmail(fieldEmail.value)) { setErr(fieldEmail, errEmail); ok = false; }
+    if (!fieldTeam.value)                { setErr(fieldTeam,  errTeam);  ok = false; }
     if (!ok) return;
 
-    const payload = {
-      name:      fieldName.value.trim(),
-      email:     fieldEmail.value.trim(),
-      teamSize:  fieldTeam.value,
-      source:    'landing',
-      timestamp: new Date().toISOString(),
-    };
+    // Prevent double-submit
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправляем…';
 
-    console.log('[Lead]', payload);
+    const payload = {
+      name:     fieldName.value.trim(),
+      email:    fieldEmail.value.trim(),
+      teamSize: fieldTeam.value,
+      source:   'landing',
+    };
 
     /*
      * ── Подключение реального вебхука ─────────────────────────────────
-     *
-     * Вариант 1: n8n / Make / Zapier
-     *   Замените '/api/lead' на URL вашего вебхука:
+     * Вариант 1: n8n / Make / Zapier — замените URL:
      *   const WEBHOOK = 'https://your-n8n.com/webhook/lead';
      *
-     * Вариант 2: Telegram-бот
-     *   Отправьте fetch на Telegram Bot API:
-     *   fetch(`https://api.telegram.org/bot<TOKEN>/sendMessage`, {
-     *     method: 'POST',
-     *     headers: { 'Content-Type': 'application/json' },
-     *     body: JSON.stringify({ chat_id: '<CHAT_ID>', text: JSON.stringify(payload) })
-     *   });
+     * Вариант 2: Telegram-бот (токен только на сервере, не здесь):
+     *   POST https://api.telegram.org/bot<SERVER_TOKEN>/sendMessage
      *
-     * Вариант 3: Next.js API route (если перейдёте на Next.js)
-     *   Создайте app/api/lead/route.ts:
-     *   export async function POST(req) {
-     *     const data = await req.json();
-     *     // обработка...
-     *     return Response.json({ ok: true });
-     *   }
+     * Вариант 3: Next.js app/api/lead/route.ts
      * ──────────────────────────────────────────────────────────────────
      */
+    const WEBHOOK = '/api/lead'; // ← замените на реальный URL вебхука
+
     try {
-      await fetch('/api/lead', {
+      const res = await fetch(WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-    } catch {
-      // В статичном/локальном режиме запрос упадёт — это нормально.
-      // Данные уже залогированы в консоль выше.
-    }
 
-    // Show success
-    form.style.display = 'none';
-    successState.classList.remove('hidden');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      // Show success only on confirmed delivery
+      form.style.display = 'none';
+      successState.classList.remove('hidden');
+
+    } catch {
+      // Restore button so user can retry; show inline error
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Получить внедрение';
+
+      const existing = form.querySelector('.submit-error');
+      if (!existing) {
+        const errDiv = document.createElement('p');
+        errDiv.className = 'submit-error text-red-400 text-sm mt-3 text-center';
+        errDiv.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз или напишите в Telegram.';
+        submitBtn.after(errDiv);
+      }
+    }
   });
 })();
 </script>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-A-Q-S™ — Диагностика</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #121212;
+      --surface:  #1F1F1F;
+      --elevated: #252525;
+      --border:   #2A2A2A;
+      --border2:  #383838;
+      --text:     #E6E6E6;
+      --text2:    #B8B8B8;
+      --muted:    #707070;
+      --accent:   #1F5F5B;
+      --accent-l: #2A7A75;
+      --accent-d: rgba(31,95,91,.1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(18,18,18,.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent-l);
+    }
+
+    .save-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      color: var(--muted);
+    }
+
+    /* Main */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Wizard header */
+    .wizard-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .step-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .step-counter {
+      text-align: right;
+    }
+
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: 36px;
+    }
+
+    .progress-bars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .prog-seg {
+      height: 3px;
+      flex: 1;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .prog-seg.done { background: var(--accent); opacity: .6; }
+    .prog-seg.done:hover { opacity: 1; }
+    .prog-seg.active { background: var(--accent); opacity: 1; }
+    .prog-seg.todo { background: var(--border2); cursor: default; }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .prog-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      transition: color .2s;
+    }
+
+    /* Questions */
+    .questions { display: flex; flex-direction: column; gap: 12px; }
+
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color .2s;
+    }
+
+    .q-card.answered {
+      border-color: rgba(31,95,91,.3);
+    }
+
+    .q-criterion {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .q-risk-badge {
+      font-size: .55rem;
+      color: var(--border2);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: .06em;
+      font-weight: 400;
+    }
+
+    .q-text {
+      font-size: .9rem;
+      color: var(--text);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    /* Scale options */
+    .scale-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .scale-opt {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .15s;
+    }
+
+    .scale-opt:hover {
+      border-color: var(--border2);
+    }
+
+    .scale-opt.selected {
+      background: var(--accent-d);
+      border-color: rgba(31,95,91,.4);
+    }
+
+    .scale-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--accent-l);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .scale-label {
+      font-size: .75rem;
+      color: var(--text2);
+    }
+
+    .scale-opt.selected .scale-label { color: var(--text); }
+
+    /* Choice / boolean */
+    .choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice-opt {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      text-align: left;
+      font-size: .85rem;
+      color: var(--text2);
+      transition: all .15s;
+      width: 100%;
+    }
+
+    .choice-opt:hover { border-color: var(--border2); color: var(--text); }
+
+    .choice-opt.selected {
+      background: var(--accent-d);
+      border-color: rgba(31,95,91,.4);
+      color: var(--text);
+    }
+
+    /* Nav */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-back {
+      padding: 11px 20px;
+      font-size: .85rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text2);
+      background: none;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-back:hover { border-color: var(--border2); color: var(--text); }
+    .btn-back:disabled { opacity: .3; cursor: not-allowed; }
+
+    .q-count {
+      font-size: .78rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .btn-next {
+      padding: 11px 24px;
+      font-size: .85rem;
+      font-weight: 500;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-next:hover { background: var(--accent-l); }
+    .btn-next:disabled { opacity: .35; cursor: not-allowed; }
+
+    @media (max-width: 540px) {
+      .scale-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 400px) {
+      .scale-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <span class="logo">K-A-Q-S™</span>
+      <span class="save-status" id="save-status">Сохранено</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Wizard header -->
+    <div class="wizard-head">
+      <div>
+        <p class="step-label" id="step-label">// Диагностика</p>
+        <h1 class="step-title" id="step-title">1. Knowledge Architecture</h1>
+      </div>
+      <div class="step-counter">
+        <span class="step-num" id="step-num">Шаг 1 из 4</span>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bars" id="progress-bars"></div>
+      <div class="progress-labels" id="progress-labels"></div>
+    </div>
+
+    <!-- Questions container -->
+    <div class="questions" id="questions"></div>
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+      <button class="btn-back" id="btn-back" onclick="goBack()" disabled>Назад</button>
+      <span class="q-count" id="q-count"></span>
+      <button class="btn-next" id="btn-next" onclick="goNext()" disabled>Далее</button>
+    </div>
+  </main>
+
+  <script>
+    const MODULES = [
+      { key: 'K', title: '1. Knowledge Architecture' },
+      { key: 'A', title: '2. AI System Design' },
+      { key: 'Q', title: '3. Quality & Risk Control' },
+      { key: 'S', title: '4. Scalability Framework' },
+    ]
+
+    const SCALE_OPTS = [
+      { v: 0, label: 'Нет совсем' },
+      { v: 1, label: 'Есть кое-что, но без системы' },
+      { v: 2, label: 'Есть, но большие пробелы' },
+      { v: 3, label: 'В основном работает' },
+      { v: 4, label: 'Работает системно' },
+      { v: 5, label: 'Отлично — задокументировано и развивается' },
+    ]
+
+    const QUESTIONS = {
+      K: [
+        { id:'K1', criterion:'Документация процессов',
+          text:'Записаны ли ваши ключевые рабочие процессы? Есть ли инструкции, регламенты, описания — как что делается?',
+          hint:'0 — ничего не записано, всё в головах. 5 — все процессы описаны, актуальны, обновляются.',
+          type:'scale', scoring:true, risk:true },
+        { id:'K2', criterion:'Роли и ответственности',
+          text:'Каждый в команде знает, за что он отвечает? Нет ли ситуаций «я думал, это делает он»?',
+          hint:'0 — роли размыты, постоянные конфликты ответственности. 5 — у каждого чёткая зона без пересечений.',
+          type:'scale', scoring:true, risk:true },
+        { id:'K3', criterion:'Единый источник данных',
+          text:'Есть ли одно главное место, где хранятся актуальные данные компании? Или информация разбросана по чатам, таблицам и головам людей?',
+          hint:'0 — данные везде и нигде, постоянные противоречия. 5 — есть одна «главная» система, все берут данные оттуда.',
+          type:'scale', scoring:true, risk:true },
+        { id:'K4', criterion:'Карта зависимостей',
+          text:'Если один инструмент или сотрудник выбывает — понятно ли, что ещё перестанет работать?',
+          hint:'0 — связи непонятны, каждый сбой — сюрприз. 5 — есть карта зависимостей, последствия сбоев известны.',
+          type:'scale', scoring:true },
+        { id:'K5', criterion:'Передача знаний',
+          text:'Если ключевой сотрудник уйдёт завтра — насколько быстро его заменят? Есть ли онбординг и база знаний?',
+          hint:'0 — всё держится в голове одного человека. 5 — есть онбординг, база знаний, замена происходит без потрясений.',
+          type:'scale', scoring:true, risk:true },
+        { id:'K6', criterion:'Операционная карта',
+          text:'Есть ли таблица или схема: кто что делает, в каком инструменте и на каком этапе?',
+          hint:'0 — нет такой схемы. 5 — есть актуальная операционная карта, все ею пользуются.',
+          type:'scale', scoring:true },
+        { id:'K7', criterion:'Единое хранилище',
+          text:'Есть ли одно место, куда команда складывает документы и инструкции — например, Notion, Google Drive или внутренняя вики?',
+          type:'choice', scoring:false, risk:true,
+          options:[
+            {v:5, label:'Да, есть и все активно используют'},
+            {v:2, label:'Есть, но пользуются непоследовательно'},
+            {v:0, label:'Нет, документы везде и нигде'},
+          ]
+        },
+        { id:'K8', criterion:'Ревью процессов',
+          text:'Как часто вы садитесь и пересматриваете: а актуальны ли наши процессы?',
+          type:'choice', scoring:false,
+          options:[
+            {v:0, label:'Никогда — процессы не менялись годами'},
+            {v:1, label:'Один раз за всё время'},
+            {v:3, label:'Иногда — раз в год или реже'},
+            {v:4, label:'Регулярно — раз в квартал и чаще'},
+          ]
+        },
+      ],
+      A: [
+        { id:'A1', criterion:'Стратегия применения AI',
+          text:'Есть ли у вас список задач, где вы применяете или планируете применять AI? Или инструменты появляются стихийно — увидели, попробовали?',
+          hint:'Если AI пока не используете — выберите 0. Это нормально и тоже является результатом оценки.',
+          type:'scale', scoring:true, risk:true },
+        { id:'A2', criterion:'AI в рабочих процессах',
+          text:'Ваши AI-инструменты встроены в рабочий процесс — или каждый пользуется ими отдельно, сам по себе?',
+          hint:'Если AI не используете — выберите 0.',
+          type:'scale', scoring:true, risk:true },
+        { id:'A3', criterion:'Связность инструментов',
+          text:'Ваши AI-инструменты и другие программы обмениваются данными автоматически — или сотрудники переносят данные вручную?',
+          hint:'Если AI не используете — выберите 0.',
+          type:'scale', scoring:true },
+        { id:'A4', criterion:'Контроль AI-процессов',
+          text:'Вы узнаёте об ошибке в AI-инструменте сразу — или случайно, уже после того как что-то пошло не так?',
+          hint:'Если AI не используете — выберите 0.',
+          type:'scale', scoring:true, risk:true },
+        { id:'A5', criterion:'Зависимость от AI-сервисов',
+          text:'Что будет, если один из ваших AI-сервисов закроется или станет в 5 раз дороже? Есть ли запасной вариант?',
+          hint:'Если AI не используете — выберите 0.',
+          type:'scale', scoring:true, risk:true },
+        { id:'A6', criterion:'Правила работы с AI',
+          text:'Есть ли у вас правила: кто может использовать AI-инструменты, какие данные туда загружать, кто отвечает за результат?',
+          hint:'Если AI не используете — выберите 0.',
+          type:'scale', scoring:true },
+        { id:'A7', criterion:'Сколько AI-инструментов',
+          text:'Сколько AI-инструментов и сервисов сейчас используется в вашем бизнесе?',
+          type:'choice', scoring:false,
+          options:[
+            {v:2, label:'Не используем AI — пока не начали'},
+            {v:5, label:'1–3 инструмента'},
+            {v:4, label:'4–10 инструментов'},
+            {v:2, label:'Более 10 — много разных, без системы'},
+          ]
+        },
+        { id:'A8', criterion:'Кто отвечает за AI',
+          text:'Есть ли в команде кто-то, кто отвечает за то, как устроен AI в бизнесе в целом — не просто пользуется, а думает о системе?',
+          type:'choice', scoring:false, risk:true,
+          options:[
+            {v:5, label:'Да, есть выделенный человек или роль'},
+            {v:2, label:'Кто-то занимается этим в числе прочих задач'},
+            {v:1, label:'Пока не используем AI'},
+            {v:0, label:'Нет — каждый действует сам по себе'},
+          ]
+        },
+      ],
+      Q: [
+        { id:'Q1', criterion:'Обнаружение ошибок',
+          text:'Когда AI-инструмент или автоматизация работает неправильно — как вы об этом узнаёте?',
+          hint:'0 — узнаём случайно или не узнаём вовсе. 5 — сразу приходит уведомление, есть план действий. Если AI не используете — ставьте 0.',
+          type:'scale', scoring:true, risk:true },
+        { id:'Q2', criterion:'Проверка AI-процессов',
+          text:'Проверяете ли вы, что AI и автоматизация работают правильно — особенно когда что-то меняется?',
+          hint:'0 — не проверяем никогда. 5 — регулярные проверки, тесты после каждого изменения. Если AI не используете — ставьте 0.',
+          type:'scale', scoring:true, risk:true },
+        { id:'Q3', criterion:'Безопасность данных в AI',
+          text:'Контролируете ли вы, какие данные компании и клиентов попадают в AI-инструменты? Есть ли правила, что можно передавать, а что нельзя?',
+          hint:'0 — нет контроля, данные передаются без ограничений. 5 — чёткие правила, контроль доступов, проверки.',
+          type:'scale', scoring:true, risk:true },
+        { id:'Q4', criterion:'Проверка после изменений',
+          text:'Когда обновляется AI-инструмент или меняются его настройки — проверяете ли, что всё остальное по-прежнему работает как надо?',
+          hint:'0 — не проверяем, узнаём о проблемах случайно. 5 — есть чеклист проверки после каждого изменения. Если AI нет — ставьте 0.',
+          type:'scale', scoring:true },
+        { id:'Q5', criterion:'Критичные точки отказа',
+          text:'Знаете ли вы, что в вашем бизнесе «упадёт» первым при сбое? Есть ли запасные варианты для самых важных процессов?',
+          hint:'0 — не знаем, каждый сбой — сюрприз. 5 — все критичные точки известны, для каждой есть план Б.',
+          type:'scale', scoring:true, risk:true },
+        { id:'Q6', criterion:'Реакция на сбои',
+          text:'Когда что-то сломалось — есть ли чёткий сценарий: кто что делает, за какое время должен исправить?',
+          hint:'0 — каждый раз хаос и «разбирательства кто виноват». 5 — есть регламент, роли расписаны, сроки фиксированы.',
+          type:'scale', scoring:true },
+        { id:'Q7', criterion:'Сбои за последние полгода',
+          text:'Был ли за последние 6 месяцев сбой, который остановил или серьёзно замедлил работу бизнеса?',
+          type:'choice', scoring:false, risk:true,
+          options:[
+            {v:0, label:'Да, критический — бизнес останавливался'},
+            {v:1, label:'Да, несколько серьёзных инцидентов'},
+            {v:3, label:'Да, но всё было незначительным'},
+            {v:5, label:'Нет, всё работало стабильно'},
+          ]
+        },
+        { id:'Q8', criterion:'План на случай сбоя',
+          text:'Если завтра упадёт главный инструмент или сервер — есть ли план, как восстановить работу и за сколько часов?',
+          type:'choice', scoring:false, risk:true,
+          options:[
+            {v:5, label:'Да, план есть и мы его проверяли'},
+            {v:2, label:'Что-то есть, но давно не обновляли'},
+            {v:0, label:'Нет, будем разбираться по ходу'},
+          ]
+        },
+      ],
+      S: [
+        { id:'S1', criterion:'План роста',
+          text:'Есть ли у вас план: как будет работать бизнес, когда вырастете в 2–3 раза? Что тогда нужно будет перестраивать?',
+          hint:'0 — не думали об этом. 5 — есть конкретный план с точками масштабирования на год вперёд.',
+          type:'scale', scoring:true, risk:true },
+        { id:'S2', criterion:'Гибкость системы',
+          text:'Можно ли поменять один инструмент или процесс, не ломая всё остальное — или у вас «всё держится на скотче и всё связано»?',
+          hint:'0 — любое изменение ломает что-то ещё. 5 — инструменты и процессы независимы, можно менять по одному.',
+          type:'scale', scoring:true, risk:true },
+        { id:'S3', criterion:'Готовность к росту',
+          text:'Если завтра клиентов или заказов станет втрое больше — ваши инструменты и команда справятся без срочной переделки?',
+          hint:'0 — уже сейчас всё перегружено. 5 — система спроектирована с запасом, масштабирование — плановый процесс.',
+          type:'scale', scoring:true },
+        { id:'S4', criterion:'Ресурсный план',
+          text:'Знаете ли вы, сколько людей, денег и инструментов потребуется, если бизнес вырастет в 2–3 раза?',
+          hint:'0 — не считали. 5 — есть конкретные расчёты и план найма/развития.',
+          type:'scale', scoring:true },
+        { id:'S5', criterion:'Мониторинг стабильности',
+          text:'Есть ли цифры, которые показывают «всё работает нормально»? Отслеживаете ли вы стабильность ключевых процессов и инструментов?',
+          hint:'0 — нет никаких показателей, узнаём о проблемах от клиентов. 5 — есть дашборд, есть пороговые значения, есть алерты.',
+          type:'scale', scoring:true, risk:true },
+        { id:'S6', criterion:'Автоматизация при росте',
+          text:'Если объём работы удвоится — нужно нанимать вдвое больше людей, или процессы справятся сами?',
+          hint:'0 — всё ручное, рост = пропорциональный рост команды. 5 — большинство объёмных задач автоматизированы.',
+          type:'scale', scoring:true },
+        { id:'S7', criterion:'Сбои при росте',
+          text:'Как часто что-то ломается или тормозит, когда нагрузка или объём работы увеличиваются?',
+          type:'choice', scoring:false, risk:true,
+          options:[
+            {v:0, label:'Постоянно — любой рост = проблемы'},
+            {v:1, label:'Часто — раз в несколько недель'},
+            {v:3, label:'Редко — единичные случаи'},
+            {v:5, label:'Никогда или почти никогда'},
+          ]
+        },
+        { id:'S8', criterion:'Документация роста',
+          text:'Записано ли, что нужно будет расширять при росте бизнеса — и как именно это делается?',
+          type:'choice', scoring:false,
+          options:[
+            {v:5, label:'Да, всё расписано подробно'},
+            {v:2, label:'Частично — кое-что есть'},
+            {v:0, label:'Нет, будем разбираться по ходу'},
+          ]
+        },
+      ],
+    }
+
+    let currentStep = 0
+    const answers = {}
+
+    function renderProgress() {
+      const bars = document.getElementById('progress-bars')
+      const labels = document.getElementById('progress-labels')
+      bars.innerHTML = ''
+      labels.innerHTML = ''
+      MODULES.forEach((m, i) => {
+        const seg = document.createElement('div')
+        seg.className = 'prog-seg ' + (i < currentStep ? 'done' : i === currentStep ? 'active' : 'todo')
+        if (i < currentStep) seg.onclick = () => { currentStep = i; render() }
+        bars.appendChild(seg)
+
+        const lbl = document.createElement('span')
+        lbl.className = 'prog-lbl'
+        lbl.textContent = m.key
+        lbl.style.color = i === currentStep ? '#2A7A75' : i < currentStep ? '#1F5F5B' : '#383838'
+        labels.appendChild(lbl)
+      })
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions')
+      container.innerHTML = ''
+      const qs = QUESTIONS[MODULES[currentStep].key]
+
+      qs.forEach(q => {
+        const card = document.createElement('div')
+        card.className = 'q-card' + (answers[q.id] !== undefined ? ' answered' : '')
+        card.id = 'card-' + q.id
+
+        const criterion = document.createElement('div')
+        criterion.className = 'q-criterion'
+        criterion.innerHTML = q.criterion
+        if (q.risk) criterion.innerHTML += '<span class="q-risk-badge">риск-индикатор</span>'
+        card.appendChild(criterion)
+
+        const text = document.createElement('p')
+        text.className = 'q-text'
+        text.textContent = q.text
+        card.appendChild(text)
+
+        if (q.type === 'scale') {
+          const grid = document.createElement('div')
+          grid.className = 'scale-grid'
+          SCALE_OPTS.forEach(opt => {
+            const btn = document.createElement('button')
+            btn.className = 'scale-opt' + (answers[q.id] === opt.v ? ' selected' : '')
+            btn.innerHTML = `<span class="scale-num">${opt.v}</span><span class="scale-label">${opt.label}</span>`
+            btn.onclick = () => selectAnswer(q.id, opt.v)
+            grid.appendChild(btn)
+          })
+          card.appendChild(grid)
+        } else {
+          const list = document.createElement('div')
+          list.className = 'choice-list'
+          q.options.forEach(opt => {
+            const btn = document.createElement('button')
+            btn.className = 'choice-opt' + (answers[q.id] === opt.v ? ' selected' : '')
+            btn.textContent = opt.label
+            btn.onclick = () => selectAnswer(q.id, opt.v)
+            list.appendChild(btn)
+          })
+          card.appendChild(list)
+        }
+
+        container.appendChild(card)
+      })
+    }
+
+    function selectAnswer(qId, value) {
+      answers[qId] = value
+
+      // Re-render options
+      const card = document.getElementById('card-' + qId)
+      card.classList.add('answered')
+
+      card.querySelectorAll('.scale-opt, .choice-opt').forEach(btn => btn.classList.remove('selected'))
+
+      const qs = QUESTIONS[MODULES[currentStep].key]
+      const q = qs.find(x => x.id === qId)
+
+      if (q.type === 'scale') {
+        const idx = value
+        card.querySelectorAll('.scale-opt')[idx].classList.add('selected')
+      } else {
+        const optIdx = q.options.findIndex(o => o.v === value)
+        card.querySelectorAll('.choice-opt')[optIdx].classList.add('selected')
+      }
+
+      updateNav()
+      autosave()
+    }
+
+    function updateNav() {
+      const qs = QUESTIONS[MODULES[currentStep].key]
+      const scoringQs = qs.filter(q => q.scoring)
+      const answeredScoring = scoringQs.filter(q => answers[q.id] !== undefined).length
+      const total = qs.length
+      const answered = qs.filter(q => answers[q.id] !== undefined).length
+
+      document.getElementById('q-count').textContent = answered + ' / ' + total + ' вопросов'
+      document.getElementById('btn-next').disabled = answeredScoring < scoringQs.length
+      document.getElementById('btn-back').disabled = currentStep === 0
+      document.getElementById('btn-next').textContent = currentStep === 3 ? 'Завершить и получить отчёт' : 'Далее'
+    }
+
+    function autosave() {
+      const el = document.getElementById('save-status')
+      el.textContent = 'Сохраняется...'
+      setTimeout(() => { el.textContent = 'Сохранено' }, 600)
+    }
+
+    function goNext() {
+      if (currentStep < 3) {
+        currentStep++
+        render()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        // Go to results
+        window.location.href = 'kaqs-results.html'
+      }
+    }
+
+    function goBack() {
+      if (currentStep > 0) {
+        currentStep--
+        render()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+
+    function render() {
+      const m = MODULES[currentStep]
+      document.getElementById('step-label').textContent = '// Диагностика'
+      document.getElementById('step-title').textContent = m.title
+      document.getElementById('step-num').textContent = 'Шаг ' + (currentStep + 1) + ' из 4'
+      renderProgress()
+      renderQuestions()
+      updateNav()
+    }
+
+    render()
+  </script>
+
+</body>
+</html>

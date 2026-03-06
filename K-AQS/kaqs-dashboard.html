@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-A-Q-S™ — Личный кабинет</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #121212;
+      --surface:  #1F1F1F;
+      --elevated: #252525;
+      --border:   #2A2A2A;
+      --border2:  #383838;
+      --text:     #E6E6E6;
+      --text2:    #B8B8B8;
+      --muted:    #707070;
+      --accent:   #1F5F5B;
+      --accent-l: #2A7A75;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(18,18,18,.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent-l);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-email {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    .btn-text {
+      font-size: .78rem;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .btn-text:hover { color: var(--text2); }
+
+    /* Main */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    /* Page title */
+    .page-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+
+    /* Status card — in progress */
+    .status-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .status-meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .status-title {
+      font-size: .95rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .status-sub {
+      font-size: .82rem;
+      color: var(--text2);
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      padding: 5px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-draft {
+      color: var(--accent-l);
+      border: 1px solid rgba(31,95,91,.3);
+    }
+
+    /* Progress */
+    .progress-wrap { margin-bottom: 24px; }
+
+    .progress-bars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 99px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 24px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 500;
+      font-size: .85rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--accent-l); }
+
+    /* History */
+    .history-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+      transition: border-color .2s;
+    }
+    .history-item:hover { border-color: var(--border2); }
+
+    .history-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .hist-date {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .hist-level {
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .hist-score {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .hist-score-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .hist-score-max {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-outline {
+      padding: 8px 16px;
+      font-size: .75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text2);
+      background: none;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--border2); color: var(--text); }
+
+    .btn-outline-accent {
+      padding: 8px 16px;
+      font-size: .75rem;
+      border: 1px solid rgba(31,95,91,.3);
+      border-radius: 8px;
+      color: var(--accent-l);
+      background: none;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-outline-accent:hover { border-color: var(--accent-l); }
+
+    @media (max-width: 600px) {
+      .history-left { gap: 16px; }
+      .user-email { display: none; }
+      .history-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <span class="logo">K-A-Q-S™</span>
+      <div class="header-right">
+        <span class="user-email">user@company.com</span>
+        <button class="btn-text" onclick="window.location.href='kaqs-landing.html'">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <p class="page-label">// Личный кабинет</p>
+    <h1 class="page-title">Диагностика</h1>
+
+    <!-- Active draft card -->
+    <div class="card">
+      <div class="status-header">
+        <div>
+          <p class="status-meta-label">Статус</p>
+          <p class="status-title">В процессе</p>
+          <p class="status-sub">Шаг 2 из 4 — A&nbsp;—&nbsp;AI System Design</p>
+        </div>
+        <span class="badge badge-draft">ЧЕРНОВИК</span>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap">
+        <div class="progress-bars">
+          <div class="progress-bar" style="background:#1F5F5B;"></div>
+          <div class="progress-bar" style="background:#1F5F5B;opacity:.5;"></div>
+          <div class="progress-bar" style="background:#2A2A2A;"></div>
+          <div class="progress-bar" style="background:#2A2A2A;"></div>
+        </div>
+        <div class="progress-labels">
+          <span class="progress-lbl" style="color:#1F5F5B;">K</span>
+          <span class="progress-lbl" style="color:#2A7A75;">A</span>
+          <span class="progress-lbl">Q</span>
+          <span class="progress-lbl">S</span>
+        </div>
+      </div>
+
+      <a href="kaqs-wizard.html" class="btn-primary">Продолжить</a>
+    </div>
+
+    <!-- Completed history -->
+    <p class="history-label">// История</p>
+
+    <div class="history-item">
+      <div class="history-left">
+        <div>
+          <p class="hist-date">14 февраля 2025</p>
+          <p class="hist-level">Управляемая</p>
+        </div>
+        <div class="hist-score">
+          <span class="hist-score-num">67</span>
+          <span class="hist-score-max">/120</span>
+        </div>
+      </div>
+      <div class="history-actions">
+        <a href="kaqs-results.html" class="btn-outline">Результаты</a>
+        <a href="kaqs-results.html" class="btn-outline-accent">Отчёт</a>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>
