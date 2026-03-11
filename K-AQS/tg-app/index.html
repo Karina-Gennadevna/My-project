@@ -261,6 +261,17 @@
     .loss-lock-icon  { font-size: 18px; line-height: 1; }
     .loss-lock-text  { font-size: 11px; font-weight: 600; color: var(--text2); text-align: center; }
 
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(12px);
+      background: rgba(30,36,46,0.97); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text); font-size: 13px; font-weight: 500;
+      padding: 10px 20px; border-radius: 24px; white-space: nowrap;
+      opacity: 0; transition: opacity 220ms ease, transform 220ms ease;
+      pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     /* ── PAYWALL ── */
     #screen-paywall { overflow-y: auto; -webkit-overflow-scrolling: touch; display: block; }
     .pw-header { background: var(--surface); padding: 28px 20px 20px; border-bottom: 1px solid var(--sep); text-align: center; }
@@ -413,6 +424,7 @@
 
 <body style="background:#0B0F14;color:rgba(255,255,255,0.92)">
 <div id="app">
+  <div id="toast" class="toast"></div>
 
   <!-- WELCOME -->
   <div id="screen-welcome" class="screen active">
@@ -1164,7 +1176,7 @@
         </div>
       </div>
       <div class="pw-cta fade-up" style="animation-delay:.14s">
-        <button class="pw-btn" onclick="PAYMENT_URL ? tg.openLink(PAYMENT_URL) : showReport()">Получить полный отчёт — 7 900 ₽</button>
+        <button class="pw-btn" onclick="PAYMENT_URL ? tg.openLink(PAYMENT_URL) : showToast('Оплата скоро будет доступна')">Получить полный отчёт — 7 900 ₽</button>
         <div class="pw-trust">
           <div class="pw-trust-item"><span>📄</span> PDF отчёт</div>
           <div class="pw-trust-item"><span>🗺️</span> Карта рисков</div>
@@ -1292,6 +1304,15 @@
   /* ── SHARE FUNCTIONS ── */
   const APP_URL     = 'https://mini-app-sandy-eight.vercel.app/';
   const PAYMENT_URL = ''; // ← вставить ссылку ЮКассы / Prodamus когда будет готова
+
+  let _toastTimer = null;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  }
 
   function buildShareText(index) {
     return `Мой индекс управляемости бизнеса — ${index} из 100.\nПроверь систему управления своей компании за 5 минут.`;
