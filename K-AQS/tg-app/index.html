@@ -1164,7 +1164,7 @@
         </div>
       </div>
       <div class="pw-cta fade-up" style="animation-delay:.14s">
-        <button class="pw-btn" onclick="tg.openLink(PAYMENT_URL)">Получить полный отчёт — 7 900 ₽</button>
+        <button class="pw-btn" onclick="PAYMENT_URL ? tg.openLink(PAYMENT_URL) : showReport()">Получить полный отчёт — 7 900 ₽</button>
         <div class="pw-trust">
           <div class="pw-trust-item"><span>📄</span> PDF отчёт</div>
           <div class="pw-trust-item"><span>🗺️</span> Карта рисков</div>
@@ -1291,7 +1291,7 @@
 
   /* ── SHARE FUNCTIONS ── */
   const APP_URL     = 'https://mini-app-sandy-eight.vercel.app/';
-  const PAYMENT_URL = 'https://your-payment-link-here'; // ← заменить на ссылку ЮКассы / Prodamus
+  const PAYMENT_URL = ''; // ← вставить ссылку ЮКассы / Prodamus когда будет готова
 
   function buildShareText(index) {
     return `Мой индекс управляемости бизнеса — ${index} из 100.\nПроверь систему управления своей компании за 5 минут.`;
