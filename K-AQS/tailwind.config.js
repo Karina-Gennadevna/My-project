@@ -1,22 +1,39 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './hooks/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        'k-bg': '#0B0F14',
-        'k-surface': '#111827',
-        'k-surface2': '#16213a',
+        base:     '#080A0C',
+        surface:  '#0F1215',
+        elevated: '#161B20',
+        overlay:  '#1C2229',
+        accent: {
+          DEFAULT: '#F97316',
+          hover:   '#EA6C0A',
+        },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
-      maxWidth: {
-        '8xl': '88rem',
+      keyframes: {
+        'fade-up': {
+          '0%':   { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'draw-polygon': {
+          '0%':   { opacity: '0', transform: 'scale(0.2)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'fade-up':      'fade-up 0.6s cubic-bezier(0.16,1,0.3,1) forwards',
+        'draw-polygon': 'draw-polygon 0.9s cubic-bezier(0.16,1,0.3,1) forwards',
       },
     },
   },
