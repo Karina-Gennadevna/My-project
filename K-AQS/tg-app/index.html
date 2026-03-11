@@ -592,6 +592,36 @@
     { label: 'Нет',                       color: '#FF3B30', score: 1 },
   ];
 
+  // Переопределения ответов для конкретных вопросов (индекс = номер вопроса 0–19)
+  const Q_ANSWERS = {
+    0: [
+      { label: 'Есть регулярные отчёты — смотрю каждую неделю',  color: '#34C759', score: 4 },
+      { label: 'Считаю иногда, системы нет',                      color: '#FFCC00', score: 3 },
+      { label: 'Примерно понимаю, точных цифр нет',               color: '#FF9500', score: 2 },
+      { label: 'Не считаю — живу на интуиции',                    color: '#FF3B30', score: 1 },
+    ],
+    1: [
+      { label: 'Есть точный расчёт прибыльности по каждому продукту', color: '#34C759', score: 4 },
+      { label: 'Понимаю без точных расчётов',                         color: '#FFCC00', score: 3 },
+      { label: 'Скорее догадываюсь',                                  color: '#FF9500', score: 2 },
+      { label: 'Не понимаю, что прибыльно',                           color: '#FF3B30', score: 1 },
+    ],
+    2: [
+      { label: 'Есть прогноз — вижу проблемы за 1–2 месяца',   color: '#34C759', score: 4 },
+      { label: 'Иногда вижу заранее',                           color: '#FFCC00', score: 3 },
+      { label: 'Замечаю, когда уже почти поздно',               color: '#FF9500', score: 2 },
+      { label: 'Проблемы появляются неожиданно',                color: '#FF3B30', score: 1 },
+    ],
+    3: [
+      { label: 'Да, считаю прибыль каждый месяц',   color: '#34C759', score: 4 },
+      { label: 'Могу назвать примерно',              color: '#FFCC00', score: 3 },
+      { label: 'Нужно сначала посчитать',            color: '#FF9500', score: 2 },
+      { label: 'Не считаю прибыль отдельно',         color: '#FF3B30', score: 1 },
+    ],
+  };
+
+  function getAnswers(qi) { return Q_ANSWERS[qi] || ANSWERS; }
+
   const RISK_SOURCES = {
     finance:   'Нет финансовой прозрачности — деньги утекают незаметно',
     marketing: 'Нет контроля рекламных каналов — бюджет расходуется вхолостую',
@@ -750,7 +780,7 @@
 
     const list = document.getElementById('answers');
     list.innerHTML = '';
-    ANSWERS.forEach((ans, i) => {
+    getAnswers(qi).forEach((ans, i) => {
       const card = document.createElement('div');
       card.className = 'a-card' + (S.answers[qi] === i ? ' chosen' : '');
       card.innerHTML = `<div class="a-dot" style="background:${ans.color}"></div><span class="a-label">${ans.label}</span><span class="a-check">✓</span>`;
@@ -876,10 +906,10 @@
   function calcResults() {
     const zoneScores = ZONES.map((z, zi) => {
       const base    = zi * 4;
-      const mainSum = [0,1,2].map(j => S.answers[base+j]).reduce((acc,a) => acc + (a >= 0 ? ANSWERS[a].score : 0), 0);
+      const mainSum = [0,1,2].map(j => S.answers[base+j]).reduce((acc,a,j) => acc + (a >= 0 ? getAnswers(base+j)[a].score : 0), 0);
       const base100 = Math.round((mainSum / 12) * 100);
       const ctrlAns   = S.answers[base + 3];
-      const ctrlScore = ctrlAns >= 0 ? ANSWERS[ctrlAns].score : 0;
+      const ctrlScore = ctrlAns >= 0 ? getAnswers(base+3)[ctrlAns].score : 0;
       const mainAvg   = mainSum / 3;
       let adj = 0;
       const diff = ctrlScore - mainAvg;
