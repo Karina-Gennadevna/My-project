@@ -636,11 +636,26 @@
     const isFade = fromEl.classList.contains('fade-mode') || toEl.classList.contains('fade-mode');
 
     if (isFade) {
+      if (toEl.classList.contains('fade-mode')) {
+        // fade→fade или slide→fade: destination появляется поверх (crossfade)
+        toEl.style.transition = 'none';
+        toEl.style.opacity = '0';
+        toEl.classList.add('active');
+        toEl.offsetHeight;
+        toEl.style.transition = 'opacity 240ms ease';
+        toEl.style.opacity = '1';
+      } else {
+        // fade→slide: destination сразу занимает позицию под исчезающим экраном
+        toEl.style.transition = 'none';
+        toEl.classList.add('active');
+        toEl.offsetHeight;
+      }
       fromEl.style.transition = 'opacity 240ms ease';
       fromEl.style.opacity = '0';
       setTimeout(() => {
         fromEl.classList.remove('active'); fromEl.style.opacity = ''; fromEl.style.transition = '';
-        toEl.classList.add('active'); S.screen = toName; S.transitioning = false;
+        toEl.style.transition = '';
+        S.screen = toName; S.transitioning = false;
       }, 240);
     } else {
       const enterFrom = direction === 'fwd' ? 'translateX(100%)' : 'translateX(-28%)';
