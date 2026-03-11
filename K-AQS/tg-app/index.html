@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K-A-Q-S — Индекс управляемости</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:      #3B82F6;
+      --accent-bg:   rgba(59,130,246,0.12);
+      --bg:          #0B0F14;
+      --surface:     #0F1620;
+      --surface2:    rgba(255,255,255,0.05);
+      --text:        rgba(255,255,255,0.92);
+      --text2:       rgba(255,255,255,0.6);
+      --text3:       rgba(255,255,255,0.38);
+      --sep:         rgba(255,255,255,0.06);
+      --grid:        rgba(255,255,255,0.08);
+      --shadow:      0 2px 24px rgba(0,0,0,0.7);
+      --r:           16px;
+      --r-sm:        12px;
+      --success:     #22C55E;
+      --danger:      #EF4444;
+      --card-border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body { height: 100%; overflow: hidden; background: #0B0F14 !important; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      -webkit-font-smoothing: antialiased; font-size: 16px;
+    }
+    #app { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+    /* ── SCREEN BASE ── */
+    .screen {
+      position: absolute; inset: 0; background: var(--bg);
+      transform: translateX(100%); will-change: transform, opacity;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .screen.active  { transform: translateX(0); }
+    .screen.fade-mode              { transform: translateX(0); opacity: 0; pointer-events: none; }
+    .screen.fade-mode.active       { opacity: 1; pointer-events: auto; }
+
+    /* ── WELCOME ── */
+    #screen-welcome {
+      transform: translateX(0); align-items: center;
+      justify-content: space-between; padding: 44px 20px 32px; gap: 18px;
+    }
+    .welcome-top { text-align: center; }
+    .welcome-logo-img {
+      width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+      margin: 0 auto 8px; display: block;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.2),
+                  0 0 20px rgba(59,130,246,0.3), 0 0 48px rgba(59,130,246,0.12);
+    }
+    .welcome-brand {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+      color: var(--accent); text-transform: uppercase;
+    }
+    .welcome-badge {
+      display: inline-block; background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.22); border-radius: 20px;
+      padding: 4px 13px; font-size: 10px; font-weight: 600;
+      color: var(--accent); letter-spacing: 0.05em;
+      text-transform: uppercase; margin-top: 10px;
+    }
+    .welcome-title-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .welcome-title { font-size: 21px; font-weight: 700; line-height: 1.25; letter-spacing: -0.3px; }
+    .mini-radar-wrap { display: flex; justify-content: center; align-items: center; }
+    .welcome-mid {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
+      text-align: center; width: 100%;
+    }
+    .welcome-progress-wrap { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+    .welcome-progress-header { display: flex; justify-content: space-between; }
+    .welcome-progress-step { font-size: 11px; font-weight: 600; color: var(--text3); }
+    .welcome-progress-pct  { font-size: 11px; font-weight: 700; color: var(--accent); }
+    .welcome-progress-track { width: 100%; height: 3px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+    .welcome-progress-fill  { height: 100%; width: 20%; background: linear-gradient(90deg, var(--accent), rgba(59,130,246,0.55)); border-radius: 4px; }
+    .welcome-progress-status {
+      font-size: 11px; color: var(--success);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .welcome-progress-status::before {
+      content: ''; width: 5px; height: 5px;
+      background: var(--success); border-radius: 50%; flex-shrink: 0;
+    }
+    .welcome-bullets { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .w-bullet {
+      display: flex; align-items: center; gap: 11px;
+      background: var(--surface); border: var(--card-border);
+      border-radius: var(--r-sm); padding: 10px 13px;
+    }
+    .w-bullet-icon { font-size: 17px; flex-shrink: 0; }
+    .w-bullet-body { display: flex; flex-direction: column; gap: 1px; }
+    .w-bullet-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .w-bullet-desc  { font-size: 11px; color: var(--text3); line-height: 1.3; }
+    .welcome-bottom { width: 100%; }
+    .welcome-trust { margin-top: 9px; font-size: 12px; color: var(--text3); text-align: center; }
+    .welcome-note  { margin-top: 5px; font-size: 11px; color: rgba(255,255,255,0.2); text-align: center; }
+
+    /* ── QUESTION ── */
+    .q-header {
+      flex-shrink: 0; background: var(--surface);
+      border-bottom: 1px solid var(--sep); padding: 11px 16px 9px;
+    }
+    .progress-track { height: 3px; background: var(--sep); border-radius: 2px; overflow: hidden; margin-bottom: 9px; }
+    .progress-fill  { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.35s ease; }
+    .q-meta  { display: flex; justify-content: space-between; align-items: flex-start; }
+    .q-step-info { display: flex; flex-direction: column; gap: 2px; }
+    .q-step  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
+    .q-zone-label { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 5px; }
+    .q-num   { font-size: 11px; color: var(--text3); }
+    .ctrl-badge {
+      font-size: 10px; font-weight: 600; color: var(--accent);
+      background: var(--accent-bg); border-radius: 6px; padding: 1px 6px;
+    }
+    .q-body {
+      flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: 18px 16px 14px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .q-text { font-size: 18px; font-weight: 600; line-height: 1.35; letter-spacing: -0.2px; }
+    .answers { display: flex; flex-direction: column; gap: 8px; }
+    .a-card {
+      min-height: 52px; background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-sm);
+      padding: 12px 13px 12px 15px; display: flex; align-items: center;
+      gap: 11px; cursor: pointer; user-select: none; -webkit-user-select: none;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .a-card:active  { transform: scale(0.985); }
+    .a-card.chosen  { border-color: var(--accent); background: var(--accent-bg); }
+    .a-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .a-label { flex: 1; font-size: 14px; font-weight: 500; line-height: 1.35; }
+    .a-check { font-size: 14px; color: var(--accent); opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
+    .a-card.chosen .a-check { opacity: 1; }
+
+    /* ── MILESTONE ── */
+    #screen-milestone {
+      align-items: center; justify-content: center;
+      text-align: center; padding: 32px 28px; gap: 0;
+    }
+    .ms-check {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--success);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #fff; margin-bottom: 18px;
+      animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .ms-title  { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .ms-next-l { font-size: 13px; color: var(--text3); margin-bottom: 4px; }
+    .ms-next-z { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 28px; }
+    .ms-dots   { display: flex; gap: 8px; }
+    .ms-dot    { width: 9px; height: 9px; border-radius: 50%; background: var(--sep); transition: background 0.3s; }
+    .ms-dot.done    { background: var(--success); }
+    .ms-dot.current { background: var(--accent); }
+
+    /* ── LOADER ── */
+    #screen-loader { align-items: center; justify-content: center; text-align: center; padding: 32px 28px; }
+    .ld-radar-wrap { margin-bottom: 24px; }
+    .ld-title    { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .ld-subtitle { font-size: 13px; color: var(--text3); line-height: 1.55; margin-bottom: 24px; }
+    .ld-steps { display: flex; flex-direction: column; gap: 11px; text-align: left; }
+    .ld-step {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: var(--text3);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.4s ease;
+    }
+    .ld-step.show { opacity: 1; transform: translateY(0); color: var(--text2); }
+    .ld-step-check {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--surface); border: 1.5px solid var(--sep);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; flex-shrink: 0;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .ld-step.show .ld-step-check { background: var(--success); border-color: var(--success); color: #fff; }
+
+    /* ── INDEX SCREEN ── */
+    #screen-index { overflow-y: auto; -webkit-overflow-scrolling: touch; display: block; }
+    .idx-hero {
+      background: var(--surface); text-align: center;
+      padding: 32px 24px 20px; border-bottom: 1px solid var(--sep);
+    }
+    .idx-eyebrow {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text3); margin-bottom: 14px;
+    }
+    .idx-num {
+      font-size: 84px; font-weight: 700; line-height: 1;
+      letter-spacing: -4px; display: block;
+    }
+    .idx-max    { font-size: 15px; color: var(--text3); margin-top: 2px; margin-bottom: 10px; }
+    .idx-badge  { display: inline-block; padding: 5px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #fff; }
+    .idx-status { font-size: 13px; color: var(--text2); margin-top: 10px; line-height: 1.4; }
+    .idx-metrics {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; padding: 14px 12px 0;
+    }
+    .idx-metric {
+      background: var(--surface); border: var(--card-border);
+      border-radius: var(--r-sm); padding: 13px 8px; text-align: center;
+    }
+    .idx-metric-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3); margin-bottom: 8px; line-height: 1.3; }
+    .idx-metric-val   { font-size: 13px; font-weight: 700; line-height: 1.3; }
+    .idx-metric-sub   { font-size: 10px; color: var(--text3); margin-top: 3px; }
+    .idx-next-btn     { padding: 12px 12px 16px; }
+
+    /* ── LOSS SCREEN ── */
+    #screen-loss { overflow-y: auto; -webkit-overflow-scrolling: touch; display: block; }
+    .loss-header { background: var(--surface); padding: 22px 20px 16px; border-bottom: 1px solid var(--sep); }
+    .loss-screen-title { font-size: 17px; font-weight: 700; line-height: 1.3; margin-bottom: 3px; }
+    .loss-screen-sub   { font-size: 12px; color: var(--text3); }
+    .loss-card {
+      background: var(--surface); border: var(--card-border);
+      border-radius: var(--r); margin: 10px 12px 0; padding: 14px;
+    }
+    .loss-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 11px; }
+    .loss-risk-row   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .loss-risk-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .loss-risk-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .loss-bar-wrap   { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+    .loss-bar-fill   { height: 100%; border-radius: 3px; width: 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+    .loss-bar-hints  { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
+    .loss-text       { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    .loss-text strong { color: var(--text); font-weight: 600; }
+    .loss-example {
+      background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.14);
+      border-radius: var(--r-sm); padding: 13px; margin-top: 10px;
+      font-size: 13px; line-height: 1.65; color: var(--text2);
+    }
+    .loss-example strong { color: #F87171; font-weight: 700; }
+    .loss-sources { display: flex; flex-direction: column; gap: 7px; }
+    .loss-source {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; line-height: 1.45; color: var(--text2);
+      padding: 9px 11px; background: var(--surface2); border-radius: var(--r-sm);
+    }
+    .loss-source-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); flex-shrink: 0; margin-top: 5px; }
+    .loss-next-btn { padding: 14px 12px 0; }
+    .loss-spacer   { height: 20px; }
+
+    /* ── PAYWALL ── */
+    #screen-paywall { overflow-y: auto; -webkit-overflow-scrolling: touch; display: block; }
+    .pw-header { background: var(--surface); padding: 28px 20px 20px; border-bottom: 1px solid var(--sep); text-align: center; }
+    .pw-problems-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.22);
+      border-radius: 20px; padding: 5px 14px; font-size: 10px; font-weight: 700;
+      color: #F87171; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .pw-title { font-size: 20px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+    .pw-sub   { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .pw-card  { background: var(--surface); border: var(--card-border); border-radius: var(--r); margin: 10px 12px 0; padding: 15px; }
+    .pw-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 13px; }
+    .pw-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .pw-item:last-child { margin-bottom: 0; }
+    .pw-item-icon { font-size: 18px; flex-shrink: 0; }
+    .pw-item-body { flex: 1; }
+    .pw-item-title { font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .pw-item-desc  { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .pw-cta { padding: 14px 12px 0; }
+    .pw-btn {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+      color: #fff; border: none; border-radius: 14px; padding: 17px 16px;
+      font-size: 17px; font-weight: 700; font-family: inherit;
+      cursor: pointer; -webkit-appearance: none;
+      transition: opacity 0.12s, transform 0.1s; text-align: center;
+      letter-spacing: -0.2px;
+    }
+    .pw-btn:active { opacity: 0.88; transform: scale(0.98); }
+    .pw-trust {
+      display: flex; justify-content: center; gap: 16px;
+      margin-top: 11px; flex-wrap: wrap;
+    }
+    .pw-trust-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text3); }
+    .pw-spacer { height: 24px; }
+
+    /* ── REPORT SCREEN ── */
+    #screen-report { overflow-y: auto; -webkit-overflow-scrolling: touch; display: block; }
+    .res-hero { background: var(--surface); text-align: center; padding: 28px 24px 20px; border-bottom: 1px solid var(--sep); margin-bottom: 10px; }
+    .res-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 12px; }
+    .res-score-num { font-size: 68px; font-weight: 700; line-height: 1; letter-spacing: -3px; }
+    .res-score-max { font-size: 15px; color: var(--text3); margin-top: 2px; margin-bottom: 10px; }
+    .res-badge     { display: inline-block; padding: 5px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #fff; }
+    .res-radar     { display: flex; justify-content: center; padding: 12px 24px 4px; }
+    .res-card      { background: var(--surface); border: var(--card-border); border-radius: var(--r); margin: 0 12px 10px; padding: 14px; box-shadow: var(--shadow); }
+    .res-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 12px; }
+    .zone-row  { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+    .zone-row:last-child { margin-bottom: 0; }
+    .zone-ico  { font-size: 14px; flex-shrink: 0; width: 18px; text-align: center; }
+    .zone-name { font-size: 12px; font-weight: 500; width: 72px; flex-shrink: 0; }
+    .zone-bar  { flex: 1; height: 4px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+    .zone-bar-f { height: 100%; border-radius: 3px; width: 0; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+    .zone-sc   { font-size: 12px; font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
+    .risk-source-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 11px; background: var(--surface2); border-radius: var(--r-sm); margin-bottom: 7px; }
+    .risk-source-item:last-child { margin-bottom: 0; }
+    .risk-source-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .risk-source-text { font-size: 13px; line-height: 1.45; color: var(--text2); }
+    .roadmap-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; background: var(--surface2); border-radius: var(--r-sm); margin-bottom: 7px; }
+    .roadmap-item:last-child { margin-bottom: 0; }
+    .roadmap-num   { font-size: 18px; font-weight: 700; color: var(--accent); flex-shrink: 0; line-height: 1; min-width: 22px; }
+    .roadmap-body  { flex: 1; }
+    .roadmap-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .roadmap-desc  { font-size: 12px; color: var(--text3); line-height: 1.4; }
+    .market-rows { display: flex; flex-direction: column; gap: 9px; margin-bottom: 12px; }
+    .market-row  { display: flex; align-items: center; gap: 9px; }
+    .market-row-label   { font-size: 12px; color: var(--text2); flex: 1; }
+    .market-row-bar-wrap { flex: 1.4; height: 5px; background: var(--sep); border-radius: 3px; overflow: hidden; }
+    .market-row-bar { height: 100%; border-radius: 3px; width: 0; transition: width 0.7s cubic-bezier(0.4,0,0.2,1); }
+    .market-row-val { font-size: 13px; font-weight: 700; width: 30px; text-align: right; }
+    .market-potential { background: var(--accent-bg); border-radius: var(--r-sm); padding: 11px 13px; font-size: 13px; line-height: 1.5; color: var(--text2); }
+    .market-potential strong { color: var(--accent); font-weight: 600; }
+    .res-spacer { height: 24px; }
+
+    /* ── BACK BUTTON (in-app) ── */
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none; color: var(--text2);
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; padding: 0; -webkit-appearance: none;
+      flex-shrink: 0;
+    }
+    .nav-back:active { opacity: 0.6; }
+    .nav-back-arrow { font-size: 18px; line-height: 1; }
+    /* Строка назад в шапке вопроса */
+    .q-back-row {
+      display: flex; align-items: center; margin-bottom: 8px;
+    }
+    /* Шапка-бар для экранов результатов */
+    .screen-topbar {
+      display: flex; align-items: center;
+      background: var(--surface); border-bottom: 1px solid var(--sep);
+      padding: 12px 16px; flex-shrink: 0;
+    }
+    .screen-topbar-title {
+      flex: 1; font-size: 13px; font-weight: 600;
+      text-align: center; color: var(--text2);
+      margin-right: 24px; /* компенсация ширины кнопки назад */
+    }
+
+    /* ── SHARE BLOCK ── */
+    .share-block {
+      background: var(--surface); border: var(--card-border);
+      border-radius: var(--r); margin: 0 12px; padding: 14px;
+    }
+    .share-block-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--text3); margin-bottom: 10px;
+    }
+    .share-score-text {
+      font-size: 14px; color: var(--text2); line-height: 1.5;
+      margin-bottom: 13px;
+    }
+    .share-score-text strong { color: var(--text); font-weight: 700; }
+    .share-btns {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .share-btn {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--r-sm); padding: 12px 14px;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      color: var(--text); cursor: pointer; -webkit-appearance: none;
+      transition: background 0.12s, border-color 0.12s;
+      text-align: left; width: 100%;
+    }
+    .share-btn:active { background: rgba(255,255,255,0.1); }
+    .share-btn-icon { font-size: 18px; flex-shrink: 0; }
+    .share-btn-label { flex: 1; }
+    .share-btn-sub   { font-size: 11px; color: var(--text3); margin-top: 1px; }
+    .share-btn.tg    { border-color: rgba(41,182,246,0.25); }
+    .share-btn.tg .share-btn-icon-wrap { color: #29B6F6; }
+    .share-btn.copy.copied { border-color: rgba(34,197,94,0.35); }
+    .share-btn.copy.copied .share-btn-icon { filter: grayscale(0); }
+
+    /* ── COMMON BUTTONS ── */
+    .btn-primary {
+      display: block; width: 100%; background: var(--accent); color: #fff;
+      border: none; border-radius: 14px; padding: 16px; font-size: 16px;
+      font-weight: 600; font-family: inherit; cursor: pointer;
+      -webkit-appearance: none; transition: opacity 0.12s, transform 0.1s; text-align: center;
+    }
+    .btn-primary:active { opacity: 0.88; transform: scale(0.98); }
+
+    /* ── ANIMATIONS ── */
+    .fade-up { animation: fadeUp 0.45s ease-out both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+
+<body style="background:#0B0F14;color:rgba(255,255,255,0.92)">
+<div id="app">
+
+  <!-- WELCOME -->
+  <div id="screen-welcome" class="screen active">
+    <div class="welcome-top">
+      <img src="ава.png" alt="K-A-Q-S" class="welcome-logo-img">
+      <div class="welcome-brand">K-A-Q-S™</div>
+    </div>
+    <div class="welcome-mid">
+      <div class="welcome-title-wrap">
+        <h1 class="welcome-title">Индекс управляемости бизнеса</h1>
+        <span class="welcome-badge">Диагностика системы управления</span>
+      </div>
+      <div class="welcome-progress-wrap">
+        <div class="welcome-progress-header">
+          <span class="welcome-progress-step">Шаг 1 из 5</span>
+          <span class="welcome-progress-pct">20%</span>
+        </div>
+        <div class="welcome-progress-track"><div class="welcome-progress-fill"></div></div>
+        <span class="welcome-progress-status">Подготовка диагностики завершена</span>
+      </div>
+      <div id="welcome-radar" class="mini-radar-wrap"></div>
+      <div class="welcome-bullets">
+        <div class="w-bullet">
+          <span class="w-bullet-icon">📝</span>
+          <div class="w-bullet-body">
+            <div class="w-bullet-title">15 вопросов по 5 зонам</div>
+            <div class="w-bullet-desc">Покрывают ключевые зоны управления бизнесом</div>
+          </div>
+        </div>
+        <div class="w-bullet">
+          <span class="w-bullet-icon">⏱</span>
+          <div class="w-bullet-body">
+            <div class="w-bullet-title">5 минут диагностики</div>
+            <div class="w-bullet-desc">Быстрая оценка системы управления</div>
+          </div>
+        </div>
+        <div class="w-bullet">
+          <span class="w-bullet-icon">🎯</span>
+          <div class="w-bullet-body">
+            <div class="w-bullet-title">Индекс 0–100</div>
+            <div class="w-bullet-desc">Показывает реальный уровень управляемости</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="welcome-bottom">
+      <button class="btn-primary" onclick="startQuiz()">Продолжить диагностику →</button>
+      <p class="welcome-trust">15 вопросов • 5 минут • результат сразу</p>
+      <p class="welcome-note">Средний индекс управляемости малого бизнеса — 46</p>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div id="screen-question" class="screen">
+    <div class="q-header">
+      <div class="q-back-row">
+        <button class="nav-back" onclick="handleBack()">
+          <span class="nav-back-arrow">‹</span> Назад
+        </button>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="q-meta">
+        <div class="q-step-info">
+          <div class="q-step" id="q-step"></div>
+          <div class="q-zone-label" id="q-zone-label"></div>
+        </div>
+        <div class="q-num" id="q-num"></div>
+      </div>
+    </div>
+    <div class="q-body" id="q-body">
+      <div class="q-text" id="q-text"></div>
+      <div class="answers" id="answers"></div>
+    </div>
+  </div>
+
+  <!-- MILESTONE (fade) -->
+  <div id="screen-milestone" class="screen fade-mode">
+    <div class="ms-check">✓</div>
+    <h2 class="ms-title"  id="ms-title"></h2>
+    <p  class="ms-next-l" id="ms-next-l"></p>
+    <p  class="ms-next-z" id="ms-next-z"></p>
+    <div class="ms-dots"  id="ms-dots"></div>
+  </div>
+
+  <!-- LOADER (fade) -->
+  <div id="screen-loader" class="screen fade-mode">
+    <div class="ld-radar-wrap" id="ld-radar"></div>
+    <p class="ld-title">Анализируем систему управления</p>
+    <p class="ld-subtitle">ИИ анализирует ответы<br>и строит карту управляемости бизнеса</p>
+    <div class="ld-steps">
+      <div class="ld-step" id="ld-s1"><div class="ld-step-check">✓</div><span>Считаем индекс управляемости</span></div>
+      <div class="ld-step" id="ld-s2"><div class="ld-step-check">✓</div><span>Определяем зоны риска</span></div>
+      <div class="ld-step" id="ld-s3"><div class="ld-step-check">✓</div><span>Строим карту управляемости</span></div>
+    </div>
+  </div>
+
+  <!-- INDEX SCREEN -->
+  <div id="screen-index" class="screen"></div>
+
+  <!-- LOSS SCREEN -->
+  <div id="screen-loss" class="screen"></div>
+
+  <!-- PAYWALL SCREEN -->
+  <div id="screen-paywall" class="screen"></div>
+
+  <!-- REPORT SCREEN -->
+  <div id="screen-report" class="screen"></div>
+
+</div><!-- #app -->
+
+<script>
+  /* ── TELEGRAM SDK ── */
+  const tg = window.Telegram?.WebApp || {
+    ready: () => {}, expand: () => {},
+    sendData: d => console.log('[TG]', d),
+    colorScheme: 'dark', themeParams: {},
+    BackButton: {
+      show: () => {}, hide: () => {},
+      onClick: cb => window.addEventListener('keydown', e => e.key === 'Backspace' && cb()),
+      offClick: () => {},
+    },
+    MainButton: { show: () => {}, hide: () => {}, setText: () => {}, onClick: () => {}, offClick: () => {}, setParams: () => {} },
+    HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {} },
+  };
+  tg.ready(); tg.expand();
+
+  /* ── DATA ── */
+  const ZONES = [
+    { id: 'finance',   name: 'Финансы',              icon: '💰' },
+    { id: 'marketing', name: 'Маркетинг',             icon: '📣' },
+    { id: 'team',      name: 'Команда',               icon: '👥' },
+    { id: 'ops',       name: 'Операционные процессы', icon: '⚙️' },
+    { id: 'control',   name: 'Контроль собственника', icon: '🎯' },
+  ];
+
+  const QUESTIONS = [
+    'Вы регулярно видите ключевые финансовые показатели бизнеса (выручку, расходы, прибыль)?',
+    'Вы точно понимаете, какие продукты или услуги приносят основную прибыль?',
+    'Вы заранее видите возможные финансовые проблемы (например кассовые разрывы)?',
+    'Вы можете назвать прибыль бизнеса за прошлый месяц?',
+    'Вы точно знаете, из каких каналов приходит большинство клиентов?',
+    'Вы регулярно анализируете эффективность рекламы?',
+    'Ваш бизнес не зависит критически от одного источника клиентов?',
+    'Если один канал привлечения перестанет работать, бизнес продолжит получать клиентов?',
+    'У сотрудников есть чёткие зоны ответственности и понятный результат работы?',
+    'Вы видите статус задач команды?',
+    'Работа команды не держится только на вашем постоянном контроле?',
+    'Если вас не будет неделю, команда сможет продолжить работу без серьёзных сбоев?',
+    'В бизнесе есть понятные процессы, а не постоянное решение одних и тех же проблем?',
+    'Повторяющиеся задачи выполняются по стандартной схеме?',
+    'Если вы выпадете из операционки на несколько дней, бизнес продолжит работать?',
+    'Новый сотрудник может быстро понять, как работает бизнес?',
+    'Вы принимаете управленческие решения на основе данных и цифр?',
+    'У вас есть регулярное время именно на управление бизнесом?',
+    'Вы управляете бизнесом системно, а не просто реагируете на проблемы?',
+    'Бизнес может стабильно работать без вашего ежедневного участия?',
+  ];
+
+  const ANSWERS = [
+    { label: 'Да — работает стабильно',   color: '#34C759', score: 4 },
+    { label: 'Скорее да, но не системно', color: '#FFCC00', score: 3 },
+    { label: 'Скорее нет',                color: '#FF9500', score: 2 },
+    { label: 'Нет',                       color: '#FF3B30', score: 1 },
+  ];
+
+  const RISK_SOURCES = {
+    finance:   'Нет финансовой прозрачности — деньги утекают незаметно',
+    marketing: 'Нет контроля рекламных каналов — бюджет расходуется вхолостую',
+    team:      'Слабая система управления задачами — работа тормозит без вас',
+    ops:       'Процессы не описаны — ошибки и потери повторяются каждый день',
+    control:   'Управление на ощущениях — решения без данных стоят денег',
+  };
+
+  const RECS = {
+    finance:   ['Внедрить ежемесячный P&L-отчёт — знать прибыль, не только выручку', 'Посчитать юнит-экономику: стоимость привлечения vs средний чек'],
+    marketing: ['Провести анализ источников клиентов за последние 6 месяцев', 'Описать воронку привлечения: от первого касания до первой оплаты'],
+    team:      ['Прописать KPI для каждой роли: 2–3 метрики + еженедельный отчёт', 'Задокументировать 3 ключевых процесса'],
+    ops:       ['Описать стандартный цикл выполнения услуги или производства', 'Определить 3 решения, которые команда принимает без вас'],
+    control:   ['Ввести еженедельный управленческий отчёт — 10 минут в пятницу', 'Выписать задачи, которые только вы делаете — делегировать одну'],
+  };
+
+  /* ── STATE ── */
+  const S = {
+    screen: 'welcome', qIndex: 0,
+    answers: new Array(20).fill(-1),
+    transitioning: false,
+    results: null,
+  };
+
+  /* ── UTILS ── */
+  const zoneOf    = qi => ZONES[Math.floor(qi / 4)];
+  const isControl = qi => qi % 4 === 3;
+  const isZoneLast= qi => qi % 4 === 3;
+  const $s        = name => document.getElementById('screen-' + name);
+
+  function scoreColor(v) {
+    if (v < 40) return '#EF4444';
+    if (v < 60) return '#F97316';
+    if (v < 75) return '#FBBF24';
+    if (v < 90) return '#22C55E';
+    return '#10B981';
+  }
+  function scoreLabel(v) {
+    if (v < 40) return 'Критический';
+    if (v < 60) return 'Нестабильный';
+    if (v < 75) return 'Средний';
+    if (v < 90) return 'Хороший';
+    return 'Высокий';
+  }
+  function scoreStatus(v) {
+    if (v < 40) return 'Система управления не работает';
+    if (v < 60) return 'Система управления нестабильна';
+    if (v < 75) return 'Управление частично выстроено';
+    if (v < 90) return 'Управление работает хорошо';
+    return 'Управление выстроено системно';
+  }
+  function riskLevel(idx) {
+    if (idx >= 80) return { label: 'Низкий',      color: '#22C55E', loss: 'до 5%',  pct: 15, lossRub: 'до 500 000' };
+    if (idx >= 60) return { label: 'Умеренный',   color: '#F59E0B', loss: '5–15%',  pct: 42, lossRub: '500 000 – 1 500 000' };
+    if (idx >= 40) return { label: 'Высокий',     color: '#EF4444', loss: '15–25%', pct: 68, lossRub: '1 500 000 – 2 500 000' };
+    return               { label: 'Критический', color: '#DC2626', loss: '25–40%', pct: 88, lossRub: '2 500 000 – 4 000 000' };
+  }
+
+  /* ── TRANSITIONS ── */
+  function goTo(toName, direction) {
+    if (S.transitioning) return;
+    S.transitioning = true;
+    const fromEl = $s(S.screen), toEl = $s(toName);
+    const DUR = 280;
+    const isFade = fromEl.classList.contains('fade-mode') || toEl.classList.contains('fade-mode');
+
+    if (isFade) {
+      fromEl.style.transition = 'opacity 240ms ease';
+      fromEl.style.opacity = '0';
+      setTimeout(() => {
+        fromEl.classList.remove('active'); fromEl.style.opacity = ''; fromEl.style.transition = '';
+        toEl.classList.add('active'); S.screen = toName; S.transitioning = false;
+      }, 240);
+    } else {
+      const enterFrom = direction === 'fwd' ? 'translateX(100%)' : 'translateX(-28%)';
+      const exitTo    = direction === 'fwd' ? 'translateX(-28%)' : 'translateX(100%)';
+      toEl.style.transform = enterFrom;
+      toEl.classList.add('active');
+      toEl.offsetHeight;
+      const t = `transform ${DUR}ms cubic-bezier(0.4,0,0.2,1)`;
+      fromEl.style.transition = t; fromEl.style.transform = exitTo;
+      toEl.style.transition   = t; toEl.style.transform   = 'translateX(0)';
+      setTimeout(() => {
+        fromEl.classList.remove('active'); fromEl.style.transform = ''; fromEl.style.transition = '';
+        toEl.style.transform = ''; toEl.style.transition = '';
+        S.screen = toName; S.transitioning = false;
+      }, DUR);
+    }
+  }
+
+  /* ── BACK NAVIGATION ── */
+  function handleBack() {
+    if (S.transitioning) return;
+    tg.HapticFeedback.impactOccurred('light');
+    if (S.screen === 'question') {
+      if (S.qIndex === 0) { tg.BackButton.hide(); goTo('welcome', 'back'); }
+      else {
+        S.qIndex--; S.answers[S.qIndex] = -1;
+        const body = document.getElementById('q-body');
+        body.style.transition = 'none'; body.style.transform = 'translateX(20px)'; body.style.opacity = '0.5';
+        body.offsetHeight;
+        body.style.transition = 'transform 200ms ease-out, opacity 200ms ease-out';
+        body.style.transform = 'translateX(0)'; body.style.opacity = '1';
+        setTimeout(() => { body.style.transition = ''; body.style.transform = ''; body.style.opacity = ''; }, 200);
+        renderQuestion();
+      }
+    } else if (S.screen === 'index')   { tg.BackButton.hide(); goTo('welcome', 'back'); }
+    else if (S.screen === 'loss')      { goTo('index', 'back'); }
+    else if (S.screen === 'paywall')   { goTo('loss', 'back'); }
+    else if (S.screen === 'report')    { goTo('paywall', 'back'); }
+  }
+
+  /* ── BACK BUTTON (Telegram native) ── */
+  tg.BackButton.onClick(() => handleBack());
+
+  /* ── QUIZ ── */
+  function startQuiz() {
+    tg.HapticFeedback.impactOccurred('medium');
+    S.qIndex = 0; S.answers = new Array(20).fill(-1);
+    renderQuestion(); goTo('question', 'fwd'); tg.BackButton.show();
+  }
+
+  function renderQuestion() {
+    const qi   = S.qIndex;
+    const zone = zoneOf(qi);
+    const zIdx = Math.floor(qi / 4);
+
+    document.getElementById('progress-fill').style.width = (qi / 20 * 100) + '%';
+    document.getElementById('q-step').textContent = `Шаг ${zIdx + 1} из 5`;
+
+    if (isControl(qi)) {
+      document.getElementById('q-zone-label').innerHTML =
+        `<span>${zone.icon}</span><span>Зона: ${zone.name}</span><span class="ctrl-badge">Контрольный</span>`;
+    } else {
+      document.getElementById('q-zone-label').innerHTML =
+        `<span>${zone.icon}</span><span>Зона: ${zone.name}</span>`;
+    }
+
+    document.getElementById('q-num').textContent = `${qi + 1} / 20`;
+    document.getElementById('q-text').textContent = QUESTIONS[qi];
+
+    const list = document.getElementById('answers');
+    list.innerHTML = '';
+    ANSWERS.forEach((ans, i) => {
+      const card = document.createElement('div');
+      card.className = 'a-card' + (S.answers[qi] === i ? ' chosen' : '');
+      card.innerHTML = `<div class="a-dot" style="background:${ans.color}"></div><span class="a-label">${ans.label}</span><span class="a-check">✓</span>`;
+      card.addEventListener('click', () => pickAnswer(i));
+      list.appendChild(card);
+    });
+  }
+
+  function pickAnswer(idx) {
+    if (S.transitioning) return;
+    tg.HapticFeedback.impactOccurred('light');
+    S.answers[S.qIndex] = idx;
+    document.querySelectorAll('.a-card').forEach((c, i) => c.classList.toggle('chosen', i === idx));
+    setTimeout(() => advanceQuiz(), 350);
+  }
+
+  function advanceQuiz() {
+    const qi = S.qIndex;
+    if (qi === 19) { showMilestone(4, true); }
+    else if (isZoneLast(qi)) { showMilestone(Math.floor(qi / 4), false); }
+    else {
+      S.qIndex++;
+      renderQuestion();
+      const body = document.getElementById('q-body');
+      body.style.transition = 'none'; body.style.opacity = '0'; body.style.transform = 'translateX(-16px)';
+      body.offsetHeight;
+      body.style.transition = 'opacity 200ms ease, transform 200ms ease';
+      body.style.opacity = '1'; body.style.transform = 'translateX(0)';
+      setTimeout(() => { body.style.transition = ''; body.style.opacity = ''; body.style.transform = ''; }, 200);
+    }
+  }
+
+  function showMilestone(zoneIdx, isLast) {
+    tg.HapticFeedback.notificationOccurred('success');
+    tg.BackButton.hide();
+    const zone = ZONES[zoneIdx], nextZone = !isLast ? ZONES[zoneIdx + 1] : null;
+    document.getElementById('ms-title').textContent = `${zone.icon} ${zone.name} пройдены`;
+    if (nextZone) {
+      document.getElementById('ms-next-l').textContent = 'Следующий блок:';
+      document.getElementById('ms-next-z').textContent = `${nextZone.icon} ${nextZone.name}`;
+    } else {
+      document.getElementById('ms-next-l').textContent = 'Все зоны пройдены!';
+      document.getElementById('ms-next-z').textContent = 'Считаем результат...';
+    }
+    const dots = document.getElementById('ms-dots');
+    dots.innerHTML = '';
+    ZONES.forEach((z, i) => {
+      const d = document.createElement('div');
+      d.className = 'ms-dot' + (i < zoneIdx ? ' done' : '') + (i === zoneIdx ? ' current' : '');
+      dots.appendChild(d);
+    });
+    goTo('milestone', 'fwd');
+    setTimeout(() => {
+      if (isLast) { showLoader(); }
+      else { S.qIndex++; renderQuestion(); goTo('question', 'fwd'); tg.BackButton.show(); }
+    }, 1500);
+  }
+
+  /* ── LOADER with animated radar ── */
+  function buildLoaderRadar() {
+    const size = 160, cx = 80, cy = 80, maxR = 60;
+    const ang  = [-90, -18, 54, 126, 198].map(d => d * Math.PI / 180);
+    const pt   = (a, r) => `${+(cx + Math.cos(a)*r).toFixed(1)},${+(cy + Math.sin(a)*r).toFixed(1)}`;
+    const ptXY = (a, r) => ({ x: +(cx + Math.cos(a)*r).toFixed(1), y: +(cy + Math.sin(a)*r).toFixed(1) });
+    const ring = f => ang.map(a => pt(a, maxR*f)).join(' ');
+    const axes = ang.map(a => {
+      const e = ptXY(a, maxR);
+      return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
+    }).join('');
+    const axisLines = ang.map((a, i) => {
+      const e = ptXY(a, maxR * 0.78);
+      return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}"
+        stroke="#3B82F6" stroke-width="2.5" stroke-dasharray="100" stroke-dashoffset="100"
+        stroke-linecap="round"
+        style="animation:ldAxis 0.5s ease-out ${i * 0.5 + 0.3}s forwards; opacity:0"/>`;
+    }).join('');
+    const icons = ang.map((a, i) => {
+      const lp = ptXY(a, maxR + 14);
+      return `<text x="${lp.x}" y="${lp.y}" text-anchor="middle" dominant-baseline="middle" font-size="13">${ZONES[i].icon}</text>`;
+    }).join('');
+
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <defs><style>
+        @keyframes ldAxis {
+          from { stroke-dashoffset:100; opacity:0; }
+          to   { stroke-dashoffset:0;   opacity:0.9; }
+        }
+        @keyframes ldPulse { 0%,100%{opacity:0.08} 50%{opacity:0.28} }
+        @keyframes ldScan  { from{transform-origin:${cx}px ${cy}px;transform:rotate(0deg)}
+                             to  {transform-origin:${cx}px ${cy}px;transform:rotate(360deg)} }
+      </style>
+      <radialGradient id="ldGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#3B82F6" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+      </radialGradient></defs>
+      <polygon points="${ring(0.33)}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <polygon points="${ring(0.67)}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+      <polygon points="${ring(1)}"    fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+      ${axes}
+      ${axisLines}
+      <circle cx="${cx}" cy="${cy}" r="${maxR}" fill="url(#ldGrad)"
+        style="animation:ldPulse 2s ease-in-out 0.3s infinite"/>
+      ${icons}
+    </svg>`;
+  }
+
+  function showLoader() {
+    document.getElementById('ld-radar').innerHTML = buildLoaderRadar();
+    ['ld-s1','ld-s2','ld-s3'].forEach(id => document.getElementById(id).classList.remove('show'));
+    goTo('loader', 'fwd');
+    setTimeout(() => document.getElementById('ld-s1').classList.add('show'), 700);
+    setTimeout(() => document.getElementById('ld-s2').classList.add('show'), 1500);
+    setTimeout(() => document.getElementById('ld-s3').classList.add('show'), 2200);
+    setTimeout(() => {
+      S.results = calcResults();
+      renderIndex();
+      goTo('index', 'fwd');
+      tg.BackButton.show();
+    }, 3300);
+  }
+
+  /* ── CALC ── */
+  function calcResults() {
+    const zoneScores = ZONES.map((z, zi) => {
+      const base    = zi * 4;
+      const mainSum = [0,1,2].map(j => S.answers[base+j]).reduce((acc,a) => acc + (a >= 0 ? ANSWERS[a].score : 0), 0);
+      const base100 = Math.round((mainSum / 12) * 100);
+      const ctrlAns   = S.answers[base + 3];
+      const ctrlScore = ctrlAns >= 0 ? ANSWERS[ctrlAns].score : 0;
+      const mainAvg   = mainSum / 3;
+      let adj = 0;
+      const diff = ctrlScore - mainAvg;
+      if      (diff <= -2) adj = -8;
+      else if (diff <  -1) adj = -4;
+      else if (diff >=  2) adj =  4;
+      return Math.max(0, Math.min(100, base100 + adj));
+    });
+    const index = Math.round(zoneScores.reduce((a,b) => a+b, 0) / 5);
+    return { index, zoneScores };
+  }
+
+  /* ── RADAR SVG ── */
+  function buildRadar(scores, size) {
+    const cx = size/2, cy = size/2, maxR = size/2 - 26;
+    const ang = [-90,-18,54,126,198].map(d => d * Math.PI / 180);
+    const pt  = (a,r) => ({ x: +(cx+Math.cos(a)*r).toFixed(1), y: +(cy+Math.sin(a)*r).toFixed(1) });
+    const pts = pp => pp.map(p => `${p.x},${p.y}`).join(' ');
+    let h = `<defs><style>@keyframes rgrow{from{transform-origin:${cx}px ${cy}px;transform:scale(0);opacity:0}to{transform-origin:${cx}px ${cy}px;transform:scale(1);opacity:1}}</style></defs>`;
+    [0.25,0.5,0.75,1].forEach(l => {
+      h += `<polygon points="${pts(ang.map(a=>pt(a,maxR*l)))}" fill="none" stroke="var(--grid)" stroke-width="1" opacity="0.5"/>`;
+    });
+    ang.forEach(a => { const e=pt(a,maxR); h += `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="var(--grid)" stroke-width="1" opacity="0.5"/>`; });
+    const dp = scores.map((s,i) => pt(ang[i], maxR*(s/100)));
+    h += `<polygon points="${pts(dp)}" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2" style="animation:rgrow .7s ease-out both"/>`;
+    dp.forEach(p => { h += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)" style="animation:rgrow .7s ease-out both"/>`; });
+    ang.forEach((a,i) => {
+      const lp = pt(a, maxR+18);
+      const anchor = lp.x < cx-5 ? 'end' : lp.x > cx+5 ? 'start' : 'middle';
+      h += `<text x="${lp.x}" y="${lp.y}" text-anchor="${anchor}" dominant-baseline="middle" font-size="14">${ZONES[i].icon}</text>`;
+    });
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="overflow:visible">${h}</svg>`;
+  }
+
+  /* ── MINI RADAR (welcome, decorative) ── */
+  function buildMiniRadar(size) {
+    size = size || 130;
+    const cx = size/2, cy = size/2, maxR = size/2 - 10;
+    const ang  = [-90,-18,54,126,198].map(d => d * Math.PI / 180);
+    const pt   = (a,r) => `${+(cx+Math.cos(a)*r).toFixed(1)},${+(cy+Math.sin(a)*r).toFixed(1)}`;
+    const ptXY = (a,r) => ({ x: +(cx+Math.cos(a)*r).toFixed(1), y: +(cy+Math.sin(a)*r).toFixed(1) });
+    const ring = f => ang.map(a => pt(a, maxR*f)).join(' ');
+    const demo = [72, 55, 63, 48, 68];
+    const dp   = demo.map((s,i) => pt(ang[i], maxR * s/100)).join(' ');
+    const axes = ang.map(a => {
+      const e = ptXY(a, maxR);
+      return `<line x1="${cx}" y1="${cy}" x2="${e.x}" y2="${e.y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+    }).join('');
+    const icons = ang.map((a,i) => {
+      const lp = ptXY(a, maxR + 12);
+      return `<text x="${lp.x}" y="${lp.y}" text-anchor="middle" dominant-baseline="middle" font-size="11">${ZONES[i].icon}</text>`;
+    }).join('');
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <defs><style>
+        @keyframes mrGrow  { from{transform-origin:${cx}px ${cy}px;transform:scale(0.1);opacity:0} to{transform-origin:${cx}px ${cy}px;transform:scale(1);opacity:1} }
+        @keyframes mrPulse { 0%,100%{opacity:0.15} 50%{opacity:0.45} }
+      </style></defs>
+      <polygon points="${ring(0.33)}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <polygon points="${ring(0.67)}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+      <polygon points="${ring(1)}"    fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1.5"/>
+      ${axes}
+      <polygon points="${dp}"
+        fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.65)" stroke-width="1.5"
+        style="animation:mrGrow 0.9s ease-out 0.3s both"/>
+      <polygon points="${ring(1)}"
+        fill="none" stroke="rgba(59,130,246,0.2)" stroke-width="1"
+        style="animation:mrPulse 3s ease-in-out 1.2s infinite"/>
+      ${icons}
+    </svg>`;
+  }
+  document.getElementById('welcome-radar').innerHTML = buildMiniRadar(130);
+
+  /* ── COUNTER ── */
+  function animCounter(el, to, ms) {
+    const start = performance.now();
+    (function tick(now) {
+      const p = Math.min((now - start) / ms, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e);
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+
+  /* ── RENDER INDEX ── */
+  function renderIndex() {
+    const { index, zoneScores } = S.results;
+    const color  = scoreColor(index);
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    const risk   = riskLevel(index);
+    const worst  = sorted[0];
+    const attn   = sorted[1];
+
+    $s('index').innerHTML = `
+      <div class="screen-topbar">
+        <button class="nav-back" onclick="handleBack()"><span class="nav-back-arrow">‹</span> Назад</button>
+        <div class="screen-topbar-title">Результат диагностики</div>
+      </div>
+      <div class="idx-hero fade-up">
+        <div class="idx-eyebrow">Индекс управляемости бизнеса</div>
+        <div class="idx-num" id="idx-score" style="color:${color}">0</div>
+        <div class="idx-max">из 100</div>
+        <span class="idx-badge" style="background:${color}">${scoreLabel(index)}</span>
+        <div class="idx-status">${scoreStatus(index)}</div>
+      </div>
+      <div class="idx-metrics fade-up" style="animation-delay:.08s">
+        <div class="idx-metric">
+          <div class="idx-metric-label">Основной риск</div>
+          <div class="idx-metric-val" style="color:${scoreColor(worst.score)}">${worst.icon}<br>${worst.name.split(' ')[0]}</div>
+          <div class="idx-metric-sub">слабая зона</div>
+        </div>
+        <div class="idx-metric">
+          <div class="idx-metric-label">Потеря прибыли</div>
+          <div class="idx-metric-val" style="color:${risk.color}">${risk.loss}</div>
+          <div class="idx-metric-sub">оценка риска</div>
+        </div>
+        <div class="idx-metric">
+          <div class="idx-metric-label">Зона внимания</div>
+          <div class="idx-metric-val">${attn.icon}<br>${attn.name.split(' ')[0]}</div>
+          <div class="idx-metric-sub">требует работы</div>
+        </div>
+      </div>
+      <div class="idx-next-btn fade-up" style="animation-delay:.16s">
+        <button class="btn-primary" onclick="showLoss()">Посмотреть риски потери денег →</button>
+      </div>
+      <div class="share-block fade-up" style="animation-delay:.22s">
+        <div class="share-block-title">Поделиться результатом</div>
+        <div class="share-score-text">
+          Мой индекс управляемости бизнеса —
+          <strong>${index} из 100</strong>.
+        </div>
+        <div class="share-btns">
+          <button class="share-btn tg" onclick="shareToTelegram(${index})">
+            <span class="share-btn-icon">✈️</span>
+            <div class="share-btn-label">
+              <div>Поделиться в Telegram</div>
+              <div class="share-btn-sub">Открывает диалог отправки</div>
+            </div>
+          </button>
+          <button class="share-btn" onclick="shareToTeam(${index})">
+            <span class="share-btn-icon">👥</span>
+            <div class="share-btn-label">
+              <div>Отправить команде</div>
+              <div class="share-btn-sub">Переслать в чат или группу</div>
+            </div>
+          </button>
+          <button class="share-btn copy" id="copy-btn" onclick="copyLink(${index})">
+            <span class="share-btn-icon">🔗</span>
+            <div class="share-btn-label">
+              <div id="copy-btn-text">Скопировать ссылку</div>
+              <div class="share-btn-sub" id="copy-btn-sub">Ссылка на диагностику</div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    `;
+    animCounter(document.getElementById('idx-score'), index, 900);
+  }
+
+  /* ── RENDER LOSS ── */
+  function renderLoss() {
+    const { index, zoneScores } = S.results;
+    const risk   = riskLevel(index);
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+
+    $s('loss').innerHTML = `
+      <div class="screen-topbar">
+        <button class="nav-back" onclick="handleBack()"><span class="nav-back-arrow">‹</span> Назад</button>
+        <div class="screen-topbar-title">Риски потерь</div>
+      </div>
+      <div class="loss-header">
+        <div class="loss-screen-title">Потери из-за слабой системы управления</div>
+        <div class="loss-screen-sub">На основе вашего индекса ${index}/100</div>
+      </div>
+      <div class="loss-card fade-up" style="animation-delay:.04s">
+        <div class="loss-card-title">Риск потери денег</div>
+        <div class="loss-risk-row">
+          <div>
+            <div class="loss-risk-label" style="color:${risk.color}">${risk.label}</div>
+            <div class="loss-risk-sub">уровень риска</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:20px;font-weight:700;color:${risk.color}">${risk.loss}</div>
+            <div style="font-size:11px;color:var(--text3)">прибыли в год</div>
+          </div>
+        </div>
+        <div class="loss-bar-wrap">
+          <div class="loss-bar-fill" data-w="${risk.pct}" style="background:${risk.color}"></div>
+        </div>
+        <div class="loss-bar-hints">
+          <span style="color:var(--success)">Нет риска</span>
+          <span style="color:#DC2626">Критический</span>
+        </div>
+      </div>
+      <div class="loss-card fade-up" style="animation-delay:.09s">
+        <div class="loss-card-title">Что это значит для бизнеса</div>
+        <div class="loss-text">Из-за системных проблем бизнес может терять <strong>${risk.loss} прибыли</strong> ежегодно.</div>
+        <div class="loss-example">
+          Если оборот компании <strong>10 млн ₽ в год</strong>,<br>
+          потери могут составлять<br>
+          <strong>${risk.lossRub} ₽ в год</strong>
+        </div>
+      </div>
+      <div class="loss-card fade-up" style="animation-delay:.14s">
+        <div class="loss-card-title">Источники потерь</div>
+        <div class="loss-sources">
+          ${sorted.slice(0,3).map(z => `
+            <div class="loss-source">
+              <div class="loss-source-dot"></div>
+              <span>${RISK_SOURCES[z.id]}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="loss-next-btn fade-up" style="animation-delay:.19s">
+        <button class="btn-primary" onclick="showPaywall()">Получить полный отчёт →</button>
+      </div>
+      <div class="loss-spacer"></div>
+    `;
+    setTimeout(() => {
+      document.querySelectorAll('.loss-bar-fill').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 400);
+  }
+
+  function showLoss() {
+    tg.HapticFeedback.impactOccurred('light');
+    renderLoss();
+    goTo('loss', 'fwd');
+    tg.BackButton.show();
+  }
+
+  /* ── RENDER PAYWALL ── */
+  function renderPaywall() {
+    const { index, zoneScores } = S.results;
+    const sorted       = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    const weakCount    = sorted.filter(z => z.score < 70).length;
+    const problemCount = Math.min(7, weakCount * 2 + 1);
+
+    $s('paywall').innerHTML = `
+      <div class="screen-topbar">
+        <button class="nav-back" onclick="handleBack()"><span class="nav-back-arrow">‹</span> Назад</button>
+        <div class="screen-topbar-title">Полный отчёт</div>
+      </div>
+      <div class="pw-header fade-up">
+        <div class="pw-problems-badge">⚠️ Мы нашли ${problemCount} системных проблем</div>
+        <div class="pw-title">Полный отчёт<br>по вашему бизнесу</div>
+        <div class="pw-sub">Всё что нужно для роста индекса управляемости</div>
+      </div>
+      <div class="pw-card fade-up" style="animation-delay:.07s">
+        <div class="pw-card-title">В полном отчёте вы получите</div>
+        <div class="pw-item">
+          <div class="pw-item-icon">🗺️</div>
+          <div class="pw-item-body">
+            <div class="pw-item-title">Карту операционных рисков</div>
+            <div class="pw-item-desc">Все слабые места по 5 зонам с деталями</div>
+          </div>
+        </div>
+        <div class="pw-item">
+          <div class="pw-item-icon">📊</div>
+          <div class="pw-item-body">
+            <div class="pw-item-title">Индекс управляемости по всем зонам</div>
+            <div class="pw-item-desc">Детальный разбор каждой зоны с оценками</div>
+          </div>
+        </div>
+        <div class="pw-item">
+          <div class="pw-item-icon">🛣️</div>
+          <div class="pw-item-body">
+            <div class="pw-item-title">Дорожная карта изменений на 90 дней</div>
+            <div class="pw-item-desc">Пошаговый план с конкретными действиями</div>
+          </div>
+        </div>
+        <div class="pw-item">
+          <div class="pw-item-icon">⚡</div>
+          <div class="pw-item-body">
+            <div class="pw-item-title">Сценарии точек отказа</div>
+            <div class="pw-item-desc">Где и как может сломаться ваш бизнес</div>
+          </div>
+        </div>
+        <div class="pw-item">
+          <div class="pw-item-icon">🏗️</div>
+          <div class="pw-item-body">
+            <div class="pw-item-title">Архитектура управляемого бизнеса</div>
+            <div class="pw-item-desc">Модель системы управления под ваш тип бизнеса</div>
+          </div>
+        </div>
+      </div>
+      <div class="pw-cta fade-up" style="animation-delay:.14s">
+        <button class="pw-btn" onclick="showReport()">Получить полный отчёт — 7 900 ₽</button>
+        <div class="pw-trust">
+          <div class="pw-trust-item"><span>📄</span> PDF отчёт</div>
+          <div class="pw-trust-item"><span>🗺️</span> Карта рисков</div>
+          <div class="pw-trust-item"><span>📅</span> Roadmap 90 дней</div>
+        </div>
+      </div>
+      <div class="pw-spacer"></div>
+    `;
+  }
+
+  function showPaywall() {
+    tg.HapticFeedback.impactOccurred('light');
+    renderPaywall();
+    goTo('paywall', 'fwd');
+    tg.BackButton.show();
+  }
+
+  /* ── RENDER REPORT (full dashboard) ── */
+  function renderReport() {
+    const { index, zoneScores } = S.results;
+    const color  = scoreColor(index);
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    const risk   = riskLevel(index);
+    const radarSz = Math.min(window.innerWidth - 48, 240);
+
+    const roadmap = sorted.slice(0,3).map((z, i) => ({
+      n: i + 1, zone: z, rec: RECS[z.id][0],
+      week: ['Недели 1–4', 'Недели 5–8', 'Недели 9–12'][i],
+    }));
+
+    function marketText() {
+      const weak = sorted.slice(0,2).map(z => z.name.toLowerCase());
+      let g, n;
+      if      (index < 40) { g = '30–40 пунктов'; n = 'У вас большой резерв для роста.'; }
+      else if (index < 60) { g = '20–30 пунктов'; n = 'Рост возможен без кардинальных изменений.'; }
+      else if (index < 75) { g = '10–20 пунктов'; n = 'Точечные улучшения дадут заметный результат.'; }
+      else                 { g = '5–10 пунктов';  n = 'Вы выше среднего — есть куда расти.'; }
+      return `Улучшите <strong>${weak.join(' и ')}</strong> — индекс вырастет на <strong>${g}</strong>. ${n}`;
+    }
+
+    $s('report').innerHTML = `
+      <div class="screen-topbar">
+        <button class="nav-back" onclick="handleBack()"><span class="nav-back-arrow">‹</span> Назад</button>
+        <div class="screen-topbar-title">Dashboard</div>
+      </div>
+      <div class="res-hero fade-up">
+        <div class="res-eyebrow">Полный отчёт — K-A-Q-S™</div>
+        <div class="res-score-num" id="rep-num" style="color:${color}">0</div>
+        <div class="res-score-max">из 100</div>
+        <span class="res-badge" style="background:${color}">${scoreLabel(index)}</span>
+      </div>
+      <div class="res-radar fade-up" style="animation-delay:.07s">
+        ${buildRadar(zoneScores, radarSz)}
+      </div>
+      <div class="res-card fade-up" style="animation-delay:.11s">
+        <div class="res-card-title">Оценка по зонам</div>
+        ${sorted.map(z => `
+          <div class="zone-row">
+            <span class="zone-ico">${z.icon}</span>
+            <span class="zone-name">${z.name.length > 10 ? z.name.slice(0,9)+'…' : z.name}</span>
+            <div class="zone-bar"><div class="zone-bar-f" data-w="${z.score}" style="background:${scoreColor(z.score)}"></div></div>
+            <span class="zone-sc" style="color:${scoreColor(z.score)}">${z.score}</span>
+          </div>`).join('')}
+      </div>
+      <div class="res-card fade-up" style="animation-delay:.15s">
+        <div class="res-card-title">Основные источники риска</div>
+        ${sorted.slice(0,3).map(z => `
+          <div class="risk-source-item">
+            <div class="risk-source-dot" style="background:${risk.color}"></div>
+            <div class="risk-source-text">${RISK_SOURCES[z.id]}</div>
+          </div>`).join('')}
+      </div>
+      <div class="res-card fade-up" style="animation-delay:.19s">
+        <div class="res-card-title">Roadmap на 90 дней — первые шаги</div>
+        ${roadmap.map(r => `
+          <div class="roadmap-item">
+            <div class="roadmap-num">${r.n}</div>
+            <div class="roadmap-body">
+              <div class="roadmap-title">${r.zone.icon} ${r.zone.name}</div>
+              <div class="roadmap-desc">${r.week}: ${r.rec}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="res-card fade-up" style="animation-delay:.23s">
+        <div class="res-card-title">Сравнение с рынком</div>
+        <div class="market-rows">
+          <div class="market-row">
+            <span class="market-row-label">Ваш результат</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:${color}" data-w="${index}"></div></div>
+            <span class="market-row-val" style="color:${color}">${index}</span>
+          </div>
+          <div class="market-row">
+            <span class="market-row-label">Малый бизнес</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:var(--text3)" data-w="58"></div></div>
+            <span class="market-row-val" style="color:var(--text3)">58</span>
+          </div>
+          <div class="market-row">
+            <span class="market-row-label">Системный бизнес</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:var(--success)" data-w="80"></div></div>
+            <span class="market-row-val" style="color:var(--success)">80+</span>
+          </div>
+        </div>
+        <div class="market-potential">${marketText()}</div>
+      </div>
+      <div class="res-spacer"></div>
+    `;
+
+    animCounter(document.getElementById('rep-num'), index, 900);
+    setTimeout(() => {
+      document.querySelectorAll('.zone-bar-f').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 450);
+    setTimeout(() => {
+      document.querySelectorAll('.market-row-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 650);
+  }
+
+  function showReport() {
+    tg.HapticFeedback.notificationOccurred('success');
+    renderReport();
+    goTo('report', 'fwd');
+    tg.BackButton.show();
+    setupMainButton();
+  }
+
+  /* ── SHARE FUNCTIONS ── */
+  const APP_URL = 'https://t.me/kaqs_bot/app'; // замените на реальную ссылку на mini-app
+
+  function buildShareText(index) {
+    return `Мой индекс управляемости бизнеса — ${index} из 100.\nПроверь систему управления своей компании за 5 минут.`;
+  }
+
+  function shareToTelegram(index) {
+    tg.HapticFeedback.impactOccurred('light');
+    const text = buildShareText(index);
+    const url  = `https://t.me/share/url?url=${encodeURIComponent(APP_URL)}&text=${encodeURIComponent(text)}`;
+    if (window.Telegram?.WebApp) {
+      tg.openTelegramLink(url);
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+
+  function shareToTeam(index) {
+    tg.HapticFeedback.impactOccurred('light');
+    const text = buildShareText(index);
+    // В Telegram показываем диалог выбора чата через switchInlineQuery (если поддерживается)
+    // иначе — тот же share URL
+    if (window.Telegram?.WebApp && tg.switchInlineQuery) {
+      tg.switchInlineQuery(text, ['users', 'groups', 'channels']);
+    } else {
+      const url = `https://t.me/share/url?url=${encodeURIComponent(APP_URL)}&text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  }
+
+  function copyLink(index) {
+    tg.HapticFeedback.impactOccurred('light');
+    const text = buildShareText(index) + '\n' + APP_URL;
+    const btn  = document.getElementById('copy-btn');
+    const lbl  = document.getElementById('copy-btn-text');
+    const sub  = document.getElementById('copy-btn-sub');
+
+    navigator.clipboard?.writeText(text).then(() => {
+      lbl.textContent = 'Скопировано!';
+      sub.textContent = 'Текст с ссылкой скопирован';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        lbl.textContent = 'Скопировать ссылку';
+        sub.textContent = 'Ссылка на диагностику';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(() => {
+      // clipboard недоступен — показываем текст для ручного копирования
+      lbl.textContent = 'Скопировано!';
+      sub.textContent = APP_URL;
+    });
+  }
+
+  /* ── MAIN BUTTON ── */
+  function setupMainButton() {
+    const { index, zoneScores } = S.results;
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    tg.MainButton.setParams({ text: 'Получить разбор в боте', color: '#3B82F6', text_color: '#FFFFFF', is_active: true, is_visible: true });
+    tg.MainButton.onClick(() => {
+      tg.HapticFeedback.notificationOccurred('success');
+      tg.sendData(JSON.stringify({
+        index,
+        zones: Object.fromEntries(ZONES.map((z,i) => [z.id, zoneScores[i]])),
+        risks: sorted.filter(z => z.score < 60).slice(0,3).map(z => z.name),
+        recs:  sorted.slice(0,3).map(z => RECS[z.id][0]),
+      }));
+    });
+  }
+</script>
+</body>
+</html>
