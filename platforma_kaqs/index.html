@@ -1,0 +1,3149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-AQS — Платформа управляемости</title>
+  <meta name="description" content="Платформа управляемости бизнеса. Ваш индекс, проблемы, план и задачи — в одном месте.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0D0F11;
+      --bg2:         #13161A;
+      --bg3:         #191D22;
+      --bg4:         #1E2329;
+      --bg5:         #242B34;
+      --border:      rgba(255,255,255,0.06);
+      --border2:     rgba(255,255,255,0.11);
+      --border3:     rgba(255,255,255,0.16);
+      --text:        #F1F5F9;
+      --text2:       #CBD5E1;
+      --text3:       #94A3B8;
+      --text4:       #64748B;
+      --text5:       #475569;
+      --accent:      #6366F1;
+      --accent2:     #818CF8;
+      --accent3:     #A5B4FC;
+      --accent-dim:  rgba(99,102,241,0.10);
+      --accent-dim2: rgba(99,102,241,0.18);
+      --accent-dim3: rgba(99,102,241,0.28);
+      --green:       #22C55E;
+      --green-dim:   rgba(34,197,94,0.10);
+      --green-dim2:  rgba(34,197,94,0.18);
+      --yellow:      #EAB308;
+      --yellow-dim:  rgba(234,179,8,0.10);
+      --yellow-dim2: rgba(234,179,8,0.18);
+      --red:         #EF4444;
+      --red-dim:     rgba(239,68,68,0.10);
+      --red-dim2:    rgba(239,68,68,0.18);
+      --blue:        #60A5FA;
+      --blue-dim:    rgba(96,165,250,0.10);
+      --sidebar-w:   252px;
+      --topbar-h:    62px;
+      --r:           12px;
+      --r-sm:        8px;
+      --r-lg:        16px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── APP LAYOUT ── */
+    .app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 110;
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    .sidebar-logo {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: #fff;
+      letter-spacing: -.5px;
+      flex-shrink: 0;
+    }
+
+    .logo-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.3px;
+      line-height: 1.2;
+    }
+
+    .logo-tagline {
+      font-size: 10px;
+      color: var(--text5);
+      font-weight: 500;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-user {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .suser-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .suser-meta {
+      font-size: 11px;
+      color: var(--text5);
+    }
+
+    .suser-index {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-dim2);
+      border-radius: 8px;
+    }
+
+    .suser-index-label {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .suser-index-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .nav-group-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text5);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 10px 8px 5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      color: var(--text4);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all .15s ease;
+      border: 1px solid transparent;
+      position: relative;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: var(--bg4);
+      color: var(--text2);
+    }
+
+    .nav-item.active {
+      background: var(--accent-dim);
+      border-color: var(--accent-dim2);
+      color: var(--accent);
+    }
+
+    .nav-item .ni {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      opacity: .6;
+    }
+
+    .nav-item.active .ni { opacity: 1; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .nav-badge.green {
+      background: var(--green);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: var(--topbar-h);
+      min-height: var(--topbar-h);
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text3);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .topbar-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .topbar-date {
+      font-size: 12px;
+      color: var(--text5);
+    }
+
+    .topbar-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1.5px solid var(--accent-dim2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px;
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active {
+      display: block;
+      animation: fadeUp .25s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── OVERLAY ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      z-index: 109;
+    }
+
+    /* ══════════════════════════════════════
+       COMPONENTS
+    ══════════════════════════════════════ */
+
+    /* CARD */
+    .card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px;
+      transition: border-color .2s;
+    }
+
+    .card:hover { border-color: var(--border2); }
+    .card-sm { padding: 16px; }
+    .card-xs { padding: 12px 14px; }
+
+    /* SECTION HEADER */
+    .sec-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .sec-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.3px;
+    }
+
+    .sec-sub {
+      font-size: 12px;
+      color: var(--text5);
+      margin-top: 3px;
+    }
+
+    /* PAGE HEADER */
+    .pg-head {
+      margin-bottom: 26px;
+    }
+
+    .pg-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.4px;
+      margin-bottom: 5px;
+    }
+
+    .pg-sub {
+      font-size: 13px;
+      color: var(--text4);
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: var(--r-sm);
+      border: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7A5CFF, #5B8CFF);
+      color: #fff;
+      box-shadow: 0 0 0 0 rgba(122,92,255,0);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #8B6FFF, #6B9CFF);
+      box-shadow: 0 0 20px rgba(122,92,255,.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active { transform: scale(.98); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg4);
+      border-color: var(--border3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text3);
+      padding: 7px 14px;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg4);
+      color: var(--text2);
+    }
+
+    .btn-sm {
+      padding: 6px 13px;
+      font-size: 12px;
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .b-red    { background: var(--red-dim);    color: var(--red);    }
+    .b-yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .b-green  { background: var(--green-dim);  color: var(--green);  }
+    .b-blue   { background: var(--blue-dim);   color: var(--blue);   }
+    .b-accent { background: var(--accent-dim); color: var(--accent); }
+    .b-gray   { background: var(--bg5);        color: var(--text4);  }
+
+    /* LEVEL PILL */
+    .level-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .lp-critical { background: var(--red-dim2);    color: var(--red);    }
+    .lp-weak     { background: var(--yellow-dim2); color: var(--yellow); }
+    .lp-medium   { background: var(--blue-dim);    color: var(--blue);   }
+    .lp-good     { background: var(--green-dim2);  color: var(--green);  }
+
+    /* PROGRESS BAR */
+    .pbar-wrap { margin-top: 8px; }
+
+    .pbar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .pbar-track {
+      height: 6px;
+      background: var(--bg5);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .pbar-track-md { height: 8px; }
+
+    .pbar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    .pf-red    { background: var(--red); }
+    .pf-yellow { background: var(--yellow); }
+    .pf-blue   { background: var(--blue); }
+    .pf-green  { background: var(--green); }
+    .pf-accent { background: var(--accent); }
+
+    /* GRID UTILS */
+    .g2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+    .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .g5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+    .row { display: flex; align-items: center; gap: 10px; }
+    .flex-1 { flex: 1; }
+
+    /* SPACERS */
+    .mt8  { margin-top: 8px; }
+    .mt12 { margin-top: 12px; }
+    .mt16 { margin-top: 16px; }
+    .mt20 { margin-top: 20px; }
+    .mt24 { margin-top: 24px; }
+    .mb16 { margin-bottom: 16px; }
+    .mb24 { margin-bottom: 24px; }
+
+    /* DIVIDER */
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg5); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text5); }
+
+    /* ══════════════════════════════════════
+       DASHBOARD
+    ══════════════════════════════════════ */
+
+    .index-hero {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .index-hero::before {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(249,115,22,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ih-circle {
+      position: relative;
+      flex-shrink: 0;
+      width: 104px;
+      height: 104px;
+    }
+
+    .ih-circle-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ih-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .ih-max {
+      font-size: 11px;
+      color: var(--text5);
+      font-weight: 500;
+    }
+
+    .ih-info { flex: 1; }
+
+    .ih-info h2 {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.4px;
+      margin-bottom: 8px;
+      margin-top: 8px;
+    }
+
+    .ih-info p {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.75;
+      max-width: 500px;
+    }
+
+    .ih-actions { flex-shrink: 0; }
+
+    /* MINI SCORE CARDS */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(5,1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .mini-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .mini-card:hover {
+      border-color: var(--border2);
+      background: var(--bg4);
+      transform: translateY(-2px);
+    }
+
+    .mc-icon { font-size: 20px; margin-bottom: 7px; }
+    .mc-name { font-size: 11px; color: var(--text5); margin-bottom: 5px; }
+    .mc-val  { font-size: 21px; font-weight: 800; }
+
+    /* LOSSES BLOCK */
+    .losses-block {
+      background: #2A1212;
+      border: 1px solid rgba(255,107,107,.15);
+      border-radius: var(--r);
+      padding: 22px;
+    }
+
+    .losses-main-line {
+      font-size: 22px;
+      font-weight: 800;
+      color: #E07070;
+      letter-spacing: -.5px;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .losses-monthly {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(224,112,112,.6);
+      margin-bottom: 16px;
+    }
+
+    .losses-divider {
+      height: 1px;
+      background: rgba(224,112,112,.1);
+      margin-bottom: 14px;
+    }
+
+    .losses-reasons-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(203,213,225,.5);
+      margin-bottom: 10px;
+    }
+
+    .losses-reason {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      color: #94A3B8;
+      margin-bottom: 7px;
+    }
+
+    .losses-reason::before {
+      content: '';
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(224,112,112,.45);
+      flex-shrink: 0;
+    }
+
+    /* PROBLEM PREVIEW CARD */
+    .prob-prev {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .prob-prev:hover {
+      border-color: var(--border2);
+      background: var(--bg4);
+    }
+
+    .prob-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text3);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ══════════════════════════════════════
+       DIAGNOSTICS
+    ══════════════════════════════════════ */
+
+    .block-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px;
+      transition: border-color .2s;
+    }
+
+    .block-card:hover { border-color: var(--border2); }
+
+    .bc-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .bc-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: var(--bg5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .bc-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .bc-score-big {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .bc-score-max {
+      font-size: 13px;
+      color: var(--text4);
+      font-weight: 400;
+    }
+
+    /* ══════════════════════════════════════
+       PROBLEMS
+    ══════════════════════════════════════ */
+
+    .prob-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .prob-card:hover  { border-color: var(--border2); }
+    .prob-card.open   { border-color: var(--border2); }
+
+    .prob-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .prob-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      padding-top: 1px;
+    }
+
+    .prob-arrow {
+      flex-shrink: 0;
+      transition: transform .2s;
+      color: var(--text4);
+      margin-top: 3px;
+    }
+
+    .prob-card.open .prob-arrow { transform: rotate(180deg); }
+
+    .prob-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 9px;
+      padding-left: 42px;
+      flex-wrap: wrap;
+    }
+
+    .prob-body {
+      display: none;
+      padding-top: 18px;
+      padding-left: 42px;
+    }
+
+    .prob-card.open .prob-body { display: block; }
+
+    .prob-desc {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .info-box {
+      border-radius: 9px;
+      padding: 13px 15px;
+      margin-bottom: 10px;
+    }
+
+    .info-box-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 5px;
+    }
+
+    .info-box p {
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .ib-danger {
+      background: var(--red-dim);
+      border: 1px solid rgba(239,68,68,.15);
+    }
+
+    .ib-danger .info-box-label { color: var(--red); }
+    .ib-danger p { color: var(--text2); }
+
+    .ib-rec {
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,.15);
+    }
+
+    .ib-rec .info-box-label { color: var(--green); }
+    .ib-rec p { color: var(--text2); }
+
+    /* ══════════════════════════════════════
+       PLAN
+    ══════════════════════════════════════ */
+
+    .plan-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px;
+      display: flex;
+      gap: 18px;
+      transition: border-color .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .plan-item.u-critical::before { background: #E07070; }
+    .plan-item.u-important::before { background: var(--yellow); }
+    .plan-item.u-improve::before { background: var(--text5); }
+
+    .plan-item.u-critical { border-color: rgba(224,112,112,.15); }
+    .plan-item.u-current  { border-color: rgba(99,102,241,.3); box-shadow: 0 0 0 1px rgba(99,102,241,.1); }
+
+    .plan-item:hover { border-color: var(--border2); }
+
+    .plan-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1.5px solid var(--accent-dim2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .plan-body { flex: 1; min-width: 0; }
+
+    .plan-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 7px;
+      letter-spacing: -.2px;
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .plan-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .plan-gives-risks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .plan-gr-box {
+      border-radius: 8px;
+      padding: 12px 13px;
+    }
+
+    .plan-gr-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+
+    .plan-gr-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .plan-gr-item:last-child { margin-bottom: 0; }
+
+    .plan-gr-item::before {
+      content: '';
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .pgr-gives { background: rgba(99,102,241,.08); border: 1px solid rgba(99,102,241,.12); }
+    .pgr-gives .plan-gr-label { color: var(--accent2); }
+    .pgr-gives .plan-gr-item { color: var(--text3); }
+    .pgr-gives .plan-gr-item::before { background: var(--accent); }
+
+    .pgr-risks { background: rgba(239,68,68,.05); border: 1px solid rgba(239,68,68,.1); }
+    .pgr-risks .plan-gr-label { color: rgba(224,112,112,.7); }
+    .pgr-risks .plan-gr-item { color: var(--text4); }
+    .pgr-risks .plan-gr-item::before { background: #E07070; }
+
+    .urgency-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .ub-critical { background: rgba(224,112,112,.12); color: #E07070; }
+    .ub-important{ background: rgba(234,179,8,.1);    color: var(--yellow); }
+    .ub-improve  { background: var(--bg5);            color: var(--text4); }
+
+    .plan-intro {
+      padding: 16px 20px;
+      background: rgba(224,112,112,.04);
+      border: 1px solid rgba(224,112,112,.12);
+      border-radius: var(--r-sm);
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .current-step-banner {
+      background: rgba(99,102,241,.08);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+
+    .csb-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .csb-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .csb-step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.2px;
+      margin-bottom: 6px;
+    }
+
+    .csb-micro-pain {
+      font-size: 13px;
+      color: rgba(224,112,112,.75);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .csb-micro-pain::before {
+      content: '→';
+      font-weight: 700;
+      color: #E07070;
+    }
+
+    .plan-item-first {
+      background: var(--bg3);
+      border-color: rgba(99,102,241,.2) !important;
+    }
+
+    .plan-item-first .plan-title {
+      font-size: 16px;
+    }
+
+    .plan-item-secondary {
+      opacity: .8;
+    }
+
+    /* ══════════════════════════════════════
+       TASKS — execution dashboard
+    ══════════════════════════════════════ */
+
+    .focus-block {
+      background: rgba(99,102,241,.07);
+      border: 1px solid rgba(99,102,241,.22);
+      border-radius: var(--r);
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+
+    .focus-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 12px;
+    }
+
+    .focus-task-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.3px;
+      margin-bottom: 10px;
+    }
+
+    .focus-gives {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px;
+    }
+
+    .focus-give {
+      font-size: 13px;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .focus-give::before {
+      content: '→';
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .sem-filters {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .sf-btn {
+      padding: 7px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text4);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
+    }
+
+    .sf-btn:hover  { background: var(--bg4); color: var(--text2); }
+    .sf-btn.active { background: var(--accent-dim); border-color: var(--accent-dim2); color: var(--accent); }
+
+    .task-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      transition: border-color .2s;
+    }
+
+    .task-card:hover   { border-color: var(--border2); }
+    .task-card.tc-active { border-color: rgba(99,102,241,.22); }
+    .task-card.tc-done   { opacity: .5; }
+
+    .tc-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .tc-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      border: 1.5px solid var(--border2);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all .15s;
+    }
+
+    .tc-check.checked     { background: var(--green); border-color: var(--green); }
+    .tc-check.in-progress { border-color: var(--accent); background: var(--accent-dim); }
+
+    .tc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    .tc-title.done { text-decoration: line-through; color: var(--text5); }
+
+    .tc-gives {
+      padding: 10px 12px;
+      background: var(--bg4);
+      border-radius: 7px;
+      margin: 0 0 12px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .tc-give {
+      font-size: 12px;
+      color: var(--text4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tc-give::before {
+      content: '→';
+      color: var(--accent);
+      font-size: 11px;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .tc-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 32px;
+      flex-wrap: wrap;
+    }
+
+    .tc-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text5);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      padding: 14px 0 8px;
+    }
+
+    .task-block-tag {
+      font-size: 11px;
+      color: var(--text4);
+      background: var(--bg5);
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* legacy compat */
+    .filter-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+      background: transparent; color: var(--text4); font-size: 12px; font-weight: 500;
+      cursor: pointer; font-family: inherit; transition: all .15s;
+    }
+    .filter-btn:hover  { background: var(--bg4); color: var(--text2); }
+    .filter-btn.active { background: var(--accent-dim); border-color: var(--accent-dim2); color: var(--accent); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text5);
+    }
+
+    .empty-state-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-state-text { font-size: 14px; }
+
+    /* ── STEP VIEW ── */
+
+    .step-back-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .step-view-card {
+      background: var(--bg3);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: var(--r);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .step-view-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.4px;
+      margin: 12px 0 8px;
+    }
+
+    .step-view-desc {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .step-gives-block {
+      padding: 14px 16px;
+      background: rgba(99,102,241,.06);
+      border: 1px solid rgba(99,102,241,.12);
+      border-radius: 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .step-gives-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 4px;
+    }
+
+    .step-give-item {
+      font-size: 13px;
+      color: var(--text3);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .step-give-item::before {
+      content: '→';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-progress-bar {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--bg4);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .step-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text4);
+      margin-bottom: 8px;
+    }
+
+    .step-complete-banner {
+      background: rgba(34,197,94,.05);
+      border: 1px solid rgba(34,197,94,.2);
+      border-radius: var(--r);
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .scb-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(34,197,94,.12);
+      border: 1.5px solid rgba(34,197,94,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 16px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .scb-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    .scb-sub {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .step-tasks-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text5);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 10px;
+    }
+
+    /* ══════════════════════════════════════
+       PROGRESS
+    ══════════════════════════════════════ */
+
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-bottom: 7px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text4);
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+
+    @media (max-width: 1100px) {
+      .mini-grid { grid-template-columns: repeat(3,1fr); }
+      .g5 { grid-template-columns: repeat(3,1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .g3 { grid-template-columns: repeat(2,1fr); }
+      .index-hero { flex-wrap: wrap; gap: 20px; padding: 22px; }
+      .ih-actions { width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: 0; top: 0; bottom: 0;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .hamburger { display: flex; }
+      .content { padding: 16px; }
+      .g2 { grid-template-columns: 1fr; }
+      .g3 { grid-template-columns: 1fr; }
+      .mini-grid { grid-template-columns: repeat(2,1fr); }
+      .topbar { padding: 0 16px; }
+      .topbar-date { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .mini-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    /* ── DOJIM SYSTEM ── */
+
+    .dojim-banner {
+      background: rgba(224,112,112,.05);
+      border: 1px solid rgba(224,112,112,.2);
+      border-radius: var(--r);
+      padding: 20px 22px;
+      margin-bottom: 24px;
+    }
+
+    .dojim-stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #E07070;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      background: rgba(224,112,112,.1);
+      border: 1px solid rgba(224,112,112,.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 13px;
+    }
+
+    .dojim-main {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.3px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .dojim-sub {
+      font-size: 13px;
+      color: var(--text4);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .dojim-sub span { color: var(--text2); }
+
+    /* Completion toast */
+    .completion-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: var(--bg3);
+      border: 1px solid rgba(34,197,94,.3);
+      border-left: 3px solid var(--green);
+      border-radius: var(--r);
+      padding: 16px 18px;
+      min-width: 300px;
+      max-width: 380px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(34,197,94,.08);
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all .4s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+    }
+
+    .completion-toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ct-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .ct-check-icon {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .ct-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .ct-effect {
+      font-size: 12px;
+      color: var(--green);
+      line-height: 1.55;
+      padding-left: 32px;
+      margin-bottom: 4px;
+    }
+
+    .ct-next {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .ct-next-label {
+      font-size: 11px;
+      color: var(--text4);
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    /* Inactivity banner */
+    .inactivity-banner {
+      position: fixed;
+      bottom: 0;
+      left: var(--sidebar-w);
+      right: 0;
+      z-index: 9990;
+      background: var(--bg2);
+      border-top: 2px solid rgba(224,112,112,.35);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transform: translateY(100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+    }
+
+    .inactivity-banner.visible {
+      transform: translateY(0);
+    }
+
+    .ib-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E07070;
+      box-shadow: 0 0 8px #E07070;
+      flex-shrink: 0;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.8); }
+    }
+
+    .ib-text { flex: 1; }
+
+    .ib-main {
+      font-size: 13px;
+      font-weight: 700;
+      color: #E07070;
+      margin-bottom: 1px;
+    }
+
+    .ib-sub {
+      font-size: 11px;
+      color: var(--text5);
+    }
+
+    .ib-close {
+      background: none;
+      border: none;
+      color: var(--text5);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 2px 6px;
+      line-height: 1;
+      transition: color .15s;
+    }
+
+    .ib-close:hover { color: var(--text3); }
+
+    @media (max-width: 768px) {
+      .inactivity-banner { left: 0; }
+      .completion-toast { left: 16px; right: 16px; bottom: 80px; min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-wrap">
+        <div class="logo-icon">KA</div>
+        <div>
+          <div class="logo-name">K-AQS</div>
+          <div class="logo-tagline">Платформа</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="suser-name" id="sb-name">—</div>
+      <div class="suser-meta" id="sb-meta">—</div>
+      <div class="suser-index">
+        <span class="suser-index-label">Индекс управляемости</span>
+        <span class="suser-index-val" id="sb-index">—</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Обзор</div>
+
+      <div class="nav-item active" data-page="dashboard">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+        </svg>
+        Главная
+      </div>
+
+      <div class="nav-item" data-page="diagnostics">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Диагностика
+      </div>
+
+      <div class="nav-group-label">Работа</div>
+
+      <div class="nav-item" data-page="problems">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Проблемные зоны
+        <span class="nav-badge" id="nb-problems">5</span>
+      </div>
+
+      <div class="nav-item" data-page="plan">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        План действий
+      </div>
+
+      <div class="nav-item" data-page="tasks">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        Задачи
+        <span class="nav-badge" id="nb-tasks">8</span>
+      </div>
+
+      <div class="nav-item" data-page="progress">
+        <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        Прогресс
+      </div>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <header class="topbar">
+      <button class="hamburger" onclick="openSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="topbar-title" id="topbar-title">Главная</div>
+      <div class="topbar-date" id="topbar-date"></div>
+      <div class="topbar-avatar" id="topbar-avatar">—</div>
+    </header>
+
+    <main class="content">
+      <section class="page active" id="page-dashboard"></section>
+      <section class="page" id="page-diagnostics"></section>
+      <section class="page" id="page-problems"></section>
+      <section class="page" id="page-plan"></section>
+      <section class="page" id="page-tasks"></section>
+      <section class="page" id="page-progress"></section>
+    </main>
+
+  </div>
+</div>
+
+<!-- Completion toast -->
+<div id="completion-toast" class="completion-toast">
+  <div class="ct-header">
+    <div class="ct-check-icon">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="ct-title" id="ct-title">Задача выполнена</div>
+  </div>
+  <div class="ct-effect" id="ct-effect"></div>
+  <div class="ct-next" id="ct-next">
+    <span class="ct-next-label" id="ct-next-label"></span>
+    <button class="btn btn-primary btn-sm" id="ct-next-btn">Начать →</button>
+  </div>
+</div>
+
+<!-- Inactivity banner -->
+<div id="inactivity-banner" class="inactivity-banner">
+  <div class="ib-dot"></div>
+  <div class="ib-text">
+    <div class="ib-main">Вы остановились</div>
+    <div class="ib-sub">Пока система не внедрена — проблемы сохраняются</div>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="dismissInactivity()">Продолжить внедрение →</button>
+  <button class="ib-close" onclick="closeInactivityBanner()">×</button>
+</div>
+
+<script>
+// ================================================================
+//  MOCK DATA — структура готова к замене реальным API
+// ================================================================
+
+const DATA = {
+  user: {
+    firstName: 'Александр',
+    lastName: 'Петров',
+    initials: 'АП',
+    company: 'СтройГрупп',
+    role: 'Генеральный директор',
+    diagDate: '15 марта 2026',
+  },
+
+  index: 42,
+
+  summary:
+    'Бизнес работает, но вы — главная точка всех решений. ' +
+    'Процессы нигде не зафиксированы, контроль ситуативный. ' +
+    'Без изменений зависимость от вас будет только расти.',
+
+  losses: '2 400 000 ₽',
+  lossesNote: 'расчётные потери в год из-за неэффективности',
+
+  blocks: [
+    {
+      id: 'finance', name: 'Финансы', icon: '💰', score: 35, status: 'critical',
+      desc: 'Нет управленческого учёта. Решения о деньгах принимаются интуитивно — без цифр.',
+      strong: 'Есть понимание основных статей расходов',
+      weak: 'Нет P&L, нет планирования, нет точки безубыточности',
+    },
+    {
+      id: 'marketing', name: 'Маркетинг', icon: '📣', score: 58, status: 'weak',
+      desc: 'Есть поток заявок, но нет понимания, какой канал работает и стоит своих денег.',
+      strong: 'Сарафанное радио стабильно приносит клиентов',
+      weak: 'Нет аналитики по каналам, нет стоимости заявки, нет конверсий',
+    },
+    {
+      id: 'team', name: 'Команда', icon: '👥', score: 40, status: 'critical',
+      desc: 'Люди есть, структуры нет. Все согласования и решения идут через собственника.',
+      strong: 'Лояльный коллектив, низкая текучка',
+      weak: 'Нет оргструктуры, зон ответственности и системы найма',
+    },
+    {
+      id: 'processes', name: 'Процессы', icon: '⚙️', score: 28, status: 'critical',
+      desc: 'Все процессы — в головах. Регламентов нет. Каждый делает как считает нужным.',
+      strong: 'Базовые операции выполняются стабильно',
+      weak: 'Нет ни одного зафиксированного процесса, нет стандартов',
+    },
+    {
+      id: 'control', name: 'Контроль', icon: '📊', score: 45, status: 'weak',
+      desc: 'Контроль ситуативный: нет регулярных метрик, нет системы отчётности.',
+      strong: 'Собственник лично контролирует ключевые проекты',
+      weak: 'Нет KPI, нет дашборда, нет регулярных планёрок',
+    },
+  ],
+
+  problems: [
+    {
+      id: 1, block: 'processes',
+      title: 'Процессы не зафиксированы',
+      shortDesc: 'Бизнес держится на людях. При их уходе работа останавливается.',
+      desc: 'Все ключевые процессы держатся в голове у собственника или нескольких сотрудников. При уходе человека — работа направления встаёт.',
+      danger: 'Один уволившийся сотрудник может остановить работу целого направления. Компания не масштабируется.',
+      rec: 'Зафиксировать 3 самых критичных процесса в виде пошаговых инструкций.',
+      crit: 'high',
+    },
+    {
+      id: 2, block: 'finance',
+      title: 'Нет управленческого учёта',
+      shortDesc: 'Вы не понимаете, где зарабатываете, а где теряете. Решения принимаются вслепую.',
+      desc: 'Непонятно, где компания зарабатывает, а где теряет деньги. Решения о расходах принимаются без цифр.',
+      danger: 'Невозможно управлять тем, что не измеряешь. Деньги утекают незаметно через неэффективные направления.',
+      rec: 'Внедрить простую таблицу P&L и заполнять её еженедельно.',
+      crit: 'high',
+    },
+    {
+      id: 3, block: 'team',
+      title: 'Нет структуры ответственности',
+      shortDesc: 'Непонятно, кто за что отвечает. Задачи теряются. За результат никто не несёт ответственности.',
+      desc: 'Непонятно, кто за что отвечает. Задачи теряются, за результат никто конкретно не несёт ответственности.',
+      danger: 'Собственник вынужден контролировать всё лично. Рост компании упирается в его личный ресурс.',
+      rec: 'Создать простую оргструктуру с чёткими зонами ответственности.',
+      crit: 'high',
+    },
+    {
+      id: 4, block: 'control',
+      title: 'Нет системы KPI',
+      shortDesc: 'Непонятно, как оценить работу сотрудников. Проблемы видны только когда уже поздно.',
+      desc: 'Непонятно, как оценить работу сотрудников объективно. Контроль — по настроению или жалобам клиентов.',
+      danger: 'Сотрудники работают без ориентиров. Проблемы видны только когда уже поздно.',
+      rec: 'Определить 5–7 ключевых показателей и собирать их еженедельно.',
+      crit: 'medium',
+    },
+    {
+      id: 5, block: 'marketing',
+      title: 'Нет аналитики по каналам',
+      shortDesc: 'Деньги тратятся на рекламу, но неизвестно, какой канал даёт результат, а какой — убытки.',
+      desc: 'Деньги тратятся на рекламу, но нет понимания, какой канал даёт клиентов по адекватной цене.',
+      danger: 'Часть рекламных каналов может быть убыточной — и вы об этом не знаете.',
+      rec: 'Подключить UTM-метки и начать считать стоимость заявки по каждому каналу.',
+      crit: 'medium',
+    },
+  ],
+
+  plan: [
+    {
+      id: 1, priority: 1, block: 'processes', probId: 1,
+      urgency: 'critical',
+      title: 'Зафиксировать процессы',
+      desc: 'Выбрать 3 критичных процесса и описать пошагово. Начать с тех, где уход человека останавливает работу.',
+      microPain: 'иначе бизнес продолжит зависеть от людей',
+      gives: ['бизнес перестаёт ломаться при росте', 'новые сотрудники быстрее включаются в работу', 'снижается зависимость от конкретных людей'],
+      risks: ['рост останавливается', 'замена сотрудника откатывает бизнес назад', 'собственник продолжает тушить операционку вручную'],
+      deadline: '2 недели',
+      taskIds: [101, 102, 103],
+    },
+    {
+      id: 2, priority: 2, block: 'finance', probId: 2,
+      urgency: 'critical',
+      title: 'Запустить управленческий учёт',
+      desc: 'Создать таблицу P&L. Фиксировать доходы и расходы по направлениям. Смотреть еженедельно.',
+      microPain: 'иначе деньги продолжат уходить незаметно',
+      gives: ['видно, где деньги зарабатываются, а где сжигаются', 'решения принимаются на фактах, а не ощущениях', 'скрытые потери выходят на свет'],
+      risks: ['деньги продолжают утекать незаметно', 'каждое решение — риск без цифр', 'убыточные направления продолжают жить'],
+      deadline: '1 неделя',
+      taskIds: [104, 105],
+    },
+    {
+      id: 3, priority: 3, block: 'team', probId: 3,
+      urgency: 'important',
+      title: 'Разграничить зоны ответственности',
+      desc: 'Прописать, кто за что отвечает. Зафиксировать в схеме. Согласовать с командой.',
+      microPain: 'иначе вы остаётесь диспетчером в своём бизнесе',
+      gives: ['каждый знает свою зону — задачи не теряются', 'собственник выходит из операционки', 'команда работает без постоянного контроля'],
+      risks: ['вы продолжаете быть диспетчером в собственном бизнесе', 'хаос согласований сохраняется', 'масштабирование невозможно'],
+      deadline: '1 неделя',
+      taskIds: [106, 107],
+    },
+    {
+      id: 4, priority: 4, block: 'control', probId: 4,
+      urgency: 'important',
+      title: 'Внедрить KPI команды',
+      desc: 'Определить 5–7 ключевых метрик. Собирать еженедельно. Видеть отклонения до того, как стало критично.',
+      microPain: 'иначе проблемы будут заметны только в момент кризиса',
+      gives: ['отклонения видны до того, как стало критично', 'команда работает на результат, а не на процесс', 'появляется управление, а не реакция'],
+      risks: ['проблемы заметны только в момент кризиса', 'команда работает без ориентиров', 'контроль остаётся ручным и дорогим'],
+      deadline: '3 недели',
+      taskIds: [108, 109],
+    },
+    {
+      id: 5, priority: 5, block: 'marketing', probId: 5,
+      urgency: 'improve',
+      title: 'Настроить аналитику продаж',
+      desc: 'UTM-метки на сайте и в рекламных кабинетах. Стоимость лида по каждому каналу.',
+      microPain: 'иначе рекламный бюджет продолжит уходить вхолостую',
+      gives: ['деньги идут в каналы, которые окупаются', 'виден реальный CAC по каждому источнику', 'рекламный бюджет перестаёт быть чёрной дырой'],
+      risks: ['бюджет продолжает уходить в убыточные каналы', 'нет понимания, откуда идут клиенты', 'рост продаж требует только роста бюджета'],
+      deadline: '2 недели',
+      taskIds: [110],
+    },
+  ],
+
+  tasks: [
+    { id: 101, title: 'Выбрать 3 процесса для описания',            gives: ['определит точки наибольшего риска', 'даст фокус для следующих шагов'],                  status: 'done',        priority: 'high',   deadline: '22 мар', block: 'processes', planId: 1 },
+    { id: 102, title: 'Описать процесс найма сотрудника',            gives: ['уберёт зависимость от конкретного человека', 'ускорит онбординг новых людей'],           status: 'in_progress', priority: 'high',   deadline: '26 мар', block: 'processes', planId: 1 },
+    { id: 103, title: 'Описать процесс онбординга клиента',          gives: ['снизит потери клиентов на старте', 'уберёт ручной контроль собственника'],               status: 'todo',        priority: 'high',   deadline: '29 мар', block: 'processes', planId: 1 },
+    { id: 104, title: 'Создать шаблон таблицы P&L',                 gives: ['появится основа для управленческого учёта', 'можно сразу начать считать деньги'],        status: 'done',        priority: 'high',   deadline: '21 мар', block: 'finance',   planId: 2 },
+    { id: 105, title: 'Внести данные по выручке за февраль',         gives: ['увидите реальную картину по деньгам', 'найдёте скрытые потери по направлениям'],        status: 'in_progress', priority: 'high',   deadline: '24 мар', block: 'finance',   planId: 2 },
+    { id: 106, title: 'Составить схему структуры компании',          gives: ['зоны ответственности станут видимыми', 'собственник освободится от хаоса согласований'], status: 'todo',        priority: 'medium', deadline: '28 мар', block: 'team',      planId: 3 },
+    { id: 107, title: 'Согласовать зоны ответственности с командой', gives: ['каждый знает свою зону', 'задачи перестанут теряться'],                                  status: 'todo',        priority: 'medium', deadline: '31 мар', block: 'team',      planId: 3 },
+    { id: 108, title: 'Определить список KPI по каждой роли',        gives: ['появятся ориентиры для команды', 'контроль станет измеримым без ручного управления'],   status: 'todo',        priority: 'medium', deadline: '5 апр',  block: 'control',   planId: 4 },
+    { id: 109, title: 'Настроить таблицу для сбора KPI',             gives: ['данные будут собираться в одном месте', 'отклонения видны до того, как стало критично'], status: 'todo',        priority: 'medium', deadline: '9 апр',  block: 'control',   planId: 4 },
+    { id: 110, title: 'Настроить UTM-метки на сайте',                gives: ['видно, какой канал окупается', 'рекламный бюджет перестанет уходить впустую'],          status: 'todo',        priority: 'low',    deadline: '2 апр',  block: 'marketing', planId: 5 },
+  ],
+};
+
+// ================================================================
+//  HELPERS
+// ================================================================
+
+const BLOCK_NAMES = {
+  finance: 'Финансы', marketing: 'Маркетинг',
+  team: 'Команда', processes: 'Процессы', control: 'Контроль',
+};
+
+function scoreInfo(score) {
+  if (score < 40) return { label: 'Критично',  cls: 'critical', lpCls: 'lp-critical', fillCls: 'pf-red',    color: 'var(--red)',    badgeCls: 'b-red' };
+  if (score < 60) return { label: 'Слабо',     cls: 'weak',     lpCls: 'lp-weak',     fillCls: 'pf-yellow', color: 'var(--yellow)', badgeCls: 'b-yellow' };
+  if (score < 75) return { label: 'Умеренно',  cls: 'medium',   lpCls: 'lp-medium',   fillCls: 'pf-blue',   color: 'var(--blue)',   badgeCls: 'b-blue' };
+  return           { label: 'Хорошо',    cls: 'good',     lpCls: 'lp-good',     fillCls: 'pf-green',  color: 'var(--green)',  badgeCls: 'b-green' };
+}
+
+function critBadge(c) {
+  if (c === 'high')   return '<span class="badge b-red">Высокая</span>';
+  if (c === 'medium') return '<span class="badge b-yellow">Средняя</span>';
+  return '<span class="badge b-green">Низкая</span>';
+}
+
+function priBadge(p) {
+  if (p === 'high')   return '<span class="badge b-red">Высокий</span>';
+  if (p === 'medium') return '<span class="badge b-yellow">Средний</span>';
+  return '<span class="badge b-gray">Низкий</span>';
+}
+
+function statusBadge(s) {
+  if (s === 'done')        return '<span class="badge b-green">Выполнено</span>';
+  if (s === 'in_progress') return '<span class="badge b-accent">В работе</span>';
+  return '<span class="badge b-gray">Не начато</span>';
+}
+
+function blockTag(id) {
+  return `<span class="task-block-tag">${BLOCK_NAMES[id] || id}</span>`;
+}
+
+function svgCircle(pct, r = 44) {
+  const size = r * 2 + 10;
+  const cx = size / 2;
+  const cy = size / 2;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"/>
+    <g transform="rotate(-90 ${cx} ${cy})">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#6366F1" stroke-width="6"
+        stroke-dasharray="${dash.toFixed(1)} ${(circ - dash).toFixed(1)}"
+        stroke-linecap="round"/>
+    </g>
+  </svg>`;
+}
+
+function countTasks() {
+  const total = DATA.tasks.length;
+  const done  = DATA.tasks.filter(t => t.status === 'done').length;
+  const inp   = DATA.tasks.filter(t => t.status === 'in_progress').length;
+  const todo  = DATA.tasks.filter(t => t.status === 'todo').length;
+  return { total, done, inp, todo };
+}
+
+// ================================================================
+//  RENDER: DASHBOARD
+// ================================================================
+
+function renderDashboard() {
+  const si = scoreInfo(DATA.index);
+  const tc = countTasks();
+  const pct = Math.round((tc.done / tc.total) * 100);
+  const top3 = DATA.problems.slice(0, 3);
+
+  document.getElementById('page-dashboard').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Привет, ${DATA.user.firstName}</div>
+      <div class="pg-sub">Диагностика пройдена ${DATA.user.diagDate}</div>
+    </div>
+
+    <div class="dojim-banner">
+      <div class="dojim-stat-pill">⚠ 90% предпринимателей не внедряют план</div>
+      <div class="dojim-main">Ваш план готов — но этого недостаточно</div>
+      <div class="dojim-sub">
+        <span>Вы уже знаете, где теряете деньги.</span><br>
+        Но пока не начато внедрение — ситуация не изменится.<br>
+        Вы — в том 10%, у кого есть план. Теперь важно его выполнить.
+      </div>
+      <button class="btn btn-primary" onclick="navigate('plan')" style="padding:10px 22px">
+        Начать внедрение →
+      </button>
+    </div>
+
+    <!-- ИНДЕКС -->
+    <div class="index-hero">
+      <div class="ih-circle">
+        ${svgCircle(DATA.index, 46)}
+        <div class="ih-circle-val">
+          <div class="ih-num">${DATA.index}</div>
+          <div class="ih-max">из 100</div>
+        </div>
+      </div>
+      <div class="ih-info">
+        <div class="level-pill ${si.lpCls}">● ${si.label}</div>
+        <h2>Индекс управляемости: ${DATA.index}</h2>
+        <p>${DATA.summary}</p>
+      </div>
+      <div class="ih-actions">
+        <button class="btn btn-primary" onclick="navigate('plan')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          К плану действий
+        </button>
+      </div>
+    </div>
+
+    <!-- БЛОКИ -->
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">Оценки по блокам</div>
+        <div class="sec-sub">По результатам диагностики</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('diagnostics')">Подробно →</button>
+    </div>
+
+    <div class="mini-grid mb24">
+      ${DATA.blocks.map(b => {
+        const si2 = scoreInfo(b.score);
+        return `
+          <div class="mini-card" onclick="navigate('diagnostics')">
+            <div class="mc-icon">${b.icon}</div>
+            <div class="mc-name">${b.name}</div>
+            <div class="mc-val" style="color:${si2.color}">${b.score}</div>
+            <div style="margin-top:8px">
+              <div class="pbar-track">
+                <div class="pbar-fill ${si2.fillCls}" style="width:${b.score}%"></div>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <!-- ПОТЕРИ + ПРОГРЕСС -->
+    <div class="g2 mb24">
+
+      <!-- ПОТЕРИ -->
+      <div>
+        <div class="sec-head mb16">
+          <div class="sec-title">Потери бизнеса</div>
+        </div>
+        <div class="losses-block">
+          <div class="losses-main-line">Вы теряете ≈ ${DATA.losses} в год</div>
+          <div class="losses-monthly">≈ 200 000 ₽ каждый месяц прямо сейчас</div>
+          <div class="losses-divider"></div>
+          <div class="losses-reasons-label">Вы теряете деньги, потому что:</div>
+          <div class="losses-reason">процессы не зафиксированы</div>
+          <div class="losses-reason">нет контроля и зон ответственности</div>
+          <div class="losses-reason">продажи идут без аналитики</div>
+        </div>
+      </div>
+
+      <!-- ПРОГРЕСС -->
+      <div>
+        <div class="sec-head mb16">
+          <div class="sec-title">Статус внедрения</div>
+        </div>
+        <div class="card" style="height:calc(100% - 44px);display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div class="row" style="gap:18px;margin-bottom:16px">
+              <div style="position:relative;flex-shrink:0">
+                ${svgCircle(pct, 34)}
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent)">${pct}%</div>
+              </div>
+              <div>
+                <div style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px">${tc.done} из ${tc.total} задач</div>
+                <div style="font-size:12px;color:var(--text4)">${tc.inp} в работе · ${tc.todo} не начато</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--text4);line-height:1.9;padding:12px 14px;background:var(--bg4);border-radius:8px;border:1px solid var(--border)">
+              <div style="color:var(--text2)">Вы устранили только ${tc.done} из ${tc.total} проблем</div>
+              <div>${100 - pct}% системы всё ещё не работает</div>
+              <div>Основные потери сохраняются</div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="navigate('tasks')">
+              Продолжить внедрение →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГЛАВНЫЕ ПРОБЛЕМЫ -->
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">Главные проблемы</div>
+        <div class="sec-sub">Именно из-за них вы теряете деньги</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('problems')">Все проблемы →</button>
+    </div>
+
+    <div class="stack">
+      ${top3.map((p, i) => `
+        <div class="prob-prev" onclick="navigate('problems')">
+          <div class="prob-num">${i + 1}</div>
+          <div class="flex-1">
+            <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:7px">
+              <span style="font-size:14px;font-weight:700;color:var(--text)">${p.title}</span>
+              ${critBadge(p.crit)}
+              <span class="badge b-gray">${BLOCK_NAMES[p.block]}</span>
+            </div>
+            <div style="font-size:13px;color:var(--text3);line-height:1.7">${p.shortDesc}</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text5)" stroke-width="2" style="flex-shrink:0;margin-top:2px"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top:20px;padding:22px 24px;background:rgba(224,112,112,.04);border:1px solid rgba(224,112,112,.16);border-radius:var(--r)">
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">
+        Каждый день без внедрения — это деньги, которых нет
+      </div>
+      <div style="font-size:13px;color:var(--text4);line-height:1.9;margin-bottom:16px">
+        <div>Вы знаете проблему. У вас есть план. Не хватает одного — начать.</div>
+        <div style="color:#E07070">≈ ${DATA.losses} в год уходят прямо сейчас</div>
+      </div>
+      <button class="btn btn-primary" onclick="navigate('plan')" style="padding:11px 24px">
+        Открыть план и начать →
+      </button>
+    </div>
+  `;
+}
+
+// ================================================================
+//  RENDER: DIAGNOSTICS
+// ================================================================
+
+function renderDiagnostics() {
+  const si = scoreInfo(DATA.index);
+
+  document.getElementById('page-diagnostics').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Результаты диагностики</div>
+      <div class="pg-sub">Пройдена ${DATA.user.diagDate}</div>
+    </div>
+
+    <div class="index-hero mb24">
+      <div class="ih-circle">
+        ${svgCircle(DATA.index, 46)}
+        <div class="ih-circle-val">
+          <div class="ih-num">${DATA.index}</div>
+          <div class="ih-max">из 100</div>
+        </div>
+      </div>
+      <div class="ih-info">
+        <div class="level-pill ${si.lpCls}">● ${si.label}</div>
+        <h2>Общий индекс управляемости</h2>
+        <p>Показывает, насколько бизнес управляем без вашего личного участия.
+           Рассчитан по 5 ключевым блокам. Целевое значение — от 75.</p>
+      </div>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title">Оценки по блокам</div>
+    </div>
+
+    <div class="stack" style="gap:14px">
+      ${DATA.blocks.map(b => {
+        const si2 = scoreInfo(b.score);
+        return `
+          <div class="block-card">
+            <div class="bc-head">
+              <div class="row">
+                <div class="bc-icon">${b.icon}</div>
+                <div>
+                  <div class="bc-name">${b.name}</div>
+                  <div style="margin-top:5px"><span class="badge ${si2.badgeCls}">${si2.label}</span></div>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <span class="bc-score-big" style="color:${si2.color}">${b.score}</span>
+                <span class="bc-score-max">/100</span>
+              </div>
+            </div>
+
+            <div class="pbar-wrap" style="margin-bottom:14px">
+              <div class="pbar-track pbar-track-md">
+                <div class="pbar-fill ${si2.fillCls}" style="width:${b.score}%"></div>
+              </div>
+            </div>
+
+            <p style="font-size:13px;color:var(--text3);line-height:1.75;margin-bottom:14px">${b.desc}</p>
+
+            <div class="g2" style="gap:10px">
+              <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,.12);border-radius:8px;padding:12px">
+                <div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">✓ Сильное</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.6">${b.strong}</div>
+              </div>
+              <div style="background:var(--red-dim);border:1px solid rgba(239,68,68,.12);border-radius:8px;padding:12px">
+                <div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">✗ Слабое</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.6">${b.weak}</div>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div class="mt24" style="text-align:center">
+      <button class="btn btn-primary" onclick="navigate('problems')">
+        Посмотреть проблемные зоны →
+      </button>
+    </div>
+  `;
+}
+
+// ================================================================
+//  RENDER: PROBLEMS
+// ================================================================
+
+function renderProblems() {
+  document.getElementById('page-problems').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Проблемные зоны</div>
+      <div class="pg-sub">${DATA.problems.length} проблем выявлено · нажмите на карточку, чтобы раскрыть детали</div>
+    </div>
+
+    <div class="stack" style="gap:12px" id="prob-list">
+      ${DATA.problems.map((p, i) => `
+        <div class="prob-card" id="pc-${p.id}" onclick="toggleProb(${p.id})">
+          <div class="prob-head">
+            <div class="prob-num">${i + 1}</div>
+            <div class="prob-title">${p.title}</div>
+            <svg class="prob-arrow" id="pa-${p.id}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="prob-meta">
+            ${critBadge(p.crit)}
+            <span class="badge b-gray">${BLOCK_NAMES[p.block]}</span>
+          </div>
+          <div class="prob-body">
+            <div class="prob-desc">${p.desc}</div>
+            <div class="info-box ib-danger">
+              <div class="info-box-label">⚠ Почему это опасно</div>
+              <p>${p.danger}</p>
+            </div>
+            <div class="info-box ib-rec">
+              <div class="info-box-label">→ Рекомендация</div>
+              <p>${p.rec}</p>
+            </div>
+            <div class="mt12">
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();navigate('plan')">
+                К плану действий →
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="mt24" style="text-align:center">
+      <button class="btn btn-primary" onclick="navigate('plan')">Перейти к плану действий →</button>
+    </div>
+  `;
+}
+
+function toggleProb(id) {
+  const card  = document.getElementById('pc-' + id);
+  const arrow = document.getElementById('pa-' + id);
+  const wasOpen = card.classList.contains('open');
+
+  document.querySelectorAll('.prob-card').forEach(c => c.classList.remove('open'));
+
+  if (!wasOpen) card.classList.add('open');
+}
+
+// ================================================================
+//  RENDER: PLAN
+// ================================================================
+
+function renderPlan() {
+  const urgencyMeta = {
+    critical: { badge: 'ub-critical', label: '🔥 КРИТИЧНО' },
+    important: { badge: 'ub-important', label: '⚠️ ВАЖНО' },
+    improve:  { badge: 'ub-improve',  label: '🟡 ДОРАБОТАТЬ' },
+  };
+
+  // Первый незавершённый шаг — текущий
+  const currentStep = DATA.plan.find(item => {
+    const done = DATA.tasks.filter(t => item.taskIds.includes(t.id) && t.status === 'done').length;
+    return done < item.taskIds.length;
+  });
+
+  const totalTasks = DATA.tasks.length;
+  const doneTasks  = DATA.tasks.filter(t => t.status === 'done').length;
+
+  document.getElementById('page-plan').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Ваш план внедрения</div>
+      <div class="pg-sub">5 шагов, чтобы перестать терять деньги</div>
+    </div>
+
+    <div class="plan-intro">
+      <div style="color:var(--text2);font-weight:600;margin-bottom:4px">Этот план закрывает причины ваших потерь</div>
+      <div style="color:var(--text4)">Если не внедрить — ситуация не изменится. Выполняйте по порядку, начните с первого шага.</div>
+    </div>
+
+    ${currentStep ? `
+      <div class="current-step-banner">
+        <div class="csb-top">
+          <div class="csb-dot"></div>
+          <span style="font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.7px">Сделать сейчас</span>
+        </div>
+        <div class="csb-step-title">${currentStep.title}</div>
+        <div class="csb-micro-pain">${currentStep.microPain}</div>
+        <div style="font-size:12px;color:var(--text5);margin-bottom:14px">Если не начать — потери сохранятся</div>
+        <button class="btn btn-primary" onclick="goToTasks(${currentStep.id})">
+          Начать внедрение →
+        </button>
+      </div>
+    ` : `
+      <div class="current-step-banner" style="border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.05)">
+        <div class="csb-top">
+          <div class="csb-dot" style="background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+          <span style="font-size:13px;font-weight:600;color:var(--green)">Все шаги выполнены</span>
+        </div>
+      </div>
+    `}
+
+    <div class="stack" style="gap:12px">
+      ${DATA.plan.map((item, idx) => {
+        const tasksDone  = DATA.tasks.filter(t => item.taskIds.includes(t.id) && t.status === 'done').length;
+        const tasksTotal = item.taskIds.length;
+        const pct  = Math.round((tasksDone / tasksTotal) * 100);
+        const done = tasksDone === tasksTotal;
+        const isCurrent = currentStep && currentStep.id === item.id;
+        const isFirst = idx === 0;
+        const um = urgencyMeta[item.urgency] || urgencyMeta.improve;
+        const progressText = done
+          ? 'Завершено'
+          : tasksDone > 0
+            ? `${tasksDone} из ${tasksTotal} задач выполнено · процесс в работе`
+            : `${tasksTotal} задач · не начато · процесс не стабилен`;
+
+        return `
+          <div class="plan-item u-${item.urgency} ${isCurrent ? 'u-current' : ''} ${isFirst && !done ? 'plan-item-first' : ''} ${!isFirst && !isCurrent && !done ? 'plan-item-secondary' : ''}"
+            ${done ? 'style="border-color:rgba(34,197,94,.2);opacity:.7"' : ''}>
+            <div class="plan-num"
+              ${done
+                ? 'style="background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:var(--green)"'
+                : isCurrent
+                  ? 'style="background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.3);color:var(--accent)"'
+                  : ''}>
+              ${done ? '✓' : item.priority}
+            </div>
+            <div class="plan-body">
+
+              <div class="row" style="gap:8px;margin-bottom:9px;flex-wrap:wrap">
+                <span class="urgency-badge ${done ? 'ub-improve' : um.badge}">${done ? '✓ Выполнено' : um.label}</span>
+                <span class="badge b-gray">${BLOCK_NAMES[item.block]}</span>
+                <span class="badge b-gray" style="margin-left:auto;gap:3px">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  ${item.deadline}
+                </span>
+              </div>
+
+              <div class="plan-title">${item.title}</div>
+              <div class="plan-desc">${item.desc}</div>
+
+              <div class="plan-gives-risks">
+                <div class="plan-gr-box pgr-gives">
+                  <div class="plan-gr-label">Что это даст</div>
+                  ${item.gives.map(g => `<div class="plan-gr-item">${g}</div>`).join('')}
+                </div>
+                <div class="plan-gr-box pgr-risks">
+                  <div class="plan-gr-label">Если не сделать</div>
+                  ${item.risks.map(r => `<div class="plan-gr-item">${r}</div>`).join('')}
+                </div>
+              </div>
+
+              <div class="plan-footer">
+                <div style="flex:1;min-width:120px">
+                  <div class="pbar-track" style="height:4px;margin-bottom:5px">
+                    <div class="pbar-fill ${done ? 'pf-green' : 'pf-accent'}" style="width:${pct}%"></div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text5)">${progressText}</div>
+                </div>
+                <button class="btn ${done ? 'btn-ghost' : 'btn-outline'} btn-sm" style="flex-shrink:0" onclick="goToTasks(${item.id})">
+                  ${done ? 'Просмотр' : 'Начать внедрение →'}
+                </button>
+              </div>
+
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div style="margin-top:16px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="font-size:13px;color:var(--text4);line-height:1.7">
+        <span style="color:var(--text2);font-weight:600">${doneTasks} из ${totalTasks}</span> задач выполнено
+        &nbsp;·&nbsp;
+        <span>${doneTasks < totalTasks ? 'Процесс ещё не стабилен' : 'Внедрение завершено'}</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('progress')">Прогресс →</button>
+    </div>
+  `;
+}
+
+// ================================================================
+//  RENDER: TASKS
+// ================================================================
+
+let semFilter  = 'now';
+let planFilter = null;
+let stepView   = null;
+
+// ── standalone taskCard — used both in general list and step view ──
+function taskCard(t) {
+  const isDone = t.status === 'done';
+  const isActive = t.status === 'in_progress';
+  const checkCls = isDone ? 'checked' : isActive ? 'in-progress' : '';
+  const checkIcon = isDone
+    ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+    : isActive
+      ? '<div style="width:5px;height:5px;border-radius:50%;background:var(--accent)"></div>'
+      : '';
+  return `
+    <div class="task-card ${isDone ? 'tc-done' : isActive ? 'tc-active' : ''}">
+      <div class="tc-head">
+        <button class="tc-check ${checkCls}" onclick="cycleTask(${t.id})">${checkIcon}</button>
+        <div class="tc-title ${isDone ? 'done' : ''}">${t.title}</div>
+        <span style="font-size:11px;color:var(--text5);white-space:nowrap;margin-top:2px">${t.deadline}</span>
+      </div>
+      ${!isDone && t.gives ? `
+        <div class="tc-gives">
+          ${t.gives.map(g => `<div class="tc-give">${g}</div>`).join('')}
+        </div>
+      ` : ''}
+      <div class="tc-footer">
+        ${blockTag(t.block)}
+        ${isActive
+          ? `<span class="badge b-accent">В работе</span>`
+          : isDone
+            ? `<span class="badge b-green">Выполнено</span>`
+            : ''}
+        ${!isDone ? `
+          <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="cycleTask(${t.id})">
+            ${isActive ? 'Завершить →' : 'Начать выполнение →'}
+          </button>
+        ` : `
+          <button class="btn btn-ghost btn-sm" style="margin-left:auto;font-size:11px" onclick="cycleTask(${t.id})">
+            Отменить
+          </button>
+        `}
+      </div>
+    </div>`;
+}
+
+function renderTasks() { renderTasksInner(); }
+
+function renderTasksInner() {
+  // Step view takes priority
+  if (stepView !== null) { renderStepView(stepView); return; }
+
+  const tc = countTasks();
+
+  const focusTask = DATA.tasks.find(t => t.status === 'in_progress')
+    || DATA.tasks.find(t => t.status === 'todo' && t.priority === 'high');
+
+  let pool = planFilter !== null
+    ? DATA.tasks.filter(t => t.planId === planFilter)
+    : [...DATA.tasks];
+
+  let filtered;
+  if      (semFilter === 'now')       filtered = pool.filter(t => t.status === 'in_progress' || (t.status === 'todo' && t.priority === 'high'));
+  else if (semFilter === 'important') filtered = pool.filter(t => t.status !== 'done' && t.priority === 'medium');
+  else if (semFilter === 'other')     filtered = pool.filter(t => t.status !== 'done' && t.priority === 'low');
+  else if (semFilter === 'done')      filtered = pool.filter(t => t.status === 'done');
+  else                                filtered = pool;
+
+  const nowCount = DATA.tasks.filter(t => t.status === 'in_progress' || (t.status === 'todo' && t.priority === 'high')).length;
+  const impCount = DATA.tasks.filter(t => t.status !== 'done' && t.priority === 'medium').length;
+  const othCount = DATA.tasks.filter(t => t.status !== 'done' && t.priority === 'low').length;
+
+  document.getElementById('page-tasks').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Задачи внедрения</div>
+      <div class="pg-sub">
+        Вы начали внедрение — но пока задачи не выполнены, результата нет.
+        &nbsp;·&nbsp; В работе: <strong style="color:var(--text2)">${tc.inp} из ${tc.total}</strong>
+      </div>
+    </div>
+
+    ${focusTask && semFilter !== 'done' ? `
+      <div class="focus-block">
+        <div class="focus-label">🔥 Сделать сейчас</div>
+        <div class="focus-task-title">${focusTask.title}</div>
+        <div style="font-size:12px;color:var(--text5);margin-bottom:10px">Это самый быстрый способ снизить потери</div>
+        ${focusTask.gives ? `
+          <div class="focus-gives">
+            ${focusTask.gives.map(g => `<div class="focus-give">${g}</div>`).join('')}
+          </div>
+        ` : ''}
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="cycleTask(${focusTask.id})">
+            ${focusTask.status === 'in_progress' ? 'Завершить →' : 'Начать выполнение →'}
+          </button>
+          ${blockTag(focusTask.block)}
+          <span style="font-size:12px;color:var(--text5)">до ${focusTask.deadline}</span>
+        </div>
+      </div>
+    ` : ''}
+
+    <div class="sem-filters">
+      <button class="sf-btn ${semFilter === 'now'       ? 'active' : ''}" onclick="setSemFilter('now')">🔥 Сейчас (${nowCount})</button>
+      <button class="sf-btn ${semFilter === 'important' ? 'active' : ''}" onclick="setSemFilter('important')">⚠️ Важно (${impCount})</button>
+      <button class="sf-btn ${semFilter === 'other'     ? 'active' : ''}" onclick="setSemFilter('other')">Остальное (${othCount})</button>
+      <button class="sf-btn ${semFilter === 'done'      ? 'active' : ''}" onclick="setSemFilter('done')">✓ Выполнено (${tc.done})</button>
+      <button class="sf-btn ${semFilter === 'all'       ? 'active' : ''}" onclick="setSemFilter('all')">Все (${tc.total})</button>
+      ${planFilter !== null ? `<button class="sf-btn active" onclick="clearPlanFilter()" style="margin-left:auto">× Снять фильтр</button>` : ''}
+    </div>
+
+    <div class="stack" style="gap:10px">
+      ${filtered.length === 0
+        ? `<div class="empty-state"><div class="empty-state-icon">✓</div><div class="empty-state-text">Нет задач в этой категории</div></div>`
+        : filtered.map(t => taskCard(t)).join('')}
+    </div>
+  `;
+}
+
+function setSemFilter(f) {
+  semFilter = f;
+  renderTasksInner();
+}
+
+function clearPlanFilter() {
+  planFilter = null;
+  renderTasksInner();
+}
+
+function cycleTask(id) {
+  const task = DATA.tasks.find(t => t.id === id);
+  if (!task) return;
+
+  const wasFirstStart = task.status === 'todo'
+    && DATA.tasks.every(t => t.status === 'todo');
+
+  const cycle = { todo: 'in_progress', in_progress: 'done', done: 'todo' };
+  task.status = cycle[task.status];
+
+  if (task.status === 'in_progress' && wasFirstStart) {
+    track('first_task_started', { taskId: task.id, taskTitle: task.title, planId: task.planId });
+  }
+
+  if (task.status === 'done') {
+    track('task_completed', { taskId: task.id, taskTitle: task.title, planId: task.planId });
+    showCompletionToast(task);
+
+    // Check if the step is now fully done
+    const step = DATA.plan.find(p => p.id === task.planId);
+    if (step) {
+      const allStepDone = step.taskIds.every(
+        tid => DATA.tasks.find(t => t.id === tid)?.status === 'done'
+      );
+      if (allStepDone) {
+        const nextStep = DATA.plan.find(p => p.priority === step.priority + 1);
+        track('step_completed', {
+          planId: step.id,
+          stepTitle: step.title,
+          stepPriority: step.priority,
+          nextStepId: nextStep?.id ?? null,
+          nextStepTitle: nextStep?.title ?? null,
+        });
+      }
+    }
+  }
+
+  resetInactivity();
+  renderTasksInner();
+  updateBadges();
+  if (document.getElementById('page-plan').classList.contains('active')) renderPlan();
+}
+
+// ── COMPLETION TOAST ──
+function showCompletionToast(task) {
+  const toast    = document.getElementById('completion-toast');
+  const titleEl  = document.getElementById('ct-title');
+  const effectEl = document.getElementById('ct-effect');
+  const nextEl   = document.getElementById('ct-next');
+  const nextLabel= document.getElementById('ct-next-label');
+  const nextBtn  = document.getElementById('ct-next-btn');
+
+  // Shorten title if too long
+  const shortTitle = task.title.length > 40 ? task.title.slice(0, 38) + '…' : task.title;
+  titleEl.textContent = 'Сделано: ' + shortTitle;
+  effectEl.textContent = task.gives && task.gives[0] ? '→ ' + task.gives[0] : '';
+
+  // Find next task in the same step
+  const step = DATA.plan.find(p => p.id === task.planId);
+  const nextTask = step
+    ? DATA.tasks.find(t => step.taskIds.includes(t.id) && t.status !== 'done' && t.id !== task.id)
+    : null;
+
+  if (nextTask) {
+    nextEl.style.display = 'flex';
+    nextLabel.textContent = nextTask.title;
+    nextBtn.onclick = () => { hideCompletionToast(); cycleTask(nextTask.id); };
+  } else {
+    nextEl.style.display = 'none';
+  }
+
+  toast.classList.add('visible');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(hideCompletionToast, 5000);
+}
+
+function hideCompletionToast() {
+  document.getElementById('completion-toast').classList.remove('visible');
+}
+
+// ================================================================
+//  EVENT TRACKING  — connect to backend to trigger Telegram/push
+// ================================================================
+//
+//  track(event, payload) fires at every product moment.
+//  In production: replace the console.log with a fetch() call to
+//  your backend, which looks up the user's Telegram chat_id and
+//  sends the appropriate message via Bot API.
+//
+//  Events emitted by this module:
+//    platform_opened          — user opened the platform (session start)
+//    page_viewed              — user navigated to a page
+//    first_task_started       — first task ever moved to in_progress
+//    task_completed           — any task moved to done
+//    step_completed           — all tasks in a plan step are done
+//    inactivity_dismissed     — user clicked "Продолжить" on inactivity banner
+//    goToTasks_clicked        — user clicked "Начать внедрение" on a step
+//
+//  Backend side should implement the scheduling logic:
+//    +0h   roadmap_received  → send MSG_START_1
+//    +24h  no platform_opened → send MSG_START_NO_LOGIN
+//    +24h  platform_opened but no first_task_started → send MSG_NO_TASKS
+//    +72h  still no first_task_started → send MSG_NO_TASKS_2
+//    +3d   first_task_started but no task_completed → send MSG_STALLED
+//    +7d   idle (no events) → send MSG_IDLE_LONG
+//    task_completed → send MSG_REINFORCEMENT (within 30 min)
+//    step_completed → send MSG_STEP_DONE (immediately)
+//    trial -3d → send MSG_TRIAL_3D
+//    trial -1d → send MSG_TRIAL_1D
+
+function track(event, payload = {}) {
+  const tc = countTasks();
+  const stepsClosedCnt = DATA.plan.filter(step =>
+    step.taskIds.every(tid => DATA.tasks.find(t => t.id === tid)?.status === 'done')
+  ).length;
+
+  const enriched = {
+    event,
+    userId:    DATA.user.firstName + '_' + DATA.user.lastName, // replace with real ID
+    userName:  DATA.user.firstName,
+    company:   DATA.user.company,
+    ts:        new Date().toISOString(),
+    state: {
+      tasksTotal:      tc.total,
+      tasksDone:       tc.done,
+      tasksInProgress: tc.inp,
+      tasksTodo:       tc.todo,
+      stepsTotal:      DATA.plan.length,
+      stepsClosed:     stepsClosedCnt,
+      pctComplete:     Math.round((tc.done / tc.total) * 100),
+    },
+    ...payload,
+  };
+
+  // Dev: log to console
+  console.log('[K-AQS track]', enriched.event, enriched);
+
+  // Prod: uncomment and point to your backend
+  // fetch('/api/track', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(enriched),
+  //   keepalive: true,
+  // }).catch(() => {});
+}
+
+// ── INACTIVITY DETECTION ──
+let _inactivityTimer = null;
+const INACTIVITY_MS  = 50000; // 50 seconds without interaction
+
+function resetInactivity() {
+  clearTimeout(_inactivityTimer);
+  closeInactivityBanner();
+  _inactivityTimer = setTimeout(showInactivityBanner, INACTIVITY_MS);
+}
+
+function showInactivityBanner() {
+  document.getElementById('inactivity-banner').classList.add('visible');
+}
+
+function closeInactivityBanner() {
+  document.getElementById('inactivity-banner').classList.remove('visible');
+}
+
+function dismissInactivity() {
+  track('inactivity_dismissed');
+  closeInactivityBanner();
+  resetInactivity();
+  const currentStep = DATA.plan.find(item => {
+    const done = DATA.tasks.filter(t => item.taskIds.includes(t.id) && t.status === 'done').length;
+    return done < item.taskIds.length;
+  });
+  if (currentStep) goToTasks(currentStep.id);
+  else navigate('progress');
+}
+
+// Opens a focused view for a specific plan step
+function goToTasks(planId) {
+  track('goToTasks_clicked', { planId, stepTitle: DATA.plan.find(p => p.id === planId)?.title });
+  stepView = planId;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-tasks').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n =>
+    n.classList.toggle('active', n.dataset.page === 'tasks'));
+  document.querySelector('.content').scrollTop = 0;
+  const step = DATA.plan.find(p => p.id === planId);
+  document.getElementById('topbar-title').textContent = step ? step.title : 'Внедрение';
+  renderStepView(planId);
+  closeSidebar();
+}
+
+function exitStepView() {
+  stepView = null;
+  navigate('plan');
+}
+
+// ── Focused step task view ──
+function renderStepView(planId) {
+  const step = DATA.plan.find(p => p.id === planId);
+  if (!step) { stepView = null; renderTasksInner(); return; }
+
+  const stepTasks = DATA.tasks.filter(t => step.taskIds.includes(t.id));
+  const doneCnt   = stepTasks.filter(t => t.status === 'done').length;
+  const totalCnt  = stepTasks.length;
+  const allDone   = doneCnt === totalCnt;
+  const pct       = Math.round((doneCnt / totalCnt) * 100);
+
+  const focusTask = stepTasks.find(t => t.status === 'in_progress')
+    || stepTasks.find(t => t.status === 'todo');
+  const nextStep  = DATA.plan.find(p => p.priority === step.priority + 1);
+
+  const progressText = allDone
+    ? 'Шаг полностью выполнен'
+    : doneCnt > 0
+      ? `${doneCnt} из ${totalCnt} задач · процесс в работе`
+      : `0 из ${totalCnt} задач · не начато · процесс не стабилен`;
+
+  const urgencyMeta = {
+    critical: { badge: 'ub-critical', label: '🔥 КРИТИЧНО' },
+    important: { badge: 'ub-important', label: '⚠️ ВАЖНО' },
+    improve:  { badge: 'ub-improve',  label: '🟡 ДОРАБОТАТЬ' },
+  };
+  const um = urgencyMeta[step.urgency] || urgencyMeta.improve;
+
+  document.getElementById('topbar-title').textContent = step.title;
+  document.getElementById('page-tasks').innerHTML = `
+    <div class="step-back-bar">
+      <button class="btn btn-ghost btn-sm" onclick="exitStepView()">← К плану действий</button>
+      <span class="badge b-gray">${BLOCK_NAMES[step.block]}</span>
+      <span class="badge b-gray" style="margin-left:auto">Шаг ${step.priority} из ${DATA.plan.length}</span>
+    </div>
+
+    <div class="step-view-card">
+      <span class="urgency-badge ${um.badge}">${um.label}</span>
+      <div class="step-view-title">${step.title}</div>
+      <p class="step-view-desc">${step.desc}</p>
+      <div class="step-gives-block">
+        <div class="step-gives-label">Что даст этот шаг</div>
+        ${step.gives.map(g => `<div class="step-give-item">${g}</div>`).join('')}
+      </div>
+      <div class="step-progress-bar">
+        <div class="step-progress-label">
+          <span>${progressText}</span>
+          <span style="color:${allDone ? 'var(--green)' : 'var(--text3)'};font-weight:600">${pct}%</span>
+        </div>
+        <div class="pbar-track" style="height:5px">
+          <div class="pbar-fill ${allDone ? 'pf-green' : 'pf-accent'}" style="width:${pct}%"></div>
+        </div>
+      </div>
+    </div>
+
+    ${allDone ? `
+      <div class="step-complete-banner">
+        <div class="scb-icon">✓</div>
+        <div class="scb-title">Шаг выполнен</div>
+        <div class="scb-sub">Вы закрыли "${step.title}".<br>Бизнес стал управляемее на один шаг.</div>
+        ${nextStep ? `
+          <button class="btn btn-primary" onclick="goToTasks(${nextStep.id})">
+            Следующий шаг: ${nextStep.title} →
+          </button>
+        ` : `
+          <button class="btn btn-primary" onclick="navigate('progress')">
+            Посмотреть итоговый прогресс →
+          </button>
+        `}
+      </div>
+    ` : focusTask ? `
+      <div class="focus-block">
+        <div class="focus-label">🔥 Приоритет прямо сейчас</div>
+        <div class="focus-task-title">${focusTask.title}</div>
+        <div style="font-size:12px;color:var(--text5);margin-bottom:10px">Это самый быстрый способ снизить потери</div>
+        ${focusTask.gives ? `
+          <div class="focus-gives">
+            ${focusTask.gives.map(g => `<div class="focus-give">${g}</div>`).join('')}
+          </div>
+        ` : ''}
+        <button class="btn btn-primary" onclick="cycleTask(${focusTask.id})">
+          ${focusTask.status === 'in_progress' ? 'Завершить →' : 'Начать выполнение →'}
+        </button>
+      </div>
+    ` : ''}
+
+    <div class="step-tasks-label">Задачи этого шага</div>
+    <div class="stack" style="gap:10px">
+      ${stepTasks.map(t => taskCard(t)).join('')}
+    </div>
+
+    <div style="margin-top:20px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <button class="btn btn-ghost btn-sm" onclick="exitStepView()">← Назад к плану</button>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('progress')">Прогресс →</button>
+    </div>
+  `;
+}
+
+// ================================================================
+//  RENDER: PROGRESS
+// ================================================================
+
+function renderProgress() {
+  const tc  = countTasks();
+  const pct = Math.round((tc.done / tc.total) * 100);
+  const lvl = pct < 25 ? 'Только начали' : pct < 50 ? 'Набираем темп' : pct < 75 ? 'Хорошо идёт' : 'Финишная прямая';
+  const lvlCls = pct < 25 ? 'lp-critical' : pct < 50 ? 'lp-weak' : pct < 75 ? 'lp-medium' : 'lp-good';
+
+  // Step-level progress
+  const stepProgress = DATA.plan.map(step => {
+    const sTasks = DATA.tasks.filter(t => step.taskIds.includes(t.id));
+    const sDone  = sTasks.filter(t => t.status === 'done').length;
+    const sTotal = sTasks.length;
+    const sPct   = sTotal ? Math.round((sDone / sTotal) * 100) : 0;
+    const isDone = sDone === sTotal;
+    const statusText = isDone
+      ? 'Завершён'
+      : sDone > 0
+        ? `${sDone} из ${sTotal} задач · в работе`
+        : `Не начат · ${sTotal} задач`;
+    return { ...step, sDone, sTotal, sPct, isDone, statusText };
+  });
+  const stepsClosedCnt = stepProgress.filter(s => s.isDone).length;
+  const stepsTotal     = DATA.plan.length;
+
+  // Next active step
+  const nextActiveStep = stepProgress.find(s => !s.isDone);
+
+  document.getElementById('page-progress').innerHTML = `
+    <div class="pg-head">
+      <div class="pg-title">Прогресс</div>
+      <div class="pg-sub">
+        ${stepsClosedCnt === 0
+          ? 'Внедрение ещё не начато — проблемы бизнеса остаются открытыми'
+          : stepsClosedCnt < stepsTotal
+            ? `Устранено ${stepsClosedCnt} из ${stepsTotal} проблем — система ещё не внедрена`
+            : 'Все проблемы устранены — бизнес стал управляемым'}
+      </div>
+    </div>
+
+    <div class="index-hero mb24">
+      <div class="ih-circle">
+        ${svgCircle(pct, 46)}
+        <div class="ih-circle-val">
+          <div class="ih-num">${pct}%</div>
+          <div class="ih-max">план</div>
+        </div>
+      </div>
+      <div class="ih-info">
+        <div class="level-pill ${lvlCls}">● ${lvl}</div>
+        <h2>Вы устранили ${stepsClosedCnt} из ${stepsTotal} проблем</h2>
+        <p>${stepsTotal - stepsClosedCnt > 0
+          ? `Ещё <strong style="color:#E07070">${stepsTotal - stepsClosedCnt} проблем</strong> остаются открытыми.
+             Потери продолжаются. Каждый выполненный шаг закрывает одну системную причину.`
+          : 'Все системные проблемы устранены. Бизнес работает без постоянного участия собственника.'}
+        </p>
+      </div>
+    </div>
+
+    <div class="g3 mb24">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green)">${stepsClosedCnt}</div>
+        <div class="stat-label">проблем устранено</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:${stepsTotal - stepsClosedCnt > 0 ? '#E07070' : 'var(--green)'}">${stepsTotal - stepsClosedCnt}</div>
+        <div class="stat-label">проблем остаётся</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--accent)">${tc.done}</div>
+        <div class="stat-label">из ${tc.total} задач сделано</div>
+      </div>
+    </div>
+
+    ${nextActiveStep ? `
+      <div class="current-step-banner" style="margin-bottom:20px">
+        <div class="csb-top">
+          <div class="csb-dot"></div>
+          <span style="font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.7px">Следующий шаг</span>
+        </div>
+        <div class="csb-step-title">${nextActiveStep.title}</div>
+        <div style="font-size:12px;color:var(--text4);margin-bottom:14px">${nextActiveStep.statusText}</div>
+        <button class="btn btn-primary" onclick="goToTasks(${nextActiveStep.id})">
+          Продолжить внедрение →
+        </button>
+      </div>
+    ` : ''}
+
+    <div class="sec-head">
+      <div class="sec-title">Прогресс по шагам</div>
+    </div>
+
+    <div class="stack" style="gap:10px;margin-bottom:24px">
+      ${stepProgress.map(s => `
+        <div class="card card-sm" style="${s.isDone ? 'border-color:rgba(34,197,94,.2);opacity:.8' : ''}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;
+              background:${s.isDone ? 'rgba(34,197,94,.15)' : 'var(--accent-dim)'};
+              color:${s.isDone ? 'var(--green)' : 'var(--accent)'};
+              border:1.5px solid ${s.isDone ? 'rgba(34,197,94,.3)' : 'var(--accent-dim2)'}">
+              ${s.isDone ? '✓' : s.priority}
+            </div>
+            <div class="flex-1">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font-size:13px;font-weight:600;color:var(--text)">${s.title}</span>
+                <span style="font-size:11px;color:${s.isDone ? 'var(--green)' : 'var(--text4)'};white-space:nowrap">${s.statusText}</span>
+              </div>
+            </div>
+          </div>
+          <div class="pbar-track" style="height:4px;margin-bottom:6px">
+            <div class="pbar-fill ${s.isDone ? 'pf-green' : 'pf-accent'}" style="width:${s.sPct}%"></div>
+          </div>
+          ${!s.isDone ? `
+            <div style="margin-top:8px;text-align:right">
+              <button class="btn btn-ghost btn-sm" onclick="goToTasks(${s.id})">
+                ${s.sDone > 0 ? 'Продолжить' : 'Начать'} →
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card" style="text-align:center;border-color:var(--accent-dim2);padding:28px">
+      <div style="font-size:12px;color:var(--text4);margin-bottom:6px">Текущий индекс управляемости</div>
+      <div style="font-size:48px;font-weight:800;color:var(--accent);letter-spacing:-2px;line-height:1">${DATA.index}</div>
+      <div style="font-size:12px;color:var(--text5);margin-top:6px">Вырастет после закрытия шагов</div>
+      <div class="mt16">
+        <button class="btn btn-primary" onclick="navigate('plan')">
+          К плану действий →
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ================================================================
+//  NAVIGATION
+// ================================================================
+
+const PAGE_TITLES = {
+  dashboard:   'Главная',
+  diagnostics: 'Диагностика',
+  problems:    'Проблемные зоны',
+  plan:        'План действий',
+  tasks:       'Задачи',
+  progress:    'Прогресс',
+};
+
+const RENDERERS = {
+  dashboard:   renderDashboard,
+  diagnostics: renderDiagnostics,
+  problems:    renderProblems,
+  plan:        renderPlan,
+  tasks:       renderTasksInner,
+  progress:    renderProgress,
+};
+
+function navigate(pageId) {
+  // Sidebar nav to tasks always shows the full list, not a step view
+  if (pageId === 'tasks') stepView = null;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageId);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n =>
+    n.classList.toggle('active', n.dataset.page === pageId));
+
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[pageId] || '';
+  document.querySelector('.content').scrollTop = 0;
+
+  if (RENDERERS[pageId]) RENDERERS[pageId]();
+
+  closeSidebar();
+}
+
+function updateBadges() {
+  const tc = countTasks();
+  const el = document.getElementById('nb-tasks');
+  if (el) el.textContent = tc.inp + tc.todo;
+}
+
+// ================================================================
+//  SIDEBAR MOBILE
+// ================================================================
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ================================================================
+//  INIT
+// ================================================================
+
+function init() {
+  // Inject user data
+  document.getElementById('sb-name').textContent     = DATA.user.firstName + ' ' + DATA.user.lastName;
+  document.getElementById('sb-meta').textContent     = DATA.user.company + ' · ' + DATA.user.role;
+  document.getElementById('sb-index').textContent    = DATA.index;
+  document.getElementById('topbar-avatar').textContent = DATA.user.initials;
+
+  // Date
+  const now = new Date();
+  document.getElementById('topbar-date').textContent =
+    now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Nav click handlers
+  document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+    item.addEventListener('click', () => { resetInactivity(); navigate(item.dataset.page); });
+  });
+
+  // Inactivity tracking — reset on any interaction
+  ['click', 'keydown', 'touchstart', 'scroll'].forEach(ev =>
+    document.addEventListener(ev, resetInactivity, { passive: true })
+  );
+
+  // Initial render
+  renderDashboard();
+  updateBadges();
+  resetInactivity();
+
+  // Track session start — backend checks if this is first open, nth open, etc.
+  track('platform_opened');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
