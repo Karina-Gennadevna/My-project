@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { getSession } from '@/lib/auth'
-import { calculateResult, generateExecutiveSummary, generateModuleInterpretation, generateRoadmap, generateAILayerRecommendations } from '@/lib/scoring'
+import { calculateResult } from '@/lib/scoring'
+import { generateAIReport } from '@/lib/ai-report'
 import type { Module } from '@/types'
 
 // GET /api/assessment/[id]
@@ -72,18 +73,10 @@ export async function PATCH(
 
     if (currentStep !== undefined) updateData.currentStep = currentStep
 
-    // If submitting — calculate results
+    // If submitting — calculate results and generate AI report
     if (submit) {
       const result = calculateResult(mergedAnswers)
-      const executiveSummary = generateExecutiveSummary(result)
-
-      const moduleInterpretations: Record<string, string> = {}
-      for (const mod of ['K', 'A', 'Q', 'S'] as Module[]) {
-        moduleInterpretations[mod] = generateModuleInterpretation(mod, result.modules[mod], result.risks)
-      }
-
-      const roadmap = generateRoadmap(result)
-      const aiLayerRecommendations = generateAILayerRecommendations(result)
+      const aiReport = await generateAIReport(result, mergedAnswers)
 
       updateData.status = 'completed'
       updateData.currentStep = 5
@@ -97,10 +90,10 @@ export async function PATCH(
         modules: result.modules,
         maturityLevel: result.maturityLevel,
         maturityLabel: result.maturityLabel,
-        executiveSummary,
-        moduleInterpretations,
-        roadmap,
-        aiLayerRecommendations,
+        executiveSummary: aiReport.executiveSummary,
+        moduleInterpretations: aiReport.moduleInterpretations,
+        roadmap: aiReport.roadmap,
+        aiLayerRecommendations: aiReport.aiLayerRecommendations,
       })
       updateData.risks = JSON.stringify(result.risks)
     }

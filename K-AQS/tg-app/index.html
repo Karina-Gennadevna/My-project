@@ -419,6 +419,134 @@
     /* ── ANIMATIONS ── */
     .fade-up { animation: fadeUp 0.45s ease-out both; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── MAIN APP (tab-based) ── */
+    #screen-main { background: #0B0F14; display: flex; flex-direction: column; }
+    .tab-content  { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+    .tab-panel    { position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── TAB BAR ── */
+    .tab-bar {
+      flex-shrink: 0; display: grid; grid-template-columns: repeat(4, 1fr);
+      background: rgba(9,13,19,0.97); border-top: 1px solid rgba(255,255,255,0.07);
+      height: calc(62px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .tab-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; border: none; background: none; color: #3E4A5E;
+      font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.01em; cursor: pointer; -webkit-appearance: none;
+      padding: 6px 4px 0; transition: color 0.16s; -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn:active { transform: scale(0.90); opacity: 0.7; }
+    .tab-btn.active { color: #3B82F6; }
+    .tab-btn-icon { line-height: 0; display: block; }
+
+    /* ── HOME TAB ── */
+    .main-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px 10px; flex-shrink: 0;
+    }
+    .main-topbar-brand { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: #3B82F6; text-transform: uppercase; }
+    .main-topbar-date  { font-size: 11px; color: #3E4A5E; font-weight: 500; }
+    .home-score-card {
+      margin: 0 12px 10px;
+      background: linear-gradient(145deg, #111E38 0%, #0B1425 100%);
+      border: 1px solid rgba(59,130,246,0.18); border-radius: 20px;
+      padding: 20px 20px 18px; text-align: center; position: relative; overflow: hidden;
+    }
+    .home-score-card::before {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.11), transparent 70%);
+      pointer-events: none;
+    }
+    .home-score-eyebrow { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #475569; margin-bottom: 6px; }
+    .home-score-num    { font-size: 76px; font-weight: 700; line-height: 1; letter-spacing: -4px; margin-bottom: 6px; }
+    .home-score-label  { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 7px; }
+    .home-score-status { font-size: 12px; color: #94A3B8; line-height: 1.4; }
+    .home-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 12px 10px; }
+    .home-metric  {
+      background: #0F1620; border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 13px 12px;
+    }
+    .home-metric-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #3E4A5E; margin-bottom: 5px; }
+    .home-metric-val   { font-size: 14px; font-weight: 700; line-height: 1.25; }
+    .home-metric-sub   { font-size: 10px; color: #475569; margin-top: 3px; }
+    .home-actions { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+    .btn-secondary {
+      display: block; width: 100%; background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.22); color: #3B82F6; border-radius: 14px;
+      padding: 14px; font-size: 15px; font-weight: 600; font-family: inherit;
+      cursor: pointer; -webkit-appearance: none; transition: background 0.12s, transform 0.1s; text-align: center;
+    }
+    .btn-secondary:active { background: rgba(59,130,246,0.16); transform: scale(0.98); }
+
+    /* ── INDEX TAB ── */
+    .idx-tab-gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: 16px 24px 10px; }
+    .idx-tab-section {
+      margin: 0 12px 10px; background: #0F1620;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 14px;
+    }
+    .idx-tab-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #3E4A5E; margin-bottom: 12px; }
+
+    /* ── RECS TAB ── */
+    .recs-header   { padding: 14px 16px 8px; }
+    .recs-title    { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+    .recs-sub      { font-size: 12px; color: #94A3B8; }
+    .rec-card {
+      margin: 0 12px 8px; background: #0F1620;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 14px;
+    }
+    .rec-card-header  { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .rec-priority-badge { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; margin-top: 3px; }
+    .rec-priority-1   { background: rgba(239,68,68,0.12); color: #F87171; }
+    .rec-priority-2   { background: rgba(245,158,11,0.12); color: #FCD34D; }
+    .rec-priority-3   { background: rgba(59,130,246,0.12); color: #93C5FD; }
+    .rec-zone-icon    { font-size: 20px; flex-shrink: 0; line-height: 1; }
+    .rec-body         { flex: 1; }
+    .rec-zone-name    { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #3E4A5E; margin-bottom: 3px; }
+    .rec-title        { font-size: 13px; font-weight: 600; line-height: 1.4; }
+    .rec-action       { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 9px 11px; font-size: 12px; color: #94A3B8; line-height: 1.55; margin-top: 10px; }
+    .rec-action strong { color: #CBD5E1; font-weight: 600; }
+    .ai-tips-card {
+      margin: 0 12px 10px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(99,102,241,0.06));
+      border: 1px solid rgba(99,102,241,0.14); border-radius: 16px; padding: 14px;
+    }
+    .ai-tips-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .ai-tips-label  { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #818CF8; }
+    .ai-tip         { font-size: 12px; color: #94A3B8; line-height: 1.65; margin-bottom: 8px; }
+    .ai-tip:last-child { margin-bottom: 0; }
+    .ai-tip strong  { color: #C7D2FE; font-weight: 600; }
+
+    /* ── PROGRESS TAB ── */
+    .progress-header { padding: 14px 16px 8px; }
+    .progress-title  { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+    .progress-sub    { font-size: 12px; color: #94A3B8; }
+    .progress-chart-card {
+      margin: 0 12px 10px; background: #0F1620;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden;
+    }
+    .progress-chart-top { padding: 13px 14px 0; display: flex; align-items: center; justify-content: space-between; }
+    .progress-chart-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #3E4A5E; }
+    .progress-delta      { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 8px; }
+    .progress-delta.up   { background: rgba(34,197,94,0.1);  color: #4ADE80; }
+    .progress-delta.down { background: rgba(239,68,68,0.1);  color: #F87171; }
+    .progress-delta.same { background: rgba(255,255,255,0.05); color: #94A3B8; }
+    .progress-chart-svg-wrap { padding: 10px 12px 14px; }
+    .progress-section  { margin: 0 12px 10px; }
+    .progress-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #3E4A5E; margin-bottom: 8px; }
+    .progress-entry    { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; }
+    .progress-entry:last-child { margin-bottom: 0; }
+    .progress-entry-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .progress-entry-date  { font-size: 12px; color: #475569; flex: 1; }
+    .progress-entry-score { font-size: 15px; font-weight: 700; }
+    .progress-entry-delta { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; min-width: 28px; text-align: center; }
+    .progress-first-msg   { padding: 20px; text-align: center; font-size: 13px; color: #3E4A5E; line-height: 1.6; }
   </style>
 </head>
 
@@ -535,6 +663,58 @@
   <!-- REPORT SCREEN -->
   <div id="screen-report" class="screen"></div>
 
+  <!-- MAIN APP (tab-based, appears after diagnostics) -->
+  <div id="screen-main" class="screen">
+    <div class="tab-content">
+      <div id="tab-home"     class="tab-panel active" data-tab="home"></div>
+      <div id="tab-idx"      class="tab-panel"        data-tab="idx"></div>
+      <div id="tab-recs"     class="tab-panel"        data-tab="recs"></div>
+      <div id="tab-progress" class="tab-panel"        data-tab="progress"></div>
+    </div>
+    <nav class="tab-bar">
+      <!-- Главная -->
+      <button class="tab-btn active" data-tab="home" onclick="switchTab('home')">
+        <span class="tab-btn-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12L5 10M5 10L12 3L19 10M5 10V20a1 1 0 001 1h4M19 10V20a1 1 0 01-1 1h-4M9 21v-6a1 1 0 011-1h4a1 1 0 011 1v6"/>
+          </svg>
+        </span>
+        Главная
+      </button>
+      <!-- Индекс -->
+      <button class="tab-btn" data-tab="idx" onclick="switchTab('idx')">
+        <span class="tab-btn-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 12L8.5 8.5"/>
+            <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+            <path d="M12 3v2M21 12h-2M12 21v-2M3 12h2"/>
+          </svg>
+        </span>
+        Индекс
+      </button>
+      <!-- Рекомендации -->
+      <button class="tab-btn" data-tab="recs" onclick="switchTab('recs')">
+        <span class="tab-btn-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.75A2 2 0 0015 16.5V17H9v-.5a2 2 0 00-1-1.75A7 7 0 0112 2z"/>
+          </svg>
+        </span>
+        Советы
+      </button>
+      <!-- Прогресс -->
+      <button class="tab-btn" data-tab="progress" onclick="switchTab('progress')">
+        <span class="tab-btn-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+        </span>
+        Прогресс
+      </button>
+    </nav>
+  </div>
+
 </div><!-- #app -->
 
 <script>
@@ -552,6 +732,7 @@
     HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {} },
   };
   tg.ready(); tg.expand();
+  apiAuth(); // фоновая авторизация — не блокирует UI
 
   /* ── DATA ── */
   const ZONES = [
@@ -738,13 +919,100 @@
     control:   ['Ввести еженедельный управленческий отчёт — 10 минут в пятницу', 'Выписать задачи, которые только вы делаете — делегировать одну'],
   };
 
+  /* ── API ── */
+  // В разработке — localhost, в продакшне замените на URL Railway/VPS
+  const API_URL = 'https://k-aqs-backend.up.railway.app';
+
   /* ── STATE ── */
   const S = {
     screen: 'welcome', qIndex: 0,
     answers: new Array(20).fill(-1),
     transitioning: false,
     results: null,
+    jwt: localStorage.getItem('kaqs_jwt') || null,
   };
+
+  /* ── API: Авторизация ── */
+  // Вызывается один раз при старте. Отправляет initData в наш бэкенд,
+  // получает JWT и сохраняет его. Если не в Telegram — тихо пропускает.
+  async function apiAuth() {
+    const initData = tg.initData;
+    if (!initData) return; // запущено вне Telegram — пропускаем
+    try {
+      const res = await fetch(`${API_URL}/api/auth/telegram`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ initData }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      S.jwt = data.token;
+      localStorage.setItem('kaqs_jwt', data.token);
+    } catch {
+      // Нет сети — продолжаем работу без сервера
+    }
+  }
+
+  /* ── API: Загрузка истории с сервера ── */
+  // Вызывается после показа главного экрана.
+  // Сервер — источник правды: он знает ВСЕ диагностики пользователя,
+  // даже если он менял телефон или удалял приложение.
+  // Результат: localStorage обновляется, вкладка «Прогресс» перерисовывается.
+  async function apiLoadHistory() {
+    if (!S.jwt) return;
+    try {
+      const res = await fetch(`${API_URL}/api/diagnostic/history`, {
+        headers: { 'Authorization': `Bearer ${S.jwt}` },
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.sessions || !data.sessions.length) return;
+
+      // Нормализуем формат API → формат localStorage (от старых к новым)
+      const apiHistory = data.sessions.slice().reverse().map(s => ({
+        date: new Date(s.completedAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }),
+        index: s.indexScore,
+      }));
+
+      // Обновляем localStorage только если у API данных больше или столько же
+      const localHistory = loadHistory();
+      if (apiHistory.length >= localHistory.length) {
+        localStorage.setItem('kaqs_history', JSON.stringify(apiHistory));
+        // Если открыта вкладка «Прогресс» — перерисовываем её актуальными данными
+        if (document.querySelector('.tab-btn[data-tab="progress"].active')) {
+          renderTabProgress();
+        }
+      }
+    } catch {
+      // Нет сети — используем данные из localStorage
+    }
+  }
+
+  /* ── API: Сохранение диагностики ── */
+  // Вызывается в фоне после завершения диагностики.
+  // Если нет JWT или нет сети — просто не сохраняет в облаке (данные есть в localStorage).
+  async function apiSaveDiagnostic(results) {
+    if (!S.jwt) return;
+    try {
+      await fetch(`${API_URL}/api/diagnostic/complete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${S.jwt}`,
+        },
+        body: JSON.stringify({
+          indexScore:    results.index,
+          zoneFinance:   results.zoneScores[0],
+          zoneMarketing: results.zoneScores[1],
+          zoneTeam:      results.zoneScores[2],
+          zoneOps:       results.zoneScores[3],
+          zoneControl:   results.zoneScores[4],
+        }),
+      });
+    } catch {
+      // Нет сети — данные сохранены в localStorage, всё в порядке
+    }
+  }
 
   /* ── UTILS ── */
   const zoneOf    = qi => ZONES[Math.floor(qi / 4)];
@@ -843,8 +1111,8 @@
         setTimeout(() => { body.style.transition = ''; body.style.transform = ''; body.style.opacity = ''; }, 200);
         renderQuestion();
       }
-    } else if (S.screen === 'index')   { tg.BackButton.hide(); goTo('welcome', 'back'); }
-    else if (S.screen === 'loss')      { goTo('index', 'back'); }
+    } else if (S.screen === 'main')    { /* stay, tab bar handles navigation */ }
+    else if (S.screen === 'loss')      { goTo('main', 'back'); }
     else if (S.screen === 'paywall')   { goTo('loss', 'back'); }
     else if (S.screen === 'report')    { goTo('paywall', 'back'); }
   }
@@ -996,9 +1264,7 @@
     setTimeout(() => document.getElementById('ld-s3').classList.add('show'), 2200);
     setTimeout(() => {
       S.results = calcResults();
-      renderIndex();
-      goTo('index', 'fwd');
-      tg.BackButton.show();
+      showMainApp();
     }, 3300);
   }
 
@@ -1493,6 +1759,354 @@
       lbl.textContent = 'Скопировано!';
       sub.textContent = APP_URL;
     });
+  }
+
+  /* ── HISTORY (localStorage) ── */
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem('kaqs_history') || '[]'); }
+    catch { return []; }
+  }
+  function saveHistory(entry) {
+    const h = loadHistory();
+    h.push(entry);
+    if (h.length > 30) h.splice(0, h.length - 30);
+    localStorage.setItem('kaqs_history', JSON.stringify(h));
+  }
+
+  /* ── SHOW MAIN APP ── */
+  function showMainApp() {
+    const today = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    saveHistory({ date: today, index: S.results.index });
+    apiSaveDiagnostic(S.results); // фоновая сохранение в облако
+    renderTabHome();
+    renderTabIndex();
+    renderTabRecs();
+    renderTabProgress();
+    switchTab('home', false);
+    goTo('main', 'fwd');
+    tg.BackButton.hide();
+    // После рендера — грузим историю с сервера и обновляем прогресс если нужно
+    setTimeout(() => apiLoadHistory(), 1500);
+  }
+
+  /* ── SWITCH TAB ── */
+  function switchTab(tab, haptic) {
+    if (haptic !== false) tg.HapticFeedback.impactOccurred('light');
+    document.querySelectorAll('.tab-btn').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.tab === tab));
+    document.querySelectorAll('.tab-panel').forEach(panel =>
+      panel.classList.toggle('active', panel.dataset.tab === tab));
+    const panel = document.querySelector('.tab-panel[data-tab="' + tab + '"]');
+    if (panel) panel.scrollTop = 0;
+    if (tab === 'home') {
+      const el = document.getElementById('home-score-anim');
+      if (el && S.results) animCounter(el, S.results.index, 800);
+    }
+  }
+
+  /* ── RESTART DIAGNOSTIC ── */
+  function restartDiag() {
+    tg.HapticFeedback.impactOccurred('medium');
+    S.qIndex = 0; S.answers = new Array(20).fill(-1);
+    renderQuestion(); goTo('question', 'fwd'); tg.BackButton.show();
+  }
+
+  /* ── DONUT GAUGE SVG ── */
+  function buildDonutGauge(score, color) {
+    const sz = 164, cx = 82, cy = 82, r = 64;
+    const C  = 2 * Math.PI * r;
+    const arc = C * 0.75;                 // 270° arc
+    const off = -((C - arc) / 2);        // center gap at bottom
+    const fill = arc * (score / 100);
+    return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+        stroke="rgba(255,255,255,0.07)" stroke-width="10" stroke-linecap="round"
+        stroke-dasharray="${arc} ${C}" stroke-dashoffset="${off}"
+        transform="rotate(-90 ${cx} ${cy})"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+        stroke="${color}" stroke-width="10" stroke-linecap="round"
+        stroke-dasharray="${fill} ${C}" stroke-dashoffset="${off}"
+        transform="rotate(-90 ${cx} ${cy})"
+        style="transition:stroke-dasharray 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+      <text x="${cx}" y="${cy - 8}" text-anchor="middle" dominant-baseline="middle"
+        font-size="30" font-weight="700" fill="${color}" font-family="Inter,sans-serif">${score}</text>
+      <text x="${cx}" y="${cy + 12}" text-anchor="middle" dominant-baseline="middle"
+        font-size="11" fill="#64748B" font-family="Inter,sans-serif">из 100</text>
+      <text x="${cx}" y="${cy + 26}" text-anchor="middle" dominant-baseline="middle"
+        font-size="10" fill="#94A3B8" font-family="Inter,sans-serif">${scoreLabel(score)}</text>
+    </svg>`;
+  }
+
+  /* ── PROGRESS CHART SVG ── */
+  function buildProgressChart(history) {
+    const W = Math.min((window.innerWidth || 375) - 48, 360);
+    const H = 96, padL = 6, padR = 6, padT = 14, padB = 22;
+    const cW = W - padL - padR, cH = H - padT - padB;
+    if (!history.length) {
+      return `<svg width="${W}" height="${H}"><text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#3E4A5E" font-size="12" font-family="Inter">Нет данных</text></svg>`;
+    }
+    const gradId = 'pg' + Math.random().toString(36).slice(2,7);
+    const accent = '#3B82F6';
+    if (history.length === 1) {
+      const x = padL + cW / 2, y = padT + cH * (1 - history[0].index / 100);
+      const c = scoreColor(history[0].index);
+      return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+        <line x1="${padL}" y1="${padT+cH}" x2="${W-padR}" y2="${padT+cH}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <circle cx="${x}" cy="${y}" r="5" fill="${c}"/>
+        <text x="${x}" y="${y-10}" text-anchor="middle" fill="${c}" font-size="11" font-weight="700" font-family="Inter">${history[0].index}</text>
+        <text x="${x}" y="${padT+cH+15}" text-anchor="middle" fill="#475569" font-size="10" font-family="Inter">${history[0].date}</text>
+      </svg>`;
+    }
+    const n = history.length;
+    const xs = history.map((_, i) => padL + (i / (n - 1)) * cW);
+    const ys = history.map(e => padT + cH * (1 - e.index / 100));
+    let path = `M ${xs[0]} ${ys[0]}`;
+    for (let i = 1; i < n; i++) {
+      const cpx = (xs[i-1] + xs[i]) / 2;
+      path += ` C ${cpx} ${ys[i-1]}, ${cpx} ${ys[i]}, ${xs[i]} ${ys[i]}`;
+    }
+    const area = path + ` L ${xs[n-1]} ${padT+cH} L ${xs[0]} ${padT+cH} Z`;
+    const showIdx = n <= 5 ? history.map((_, i) => i) : [0, Math.floor(n/2), n-1];
+    const labels  = showIdx.map(i => {
+      const anchor = i === 0 ? 'start' : i === n-1 ? 'end' : 'middle';
+      return `<text x="${xs[i]}" y="${padT+cH+15}" text-anchor="${anchor}" fill="#475569" font-size="10" font-family="Inter">${history[i].date}</text>
+              <text x="${xs[i]}" y="${ys[i]-9}" text-anchor="middle" fill="${accent}" font-size="10" font-weight="700" font-family="Inter">${history[i].index}</text>`;
+    }).join('');
+    return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${accent}" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <line x1="${padL}" y1="${padT+cH}" x2="${W-padR}" y2="${padT+cH}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <path d="${area}" fill="url(#${gradId})"/>
+      <path d="${path}" fill="none" stroke="${accent}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${history.map((e,i) => `<circle cx="${xs[i]}" cy="${ys[i]}" r="3.5" fill="${accent}"/>`).join('')}
+      ${labels}
+    </svg>`;
+  }
+
+  /* ── RENDER TAB: HOME ── */
+  function renderTabHome() {
+    const { index, zoneScores } = S.results;
+    const color  = scoreColor(index);
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    const risk   = riskLevel(index);
+    const today  = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+    const histCount = loadHistory().length;
+
+    document.getElementById('tab-home').innerHTML = `
+      <div class="main-topbar">
+        <div class="main-topbar-brand">K-A-Q-S™</div>
+        <div class="main-topbar-date">${today}</div>
+      </div>
+      <div class="home-score-card fade-up">
+        <div class="home-score-eyebrow">Индекс управляемости бизнеса</div>
+        <div class="home-score-num" id="home-score-anim" style="color:${color}">0</div>
+        <span class="home-score-label" style="background:${color}">${scoreLabel(index)}</span>
+        <div class="home-score-status">${scoreStatus(index)}</div>
+      </div>
+      <div class="home-metrics fade-up" style="animation-delay:.06s">
+        <div class="home-metric">
+          <div class="home-metric-label">Уровень риска</div>
+          <div class="home-metric-val" style="color:${risk.color}">${risk.label}</div>
+          <div class="home-metric-sub">потеря ${risk.loss} прибыли</div>
+        </div>
+        <div class="home-metric">
+          <div class="home-metric-label">Слабая зона</div>
+          <div class="home-metric-val">${sorted[0].icon} ${sorted[0].name.split(' ')[0]}</div>
+          <div class="home-metric-sub" style="color:${scoreColor(sorted[0].score)}">${sorted[0].score}/100</div>
+        </div>
+        <div class="home-metric">
+          <div class="home-metric-label">Зона внимания</div>
+          <div class="home-metric-val">${sorted[1].icon} ${sorted[1].name.split(' ')[0]}</div>
+          <div class="home-metric-sub" style="color:${scoreColor(sorted[1].score)}">${sorted[1].score}/100</div>
+        </div>
+        <div class="home-metric">
+          <div class="home-metric-label">Диагностик</div>
+          <div class="home-metric-val">${histCount}</div>
+          <div class="home-metric-sub">всего пройдено</div>
+        </div>
+      </div>
+      <div class="home-actions fade-up" style="animation-delay:.12s">
+        <button class="btn-secondary" onclick="switchTab('idx')">Детальный индекс →</button>
+        <button class="btn-primary"   onclick="restartDiag()">Обновить индекс</button>
+      </div>
+      <div style="height:10px"></div>
+    `;
+    setTimeout(() => {
+      const el = document.getElementById('home-score-anim');
+      if (el) animCounter(el, index, 900);
+    }, 80);
+  }
+
+  /* ── RENDER TAB: INDEX ── */
+  function renderTabIndex() {
+    const { index, zoneScores } = S.results;
+    const color  = scoreColor(index);
+    const risk   = riskLevel(index);
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+
+    document.getElementById('tab-idx').innerHTML = `
+      <div class="main-topbar">
+        <div class="main-topbar-brand">Индекс</div>
+      </div>
+      <div class="idx-tab-gauge-wrap fade-up">
+        ${buildDonutGauge(index, color)}
+      </div>
+      <div class="idx-tab-section fade-up" style="animation-delay:.06s">
+        <div class="idx-tab-section-title">Оценка по 5 зонам</div>
+        ${sorted.map(z => `
+          <div class="zone-row">
+            <span class="zone-ico">${z.icon}</span>
+            <span class="zone-name">${z.name.length > 10 ? z.name.slice(0,9)+'…' : z.name}</span>
+            <div class="zone-bar"><div class="zone-bar-f" data-w="${z.score}" style="background:${scoreColor(z.score)}"></div></div>
+            <span class="zone-sc" style="color:${scoreColor(z.score)}">${z.score}</span>
+          </div>`).join('')}
+      </div>
+      <div class="idx-tab-section fade-up" style="animation-delay:.10s">
+        <div class="idx-tab-section-title">Сравнение с рынком</div>
+        <div class="market-rows">
+          <div class="market-row">
+            <span class="market-row-label">Ваш результат</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:${color}" data-w="${index}"></div></div>
+            <span class="market-row-val" style="color:${color}">${index}</span>
+          </div>
+          <div class="market-row">
+            <span class="market-row-label">Малый бизнес</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:var(--text3)" data-w="58"></div></div>
+            <span class="market-row-val" style="color:var(--text3)">58</span>
+          </div>
+          <div class="market-row">
+            <span class="market-row-label">Системный</span>
+            <div class="market-row-bar-wrap"><div class="market-row-bar" style="background:var(--success)" data-w="80"></div></div>
+            <span class="market-row-val" style="color:var(--success)">80+</span>
+          </div>
+        </div>
+      </div>
+      <div class="idx-tab-section fade-up" style="animation-delay:.14s">
+        <div class="idx-tab-section-title">Индекс риска потери денег</div>
+        <div class="loss-risk-row">
+          <div>
+            <div class="loss-risk-label" style="color:${risk.color}">${risk.label}</div>
+            <div class="loss-risk-sub">уровень риска</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:18px;font-weight:700;color:${risk.color}">${risk.loss}</div>
+            <div style="font-size:11px;color:var(--text3)">прибыли в год</div>
+          </div>
+        </div>
+        <div class="loss-bar-wrap">
+          <div class="loss-bar-fill" data-w="${risk.pct}" style="background:${risk.color}"></div>
+        </div>
+        <div class="loss-bar-hints">
+          <span style="color:var(--success)">Нет риска</span>
+          <span style="color:#DC2626">Критический</span>
+        </div>
+      </div>
+      <div class="idx-tab-section fade-up" style="animation-delay:.18s">
+        <div class="idx-tab-section-title">Возможные потери</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">
+          При обороте <strong style="color:var(--text)">10 млн ₽ в год</strong> слабая система управления
+          может стоить <strong style="color:${risk.color}">${risk.lossRub} ₽</strong> ежегодно.
+        </div>
+      </div>
+      <div style="height:10px"></div>
+    `;
+    setTimeout(() => {
+      document.querySelectorAll('#tab-idx .zone-bar-f').forEach(b => { b.style.width = b.dataset.w + '%'; });
+      document.querySelectorAll('#tab-idx .market-row-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
+      document.querySelectorAll('#tab-idx .loss-bar-fill').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 420);
+  }
+
+  /* ── RENDER TAB: RECS ── */
+  function renderTabRecs() {
+    const { index, zoneScores } = S.results;
+    const sorted = ZONES.map((z,i) => ({...z, score: zoneScores[i]})).sort((a,b) => a.score - b.score);
+    const priorities = ['Критично', 'Важно', 'Рекомендуется'];
+    const priClass   = ['rec-priority-1', 'rec-priority-2', 'rec-priority-3'];
+    const aiTips = {
+      finance:   '<strong>Кассовые разрывы</strong> — главная причина закрытия бизнеса. Простой P&L в таблице на 30 минут в месяц даёт полную картину.',
+      marketing: '<strong>Без UTM-аналитики</strong> реклама тратится вхолостую. Определите один главный канал — и вложите туда весь фокус.',
+      team:      '<strong>Один прописанный KPI</strong> на роль снимает половину недопониманий. Начните с одного сотрудника — покажите результат за месяц.',
+      ops:       '<strong>Самый частый вопрос</strong> команды — это сигнал: напишите регламент. Один документ на один процесс.',
+      control:   '<strong>10 минут в пятницу</strong> на три цифры: выручка, расходы, прибыль. Этого хватает для управленческих решений.',
+    };
+
+    document.getElementById('tab-recs').innerHTML = `
+      <div class="recs-header">
+        <div class="recs-title">Рекомендации</div>
+        <div class="recs-sub">Приоритетные действия для роста индекса</div>
+      </div>
+      ${sorted.slice(0,3).map((z, i) => `
+        <div class="rec-card fade-up" style="animation-delay:${i * 0.06}s">
+          <div class="rec-card-header">
+            <span class="rec-zone-icon">${z.icon}</span>
+            <div class="rec-body">
+              <div class="rec-zone-name">${z.name}</div>
+              <div class="rec-title">${RECS[z.id][0]}</div>
+            </div>
+            <span class="rec-priority-badge ${priClass[i]}">${priorities[i]}</span>
+          </div>
+          <div class="rec-action"><strong>Первый шаг:</strong> ${RECS[z.id][1]}</div>
+        </div>`).join('')}
+      <div class="ai-tips-card fade-up" style="animation-delay:.2s">
+        <div class="ai-tips-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2.5">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          <span class="ai-tips-label">AI-анализ слабых зон</span>
+        </div>
+        ${sorted.slice(0,2).map(z => `<div class="ai-tip">${aiTips[z.id] || RISK_SOURCES[z.id]}</div>`).join('')}
+      </div>
+      <div style="height:10px"></div>
+    `;
+  }
+
+  /* ── RENDER TAB: PROGRESS ── */
+  function renderTabProgress() {
+    const history = loadHistory();
+    const n = history.length;
+    const latest = n ? history[n - 1] : null;
+    const prev   = n > 1 ? history[n - 2] : null;
+    const delta  = prev && latest ? latest.index - prev.index : null;
+    const dClass = delta === null ? 'same' : delta > 0 ? 'up' : delta < 0 ? 'down' : 'same';
+    const dText  = delta === null ? 'Первый результат' : delta > 0 ? `+${delta} пунктов` : delta < 0 ? `${delta} пунктов` : '0 пунктов';
+
+    document.getElementById('tab-progress').innerHTML = `
+      <div class="progress-header">
+        <div class="progress-title">Прогресс</div>
+        <div class="progress-sub">История изменения индекса</div>
+      </div>
+      <div class="progress-chart-card fade-up">
+        <div class="progress-chart-top">
+          <div class="progress-chart-label">Динамика индекса</div>
+          <span class="progress-delta ${dClass}">${dText}</span>
+        </div>
+        <div class="progress-chart-svg-wrap">${buildProgressChart(history)}</div>
+      </div>
+      <div class="progress-section fade-up" style="animation-delay:.08s">
+        <div class="progress-section-title">История диагностик</div>
+        ${!n
+          ? '<div class="progress-first-msg">Пройдите первую диагностику,<br>чтобы увидеть историю изменений</div>'
+          : history.slice().reverse().map((entry, i, arr) => {
+              const prevE = arr[i + 1];
+              const d = prevE ? entry.index - prevE.index : null;
+              const dc = d === null ? 'same' : d > 0 ? 'up' : d < 0 ? 'down' : 'same';
+              const dt = d === null ? '—' : d > 0 ? `+${d}` : `${d}`;
+              const sc = scoreColor(entry.index);
+              return `<div class="progress-entry">
+                <div class="progress-entry-dot" style="background:${sc}"></div>
+                <div class="progress-entry-date">${entry.date}</div>
+                <div class="progress-entry-score" style="color:${sc}">${entry.index}</div>
+                <span class="progress-entry-delta ${dc}">${dt}</span>
+              </div>`;
+            }).join('')}
+      </div>
+      <div style="height:10px"></div>
+    `;
   }
 
   /* ── MAIN BUTTON ── */

@@ -44,9 +44,9 @@
       --blue-dim:    rgba(96,165,250,0.10);
       --sidebar-w:   252px;
       --topbar-h:    62px;
-      --r:           12px;
-      --r-sm:        8px;
-      --r-lg:        16px;
+      --r:           8px;
+      --r-sm:        6px;
+      --r-lg:        12px;
     }
 
     html, body {
@@ -159,8 +159,28 @@
 
     .suser-index-val {
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--accent);
+    }
+
+    .suser-streak {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: rgba(234,179,8,.07);
+      border: 1px solid rgba(234,179,8,.15);
+      border-radius: 7px;
+    }
+    .suser-streak-label {
+      font-size: 11px;
+      color: var(--text5);
+    }
+    .suser-streak-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--yellow);
     }
 
     .sidebar-nav {
@@ -185,7 +205,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      padding: 9px 10px;
+      padding: 7px 10px;
       border-radius: var(--r-sm);
       cursor: pointer;
       color: var(--text4);
@@ -346,7 +366,7 @@
 
     .sec-title {
       font-size: 17px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       letter-spacing: -.3px;
     }
@@ -364,7 +384,7 @@
 
     .pg-title {
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 600;
       color: var(--text);
       letter-spacing: -.4px;
       margin-bottom: 5px;
@@ -479,13 +499,13 @@
     }
 
     .pbar-track {
-      height: 6px;
+      height: 4px;
       background: var(--bg5);
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
     }
 
-    .pbar-track-md { height: 8px; }
+    .pbar-track-md { height: 4px; }
 
     .pbar-fill {
       height: 100%;
@@ -584,11 +604,65 @@
       font-weight: 500;
     }
 
+    /* BENCHMARK BAR */
+    .bench-wrap {
+      margin-top: 12px;
+    }
+    .bench-bar-track {
+      position: relative;
+      height: 4px;
+      background: var(--bg5);
+      border-radius: 2px;
+      overflow: visible;
+      margin-bottom: 6px;
+    }
+    .bench-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+    .bench-marker {
+      position: absolute;
+      top: -4px;
+      width: 2px;
+      height: 14px;
+      border-radius: 1px;
+      transform: translateX(-50%);
+    }
+    .bench-marker-label {
+      position: absolute;
+      top: 14px;
+      font-size: 9px;
+      font-weight: 700;
+      white-space: nowrap;
+      transform: translateX(-50%);
+      letter-spacing: .3px;
+    }
+    .bench-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .bench-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text4);
+    }
+    .bench-legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
     .ih-info { flex: 1; }
 
     .ih-info h2 {
       font-size: 21px;
-      font-weight: 800;
+      font-weight: 600;
       color: var(--text);
       letter-spacing: -.4px;
       margin-bottom: 8px;
@@ -630,7 +704,7 @@
 
     .mc-icon { font-size: 20px; margin-bottom: 7px; }
     .mc-name { font-size: 11px; color: var(--text5); margin-bottom: 5px; }
-    .mc-val  { font-size: 21px; font-weight: 800; }
+    .mc-val  { font-size: 21px; font-weight: 700; }
 
     /* LOSSES BLOCK */
     .losses-block {
@@ -642,7 +716,7 @@
 
     .losses-main-line {
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 700;
       color: #E07070;
       letter-spacing: -.5px;
       margin-bottom: 4px;
@@ -914,7 +988,7 @@
       align-items: center;
       justify-content: center;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--accent);
       flex-shrink: 0;
     }
@@ -1290,7 +1364,7 @@
 
     .step-view-title {
       font-size: 19px;
-      font-weight: 800;
+      font-weight: 600;
       color: var(--text);
       letter-spacing: -.4px;
       margin: 12px 0 8px;
@@ -1379,7 +1453,7 @@
 
     .scb-title {
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 600;
       color: var(--green);
       margin-bottom: 6px;
     }
@@ -1464,6 +1538,77 @@
 
     /* ── DOJIM SYSTEM ── */
 
+    /* ── SIDEBAR TIMER ── */
+    .sb-timer {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sb-timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    .sb-timer-label { font-size: 11px; color: var(--text5); font-weight: 500; }
+    .sb-timer-days  { font-size: 13px; font-weight: 700; }
+    .sb-timer-track { height: 4px; background: var(--bg5); border-radius: 2px; overflow: hidden; }
+    .sb-timer-fill  { height: 100%; border-radius: 2px; transition: width .5s; }
+
+    /* ── DASHBOARD TIMER BANNER ── */
+    .dash-timer {
+      border-radius: var(--r);
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .dash-timer.dt-ok     { background: rgba(99,102,241,.07);  border: 1px solid rgba(99,102,241,.22); }
+    .dash-timer.dt-warn   { background: rgba(234,179,8,.07);   border: 1px solid rgba(234,179,8,.22);  }
+    .dash-timer.dt-urgent { background: rgba(239,68,68,.07);   border: 1px solid rgba(239,68,68,.22);  }
+    .dash-timer.dt-done   { background: rgba(34,197,94,.06);   border: 1px solid rgba(34,197,94,.2);   }
+    .dt-circle {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .dt-circle.dt-ok     { background: rgba(99,102,241,.12); }
+    .dt-circle.dt-warn   { background: rgba(234,179,8,.12);  }
+    .dt-circle.dt-urgent { background: rgba(239,68,68,.12);  }
+    .dt-circle.dt-done   { background: rgba(34,197,94,.12);  }
+    .dt-num  { font-size: 24px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
+    .dt-unit { font-size: 10px; font-weight: 600; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
+    .dt-info { flex: 1; }
+    .dt-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; letter-spacing: -.2px; }
+    .dt-sub   { font-size: 12px; color: var(--text4); line-height: 1.6; }
+    .dt-bar-wrap { margin-top: 10px; }
+    .dt-bar-track { height: 4px; background: var(--bg5); border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
+    .dt-bar-fill  { height: 100%; border-radius: 2px; transition: width .5s; }
+    .dt-bar-hint  { font-size: 11px; color: var(--text5); }
+
+    /* ── TODAY FOCUS CARD ── */
+    .today-focus {
+      background: var(--bg3);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: var(--r);
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+    .tf-label {
+      font-size: 10px; font-weight: 700; color: var(--accent2);
+      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .tf-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); flex-shrink: 0; }
+    .tf-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -.3px; }
+    .tf-desc  { font-size: 13px; color: var(--text3); line-height: 1.65; margin-bottom: 14px; }
+    .tf-gives { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+    .tf-give  { font-size: 12px; color: var(--text4); display: flex; align-items: center; gap: 6px; }
+    .tf-give::before { content: '→'; color: var(--accent); font-size: 11px; font-weight: 700; flex-shrink: 0; }
+
     .dojim-banner {
       background: rgba(224,112,112,.05);
       border: 1px solid rgba(224,112,112,.2);
@@ -1490,7 +1635,7 @@
 
     .dojim-main {
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -.3px;
       margin-bottom: 8px;
@@ -1506,28 +1651,322 @@
 
     .dojim-sub span { color: var(--text2); }
 
+    /* ── RE-DIAGNOSTIC CTA ── */
+    .rediag-card {
+      background: linear-gradient(135deg, rgba(99,102,241,.1) 0%, rgba(34,197,94,.07) 100%);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .rediag-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .rediag-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(99,102,241,.15);
+      border: 1px solid rgba(99,102,241,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .rediag-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.2px;
+      margin-bottom: 4px;
+    }
+    .rediag-sub {
+      font-size: 13px;
+      color: var(--text4);
+      line-height: 1.65;
+    }
+    .rediag-delta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(34,197,94,.07);
+      border: 1px solid rgba(34,197,94,.15);
+      border-radius: var(--r-sm);
+      margin-bottom: 16px;
+    }
+    .rediag-delta-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: -1px;
+    }
+    .rediag-delta-text {
+      font-size: 12px;
+      color: var(--text4);
+      line-height: 1.5;
+    }
+
+    /* ── EXPERT MODAL ── */
+    .expert-modal-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .expert-modal-wrap.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .expert-modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-bottom: none;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      padding: 28px 24px 32px;
+      width: 100%;
+      max-width: 520px;
+      transform: translateY(100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+    }
+    .expert-modal-wrap.visible .expert-modal {
+      transform: translateY(0);
+    }
+    .expert-modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--bg5);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .expert-modal-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin-bottom: 8px;
+    }
+    .expert-modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -.2px;
+    }
+    .expert-modal-sub {
+      font-size: 13px;
+      color: var(--text4);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .expert-modal-context {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.65;
+    }
+    .expert-modal-context strong {
+      color: var(--text2);
+      display: block;
+      margin-bottom: 3px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    /* ── MILESTONE OVERLAY ── */
+    .milestone-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s ease;
+    }
+    .milestone-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .milestone-card {
+      background: var(--bg2);
+      border: 1px solid rgba(34,197,94,.25);
+      border-radius: var(--r-lg);
+      padding: 48px 40px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: calc(100% - 40px);
+      position: relative;
+      transform: scale(.85) translateY(20px);
+      transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+    }
+    .milestone-overlay.visible .milestone-card {
+      transform: scale(1) translateY(0);
+    }
+    .milestone-rings {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 24px;
+    }
+    .milestone-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(34,197,94,.15);
+      animation: ringPulse 2s ease-in-out infinite;
+    }
+    .milestone-ring:nth-child(2) { inset: -10px; animation-delay: .3s; }
+    .milestone-ring:nth-child(3) { inset: -20px; animation-delay: .6s; }
+    @keyframes ringPulse {
+      0%, 100% { opacity: .6; transform: scale(1); }
+      50%       { opacity: .2; transform: scale(1.04); }
+    }
+    .milestone-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: rgba(34,197,94,.12);
+      border: 2px solid rgba(34,197,94,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .milestone-step-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 10px;
+    }
+    .milestone-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.4px;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .milestone-sub {
+      font-size: 13px;
+      color: var(--text4);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .milestone-index-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 16px;
+      background: rgba(34,197,94,.06);
+      border: 1px solid rgba(34,197,94,.15);
+      border-radius: var(--r);
+    }
+    .milestone-idx-old {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text4);
+      letter-spacing: -1px;
+    }
+    .milestone-idx-arrow {
+      font-size: 18px;
+      color: var(--green);
+    }
+    .milestone-idx-new {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -1.5px;
+    }
+    .milestone-idx-label {
+      font-size: 11px;
+      color: var(--text5);
+      margin-top: 2px;
+    }
+    .milestone-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Confetti particles */
+    .confetti-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: var(--r-lg);
+    }
+    .confetti-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+    }
+
+    /* INDEX COUNTER ANIMATION */
+    @keyframes indexPop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.18); }
+      70%  { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+    .index-pop {
+      animation: indexPop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
     /* Completion toast */
     .completion-toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(140%);
       z-index: 9999;
-      background: var(--bg3);
-      border: 1px solid rgba(34,197,94,.3);
-      border-left: 3px solid var(--green);
-      border-radius: var(--r);
-      padding: 16px 18px;
-      min-width: 300px;
-      max-width: 380px;
-      box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(34,197,94,.08);
-      transform: translateY(120%);
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-top: 2px solid rgba(34,197,94,.55);
+      border-radius: 14px;
+      padding: 14px 18px;
+      width: 360px;
+      max-width: calc(100vw - 32px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(34,197,94,.06);
       opacity: 0;
       transition: all .4s cubic-bezier(.34,1.56,.64,1);
       pointer-events: none;
     }
 
     .completion-toast.visible {
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
       pointer-events: auto;
     }
@@ -1648,7 +2087,7 @@
 
     @media (max-width: 768px) {
       .inactivity-banner { left: 0; }
-      .completion-toast { left: 16px; right: 16px; bottom: 80px; min-width: unset; }
+      .completion-toast { width: calc(100vw - 32px); bottom: 80px; }
     }
   </style>
 </head>
@@ -1676,6 +2115,13 @@
         <span class="suser-index-val" id="sb-index">—</span>
       </div>
     </div>
+
+    <div class="suser-streak" id="sb-streak" style="display:none">
+      <span class="suser-streak-label">Дней подряд</span>
+      <span class="suser-streak-val" id="sb-streak-val">🔥 1</span>
+    </div>
+
+    <div class="sb-timer" id="sb-timer"></div>
 
     <nav class="sidebar-nav">
       <div class="nav-group-label">Обзор</div>
@@ -1786,6 +2232,58 @@
   </div>
 </div>
 
+<!-- Expert modal -->
+<div id="expert-modal-wrap" class="expert-modal-wrap" onclick="closeExpertModal()">
+  <div class="expert-modal" onclick="event.stopPropagation()">
+    <div class="expert-modal-handle"></div>
+    <div class="expert-modal-label">Консультация эксперта</div>
+    <div class="expert-modal-title">Нужна помощь с этим шагом?</div>
+    <div class="expert-modal-sub">Карина разберёт ваш конкретный случай и подскажет как пройти этот шаг быстрее. Ответ в Telegram в течение 24 часов.</div>
+    <div class="expert-modal-context" id="expert-context">
+      <strong>Ваш шаг</strong>
+      <span id="expert-step-text">—</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a id="expert-tg-link" href="#" target="_blank" class="btn btn-primary" style="justify-content:center">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.012 9.483c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 14.102l-2.95-.924c-.642-.204-.655-.642.136-.953l11.527-4.448c.535-.194 1.002.131.659.471z"/></svg>
+        Написать в Telegram
+      </a>
+      <button class="btn btn-ghost btn-sm" onclick="closeExpertModal()" style="justify-content:center">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Milestone overlay -->
+<div id="milestone-overlay" class="milestone-overlay" onclick="closeMilestone()">
+  <div class="milestone-card" onclick="event.stopPropagation()">
+    <div class="confetti-wrap" id="confetti-wrap"></div>
+    <div class="milestone-rings">
+      <div class="milestone-ring"></div>
+      <div class="milestone-ring"></div>
+      <div class="milestone-ring"></div>
+      <div class="milestone-icon">✓</div>
+    </div>
+    <div class="milestone-step-label" id="ms-step-label">Шаг 1 из 5 выполнен</div>
+    <div class="milestone-title" id="ms-title">Процессы зафиксированы</div>
+    <div class="milestone-sub" id="ms-sub">Бизнес больше не зависит от конкретных людей. Это первый системный шаг к управляемости.</div>
+    <div class="milestone-index-row">
+      <div>
+        <div class="milestone-idx-old" id="ms-idx-old">42</div>
+        <div class="milestone-idx-label">было</div>
+      </div>
+      <div class="milestone-idx-arrow">→</div>
+      <div>
+        <div class="milestone-idx-new" id="ms-idx-new">52</div>
+        <div class="milestone-idx-label">стало</div>
+      </div>
+    </div>
+    <div class="milestone-actions">
+      <button class="btn btn-primary" id="ms-next-btn" onclick="closeMilestone()">Следующий шаг →</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeMilestone()">Закрыть</button>
+    </div>
+  </div>
+</div>
+
 <!-- Inactivity banner -->
 <div id="inactivity-banner" class="inactivity-banner">
   <div class="ib-dot"></div>
@@ -1810,6 +2308,8 @@ const DATA = {
     company: 'СтройГрупп',
     role: 'Генеральный директор',
     diagDate: '15 марта 2026',
+    startDate: '2026-03-15',
+    accessDays: 14,
   },
 
   index: 42,
@@ -1908,7 +2408,7 @@ const DATA = {
       id: 1, priority: 1, block: 'processes', probId: 1,
       urgency: 'critical',
       title: 'Зафиксировать процессы',
-      desc: 'Выбрать 3 критичных процесса и описать пошагово. Начать с тех, где уход человека останавливает работу.',
+      desc: 'Описать 3 критичных процесса пошагово: найм, онбординг клиента, передача задач. Это три точки, где уход человека останавливает работу.',
       microPain: 'иначе бизнес продолжит зависеть от людей',
       gives: ['бизнес перестаёт ломаться при росте', 'новые сотрудники быстрее включаются в работу', 'снижается зависимость от конкретных людей'],
       risks: ['рост останавливается', 'замена сотрудника откатывает бизнес назад', 'собственник продолжает тушить операционку вручную'],
@@ -1962,9 +2462,9 @@ const DATA = {
   ],
 
   tasks: [
-    { id: 101, title: 'Выбрать 3 процесса для описания',            gives: ['определит точки наибольшего риска', 'даст фокус для следующих шагов'],                  status: 'done',        priority: 'high',   deadline: '22 мар', block: 'processes', planId: 1 },
-    { id: 102, title: 'Описать процесс найма сотрудника',            gives: ['уберёт зависимость от конкретного человека', 'ускорит онбординг новых людей'],           status: 'in_progress', priority: 'high',   deadline: '26 мар', block: 'processes', planId: 1 },
-    { id: 103, title: 'Описать процесс онбординга клиента',          gives: ['снизит потери клиентов на старте', 'уберёт ручной контроль собственника'],               status: 'todo',        priority: 'high',   deadline: '29 мар', block: 'processes', planId: 1 },
+    { id: 101, title: 'Описать процесс найма сотрудника',            gives: ['уберёт зависимость от конкретного человека', 'ускорит онбординг новых людей'],           status: 'done',        priority: 'high',   deadline: '22 мар', block: 'processes', planId: 1 },
+    { id: 102, title: 'Описать процесс онбординга клиента',          gives: ['снизит потери клиентов на старте', 'уберёт ручной контроль собственника'],               status: 'in_progress', priority: 'high',   deadline: '26 мар', block: 'processes', planId: 1 },
+    { id: 103, title: 'Описать передачу задач при отсутствии ключевого сотрудника', gives: ['бизнес не останавливается при уходе человека', 'снижается риск потери клиентов'], status: 'todo', priority: 'high', deadline: '29 мар', block: 'processes', planId: 1 },
     { id: 104, title: 'Создать шаблон таблицы P&L',                 gives: ['появится основа для управленческого учёта', 'можно сразу начать считать деньги'],        status: 'done',        priority: 'high',   deadline: '21 мар', block: 'finance',   planId: 2 },
     { id: 105, title: 'Внести данные по выручке за февраль',         gives: ['увидите реальную картину по деньгам', 'найдёте скрытые потери по направлениям'],        status: 'in_progress', priority: 'high',   deadline: '24 мар', block: 'finance',   planId: 2 },
     { id: 106, title: 'Составить схему структуры компании',          gives: ['зоны ответственности станут видимыми', 'собственник освободится от хаоса согласований'], status: 'todo',        priority: 'medium', deadline: '28 мар', block: 'team',      planId: 3 },
@@ -2029,6 +2529,43 @@ function svgCircle(pct, r = 44) {
   </svg>`;
 }
 
+// ── BENCHMARK BAR ──
+// Benchmark: median client score (seeded), target score
+const BENCH = { median: 61, target: 75 };
+
+function renderBenchBar(currentIdx) {
+  const pct     = Math.min(100, currentIdx);
+  const medPct  = BENCH.median;
+  const targPct = BENCH.target;
+  const fillColor = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+  return `
+    <div class="bench-wrap">
+      <div class="bench-bar-track">
+        <div class="bench-bar-fill" style="width:${pct}%;background:${fillColor}"></div>
+        <div class="bench-marker" style="left:${medPct}%;background:rgba(255,255,255,0.35)">
+          <span class="bench-marker-label" style="color:var(--text5);left:50%">${medPct}</span>
+        </div>
+        <div class="bench-marker" style="left:${targPct}%;background:var(--green)">
+          <span class="bench-marker-label" style="color:var(--green);left:50%">${targPct}</span>
+        </div>
+      </div>
+      <div class="bench-legend" style="margin-top:18px">
+        <div class="bench-legend-item">
+          <div class="bench-legend-dot" style="background:${fillColor}"></div>
+          Вы: ${currentIdx}
+        </div>
+        <div class="bench-legend-item">
+          <div class="bench-legend-dot" style="background:rgba(255,255,255,0.3)"></div>
+          Средний клиент: ${medPct}
+        </div>
+        <div class="bench-legend-item">
+          <div class="bench-legend-dot" style="background:var(--green)"></div>
+          Цель: ${targPct}
+        </div>
+      </div>
+    </div>`;
+}
+
 function countTasks() {
   const total = DATA.tasks.length;
   const done  = DATA.tasks.filter(t => t.status === 'done').length;
@@ -2047,38 +2584,33 @@ function renderDashboard() {
   const pct = Math.round((tc.done / tc.total) * 100);
   const top3 = DATA.problems.slice(0, 3);
 
+  const idx = getDisplayIndex();
+  const siIdx = scoreInfo(idx);
+
   document.getElementById('page-dashboard').innerHTML = `
     <div class="pg-head">
       <div class="pg-title">Привет, ${DATA.user.firstName}</div>
       <div class="pg-sub">Диагностика пройдена ${DATA.user.diagDate}</div>
     </div>
 
-    <div class="dojim-banner">
-      <div class="dojim-stat-pill">⚠ 90% предпринимателей не внедряют план</div>
-      <div class="dojim-main">Ваш план готов — но этого недостаточно</div>
-      <div class="dojim-sub">
-        <span>Вы уже знаете, где теряете деньги.</span><br>
-        Но пока не начато внедрение — ситуация не изменится.<br>
-        Вы — в том 10%, у кого есть план. Теперь важно его выполнить.
-      </div>
-      <button class="btn btn-primary" onclick="navigate('plan')" style="padding:10px 22px">
-        Начать внедрение →
-      </button>
-    </div>
+    ${renderRediagCTA()}
+    ${renderTimerBanner()}
+    ${renderPriorityTasks()}
 
     <!-- ИНДЕКС -->
     <div class="index-hero">
       <div class="ih-circle">
-        ${svgCircle(DATA.index, 46)}
+        ${svgCircle(idx, 46)}
         <div class="ih-circle-val">
-          <div class="ih-num">${DATA.index}</div>
+          <div class="ih-num">${idx}</div>
           <div class="ih-max">из 100</div>
         </div>
       </div>
       <div class="ih-info">
-        <div class="level-pill ${si.lpCls}">● ${si.label}</div>
-        <h2>Индекс управляемости: ${DATA.index}</h2>
+        <div class="level-pill ${siIdx.lpCls}">● ${siIdx.label}</div>
+        <h2>Индекс управляемости: ${idx}</h2>
         <p>${DATA.summary}</p>
+        ${renderBenchBar(idx)}
       </div>
       <div class="ih-actions">
         <button class="btn btn-primary" onclick="navigate('plan')">
@@ -2233,6 +2765,7 @@ function renderDiagnostics() {
         <h2>Общий индекс управляемости</h2>
         <p>Показывает, насколько бизнес управляем без вашего личного участия.
            Рассчитан по 5 ключевым блокам. Целевое значение — от 75.</p>
+        ${renderBenchBar(DATA.index)}
       </div>
     </div>
 
@@ -2461,8 +2994,12 @@ function renderPlan() {
                   </div>
                   <div style="font-size:11px;color:var(--text5)">${progressText}</div>
                 </div>
+                <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--text4)"
+                  onclick="openExpertModal(${JSON.stringify(item.title)}, ${JSON.stringify(item.desc)})">
+                  Нужна помощь?
+                </button>
                 <button class="btn ${done ? 'btn-ghost' : 'btn-outline'} btn-sm" style="flex-shrink:0" onclick="goToTasks(${item.id})">
-                  ${done ? 'Просмотр' : 'Начать внедрение →'}
+                  ${done ? 'Просмотр' : 'Начать →'}
                 </button>
               </div>
 
@@ -2647,6 +3184,12 @@ function cycleTask(id) {
           nextStepId: nextStep?.id ?? null,
           nextStepTitle: nextStep?.title ?? null,
         });
+        // Show milestone overlay
+        const idxBefore = _lastDisplayIndex ?? getDisplayIndex();
+        setTimeout(() => {
+          const idxAfter = getDisplayIndex();
+          showMilestone(step, idxBefore, idxAfter, nextStep || null);
+        }, 600);
       }
     }
   }
@@ -2654,7 +3197,153 @@ function cycleTask(id) {
   resetInactivity();
   renderTasksInner();
   updateBadges();
+  updateIndexDisplay();
   if (document.getElementById('page-plan').classList.contains('active')) renderPlan();
+}
+
+// ── STREAK ──
+function getStreak() {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const raw = localStorage.getItem('kaqs_streak');
+    const data = raw ? JSON.parse(raw) : { count: 0, lastDate: null };
+
+    if (data.lastDate === today) return data.count;
+
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const newCount = data.lastDate === yesterday ? data.count + 1 : 1;
+    localStorage.setItem('kaqs_streak', JSON.stringify({ count: newCount, lastDate: today }));
+    return newCount;
+  } catch { return 1; }
+}
+
+function renderStreak() {
+  const count = getStreak();
+  const el = document.getElementById('sb-streak');
+  const val = document.getElementById('sb-streak-val');
+  if (count >= 2) {
+    val.textContent = `🔥 ${count}`;
+    el.style.display = 'flex';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ── RE-DIAGNOSTIC CTA ──
+// Replace with your real quiz URL
+const REDIAG_URL = 'https://kaqs.ru/quiz';
+
+function renderRediagCTA() {
+  const currentIdx = getDisplayIndex();
+  const gained = currentIdx - DATA.index;
+  const tc = countTasks();
+  const allDone = tc.done === tc.total;
+  const daysLeft = getDaysLeft();
+
+  // Show if timer expired OR all tasks done
+  if (daysLeft > 0 && !allDone) return '';
+
+  const reason = allDone
+    ? 'Вы выполнили все задачи внедрения.'
+    : '14 дней программы завершены.';
+
+  return `
+    <div class="rediag-card">
+      <div class="rediag-top">
+        <div class="rediag-icon">📊</div>
+        <div>
+          <div class="rediag-title">Пройдите повторную диагностику</div>
+          <div class="rediag-sub">${reason} Посмотрите, как вырос ваш индекс за это время.</div>
+        </div>
+      </div>
+      ${gained > 0 ? `
+        <div class="rediag-delta">
+          <div class="rediag-delta-num">+${gained}</div>
+          <div class="rediag-delta-text">
+            <div style="color:var(--text2);font-weight:600">Индекс вырос с ${DATA.index} до ${currentIdx}</div>
+            <div>Повторная диагностика покажет реальные изменения по всем блокам</div>
+          </div>
+        </div>
+      ` : ''}
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <a href="${REDIAG_URL}" target="_blank" class="btn btn-primary">
+          Пройти диагностику снова →
+        </a>
+        <span style="font-size:12px;color:var(--text5)">Займёт 5–7 минут</span>
+      </div>
+    </div>`;
+}
+
+// ── EXPERT MODAL ──
+// Replace with your real Telegram username
+const EXPERT_TG = 'karina_kaqs'; // @karina_kaqs
+
+function openExpertModal(stepTitle, stepDesc) {
+  const text = encodeURIComponent(
+    `Привет! Я прохожу платформу K-AQS.\n\nШаг: «${stepTitle}»\n${stepDesc}\n\nНужна помощь с этим шагом.`
+  );
+  document.getElementById('expert-step-text').textContent = stepTitle;
+  document.getElementById('expert-tg-link').href = `https://t.me/${EXPERT_TG}?text=${text}`;
+  document.getElementById('expert-modal-wrap').classList.add('visible');
+  track('expert_help_requested', { stepTitle });
+}
+
+function closeExpertModal() {
+  document.getElementById('expert-modal-wrap').classList.remove('visible');
+}
+
+// ── MILESTONE OVERLAY ──
+function spawnConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  wrap.innerHTML = '';
+  const colors = ['#22C55E','#6366F1','#EAB308','#60A5FA','#A855F7','#F97316'];
+  for (let i = 0; i < 28; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'confetti-dot';
+    dot.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${-6 + Math.random() * 10}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      animation-duration: ${1.2 + Math.random() * 1.2}s;
+      animation-delay: ${Math.random() * .5}s;
+      width: ${4 + Math.random() * 6}px;
+      height: ${4 + Math.random() * 6}px;
+    `;
+    wrap.appendChild(dot);
+  }
+}
+
+function showMilestone(step, idxBefore, idxAfter, nextStep) {
+  document.getElementById('ms-step-label').textContent = `Шаг ${step.priority} из ${DATA.plan.length} выполнен`;
+  document.getElementById('ms-title').textContent = step.title;
+  document.getElementById('ms-sub').textContent =
+    step.gives && step.gives.length
+      ? step.gives.slice(0, 2).join('. ') + '.'
+      : 'Бизнес стал управляемее на один шаг.';
+  document.getElementById('ms-idx-old').textContent = idxBefore;
+
+  const newEl = document.getElementById('ms-idx-new');
+  newEl.textContent = idxBefore;
+
+  const nextBtn = document.getElementById('ms-next-btn');
+  if (nextStep) {
+    nextBtn.textContent = `Следующий шаг: ${nextStep.title} →`;
+    nextBtn.onclick = () => { closeMilestone(); goToTasks(nextStep.id); };
+  } else {
+    nextBtn.textContent = 'Посмотреть итоговый прогресс →';
+    nextBtn.onclick = () => { closeMilestone(); navigate('progress'); };
+  }
+
+  const overlay = document.getElementById('milestone-overlay');
+  overlay.classList.add('visible');
+  spawnConfetti();
+
+  // Animate new index counter after short delay
+  setTimeout(() => animateCounter(newEl, idxBefore, idxAfter), 500);
+}
+
+function closeMilestone() {
+  document.getElementById('milestone-overlay').classList.remove('visible');
 }
 
 // ── COMPLETION TOAST ──
@@ -2901,8 +3590,12 @@ function renderStepView(planId) {
       ${stepTasks.map(t => taskCard(t)).join('')}
     </div>
 
-    <div style="margin-top:20px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="margin-top:20px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" onclick="exitStepView()">← Назад к плану</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--text4)"
+        onclick="openExpertModal(${JSON.stringify(step.title)}, ${JSON.stringify(step.desc)})">
+        Нужна помощь с этим шагом?
+      </button>
       <button class="btn btn-ghost btn-sm" onclick="navigate('progress')">Прогресс →</button>
     </div>
   `;
@@ -2968,6 +3661,8 @@ function renderProgress() {
         </p>
       </div>
     </div>
+
+    ${renderRediagCTA()}
 
     <div class="g3 mb24">
       <div class="stat-card">
@@ -3035,8 +3730,8 @@ function renderProgress() {
 
     <div class="card" style="text-align:center;border-color:var(--accent-dim2);padding:28px">
       <div style="font-size:12px;color:var(--text4);margin-bottom:6px">Текущий индекс управляемости</div>
-      <div style="font-size:48px;font-weight:800;color:var(--accent);letter-spacing:-2px;line-height:1">${DATA.index}</div>
-      <div style="font-size:12px;color:var(--text5);margin-top:6px">Вырастет после закрытия шагов</div>
+      <div style="font-size:48px;font-weight:800;color:var(--accent);letter-spacing:-2px;line-height:1">${getDisplayIndex()}</div>
+      <div style="font-size:12px;color:var(--text5);margin-top:6px">Растёт по мере выполнения задач</div>
       <div class="mt16">
         <button class="btn btn-primary" onclick="navigate('plan')">
           К плану действий →
@@ -3111,12 +3806,182 @@ function closeSidebar() {
 //  INIT
 // ================================================================
 
+/* ── DYNAMIC INDEX ── */
+const TASK_POINTS = { high: 6, medium: 4, low: 2 };
+const MAX_GAIN    = DATA.tasks.reduce((s, t) => s + (TASK_POINTS[t.priority] || 2), 0);
+
+function getDisplayIndex() {
+  const gained = DATA.tasks
+    .filter(t => t.status === 'done')
+    .reduce((s, t) => s + (TASK_POINTS[t.priority] || 2), 0);
+  const bonus  = MAX_GAIN > 0 ? Math.round((gained / MAX_GAIN) * (100 - DATA.index)) : 0;
+  return Math.min(100, DATA.index + Math.round(bonus * 0.65));
+}
+
+// Animated counter: counts from `from` to `to` in ~700ms
+function animateCounter(el, from, to, suffix = '') {
+  if (from === to) return;
+  const duration = 700;
+  const start = performance.now();
+  const diff = to - from;
+  function step(now) {
+    const elapsed = Math.min(now - start, duration);
+    const progress = elapsed / duration;
+    // easeOutQuart
+    const eased = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.round(from + diff * eased) + suffix;
+    if (elapsed < duration) requestAnimationFrame(step);
+    else { el.textContent = to + suffix; el.classList.add('index-pop'); setTimeout(() => el.classList.remove('index-pop'), 600); }
+  }
+  requestAnimationFrame(step);
+}
+
+let _lastDisplayIndex = null;
+
+function updateIndexDisplay() {
+  const idx = getDisplayIndex();
+  const sbEl = document.getElementById('sb-index');
+
+  // Animate sidebar index if it changed
+  const prev = _lastDisplayIndex !== null ? _lastDisplayIndex : idx;
+  if (prev !== idx) {
+    animateCounter(sbEl, prev, idx);
+  } else {
+    sbEl.textContent = idx;
+  }
+  _lastDisplayIndex = idx;
+
+  // Refresh dashboard hero if active
+  if (document.getElementById('page-dashboard').classList.contains('active')) {
+    renderDashboard();
+  }
+}
+
+/* ── TIMER HELPERS ── */
+function getDaysLeft() {
+  const start = new Date(DATA.user.startDate);
+  const total = DATA.user.accessDays;
+  const now   = new Date();
+  const elapsed = Math.floor((now - start) / 86400000);
+  return Math.max(0, total - elapsed);
+}
+
+function timerMeta(daysLeft) {
+  const total = DATA.user.accessDays;
+  const pct = Math.round((daysLeft / total) * 100);
+  if (daysLeft === 0) return { cls: 'dt-done', color: '#22C55E', label: 'Доступ завершён', pct: 0 };
+  if (daysLeft <= 3)  return { cls: 'dt-urgent', color: '#EF4444', label: `Осталось ${daysLeft} дн. — финал`, pct };
+  if (daysLeft <= 7)  return { cls: 'dt-warn',   color: '#EAB308', label: `Осталось ${daysLeft} дней`, pct };
+  return                     { cls: 'dt-ok',     color: '#6366F1', label: `Осталось ${daysLeft} дней`, pct };
+}
+
+function renderTimerBanner() {
+  const d = getDaysLeft();
+  const m = timerMeta(d);
+  const tc = countTasks();
+  const taskPct = Math.round((tc.done / tc.total) * 100);
+  if (d === 0) {
+    return `<div class="dash-timer dt-done">
+      <div class="dt-circle dt-done"><div class="dt-num" style="color:#22C55E">✓</div></div>
+      <div class="dt-info">
+        <div class="dt-title">14 дней завершены</div>
+        <div class="dt-sub">Выполнено ${tc.done} из ${tc.total} задач · прогресс ${taskPct}%</div>
+      </div>
+    </div>`;
+  }
+  return `<div class="dash-timer ${m.cls}">
+    <div class="dt-circle ${m.cls}">
+      <div class="dt-num" style="color:${m.color}">${d}</div>
+      <div class="dt-unit" style="color:${m.color}">дней</div>
+    </div>
+    <div class="dt-info">
+      <div class="dt-title">${m.label} из ${DATA.user.accessDays}</div>
+      <div class="dt-sub">Задач выполнено: ${tc.done} из ${tc.total} · без внедрения потери продолжаются</div>
+      <div class="dt-bar-wrap">
+        <div class="dt-bar-track">
+          <div class="dt-bar-fill" style="width:${taskPct}%;background:${m.color}"></div>
+        </div>
+        <div class="dt-bar-hint">${taskPct}% плана выполнено</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="navigate('tasks')" style="flex-shrink:0">
+      Продолжить →
+    </button>
+  </div>`;
+}
+
+function renderPriorityTasks() {
+  const inProgress = DATA.tasks.filter(t => t.status === 'in_progress');
+  const highTodo   = DATA.tasks.filter(t => t.status === 'todo' && t.priority === 'high').slice(0, 3);
+  const allShown   = [...inProgress, ...highTodo];
+
+  if (allShown.length === 0) {
+    return `<div class="today-focus" style="border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.04)">
+      <div class="tf-label" style="color:#22C55E">Приоритетные задачи выполнены</div>
+      <div class="tf-title">Отлично — все срочные шаги закрыты</div>
+      <div style="margin-top:12px">
+        <button class="btn btn-outline btn-sm" onclick="navigate('tasks')">Посмотреть остальные →</button>
+      </div>
+    </div>`;
+  }
+
+  const BLOCK_COLOR = { processes:'#6366F1', finance:'#EAB308', team:'#22C55E', control:'#60A5FA', marketing:'#A855F7' };
+
+  function taskRow(t) {
+    const isInP  = t.status === 'in_progress';
+    const color  = BLOCK_COLOR[t.block] || '#6366F1';
+    const btnTxt = isInP ? 'Завершить' : 'Начать';
+    const btnCls = isInP ? 'btn-primary' : 'btn-outline';
+    return `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);last-child:border:none">
+        <div style="width:8px;height:8px;border-radius:50%;background:${isInP ? '#6366F1' : color};margin-top:5px;flex-shrink:0;${isInP ? 'box-shadow:0 0 6px #6366F1' : ''}"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4">${t.title}</div>
+          ${t.gives && t.gives[0] ? `<div style="font-size:12px;color:var(--text5);margin-bottom:6px">→ ${t.gives[0]}</div>` : ''}
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span style="font-size:11px;color:var(--text5)">до ${t.deadline}</span>
+            ${isInP ? `<span style="font-size:11px;font-weight:600;color:#6366F1;background:rgba(99,102,241,.1);padding:1px 7px;border-radius:4px">В работе</span>` : ''}
+          </div>
+        </div>
+        <button class="btn ${btnCls} btn-sm" style="flex-shrink:0" onclick="cycleTask(${t.id});renderDashboard()">${btnTxt}</button>
+      </div>`;
+  }
+
+  return `<div class="today-focus" style="padding:18px 20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="tf-label">Приоритетные задачи</div>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('tasks')" style="font-size:11px;padding:4px 10px">Все задачи →</button>
+    </div>
+    <div>${allShown.map(taskRow).join('')}</div>
+  </div>`;
+}
+
+function renderSidebarTimer() {
+  const d = getDaysLeft();
+  const m = timerMeta(d);
+  const total = DATA.user.accessDays;
+  const pct = Math.round(((total - d) / total) * 100);
+  document.getElementById('sb-timer').innerHTML = `
+    <div class="sb-timer-row">
+      <span class="sb-timer-label">Доступ к платформе</span>
+      <span class="sb-timer-days" style="color:${m.color}">${d} дн.</span>
+    </div>
+    <div class="sb-timer-track">
+      <div class="sb-timer-fill" style="width:${pct}%;background:${m.color}"></div>
+    </div>`;
+}
+
 function init() {
   // Inject user data
   document.getElementById('sb-name').textContent     = DATA.user.firstName + ' ' + DATA.user.lastName;
   document.getElementById('sb-meta').textContent     = DATA.user.company + ' · ' + DATA.user.role;
-  document.getElementById('sb-index').textContent    = DATA.index;
+  _lastDisplayIndex = getDisplayIndex();
+  document.getElementById('sb-index').textContent    = _lastDisplayIndex;
   document.getElementById('topbar-avatar').textContent = DATA.user.initials;
+
+  // Sidebar timer + streak
+  renderSidebarTimer();
+  renderStreak();
 
   // Date
   const now = new Date();

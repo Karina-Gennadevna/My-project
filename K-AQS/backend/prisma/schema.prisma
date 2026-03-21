@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  telegramId       BigInt               @unique @map("telegram_id")
+  telegramUsername String?              @map("telegram_username") @db.VarChar(255)
+  firstName        String               @map("first_name") @db.VarChar(255)
+  createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz()
+  lastActiveAt     DateTime             @default(now()) @map("last_active_at") @db.Timestamptz()
+
+  sessions         DiagnosticSession[]
+  payments         Payment[]
+
+  @@map("users")
+}
+
+model RecommendationTemplate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  zoneId    String   @map("zone_id") @db.VarChar(20)
+  version   Int      @default(1)
+  action    String
+  firstStep String   @map("first_step")
+  isActive  Boolean  @default(true) @map("is_active")
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+  updatedBy String?  @map("updated_by") @db.VarChar(255)
+
+  @@map("recommendation_templates")
+}
+
+model DiagnosticSession {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  completedAt     DateTime @default(now()) @map("completed_at") @db.Timestamptz()
+
+  indexScore      Int      @map("index_score") @db.SmallInt
+  zoneFinance     Int      @map("zone_finance") @db.SmallInt
+  zoneMarketing   Int      @map("zone_marketing") @db.SmallInt
+  zoneTeam        Int      @map("zone_team") @db.SmallInt
+  zoneOps         Int      @map("zone_ops") @db.SmallInt
+  zoneControl     Int      @map("zone_control") @db.SmallInt
+
+  recommendations Json     @default("{}")
+
+  reportPurchased Boolean  @default(false) @map("report_purchased")
+  reportPdfUrl    String?  @map("report_pdf_url")
+  reportSentAt    DateTime? @map("report_sent_at") @db.Timestamptz()
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payment         Payment?
+
+  @@map("diagnostic_sessions")
+}
+
+model Payment {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  sessionId         String   @unique @map("session_id") @db.Uuid
+  amount            Int
+  currency          String   @default("RUB") @db.VarChar(3)
+  provider          String   @db.VarChar(50)
+  providerPaymentId String?  @map("provider_payment_id") @db.VarChar(255)
+  status            String   @default("pending") @db.VarChar(20)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  session           DiagnosticSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+
+  @@map("payments")
+}
+
+model Admin {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String    @unique @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz()
+
+  @@map("admins")
+}

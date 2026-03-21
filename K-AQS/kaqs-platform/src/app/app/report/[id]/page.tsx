@@ -17,7 +17,11 @@ interface ParsedScores {
   executiveSummary: string
   modules: Record<Module, ModuleScore>
   moduleInterpretations: Record<Module, string>
-  roadmap: { next14days: string[]; next60days: string[]; next6months: string[] }
+  roadmap: {
+    next14days: Array<{ priority: string; module: string; title: string; action: string }>
+    next60days: Array<{ priority: string; module: string; title: string; action: string }>
+    next6months: Array<{ priority: string; module: string; title: string; action: string }>
+  }
   aiLayerRecommendations: string
 }
 
@@ -183,17 +187,28 @@ export default async function ReportPage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { title: 'Next 14 days', subtitle: 'Первоочередные действия', items: scores.roadmap.next14days },
-              { title: 'Next 60 days', subtitle: 'Среднесрочные задачи', items: scores.roadmap.next60days },
-              { title: 'Next 6 months', subtitle: 'Стратегические направления', items: scores.roadmap.next6months },
+              { title: 'Next 60 days', subtitle: 'Системное укрепление', items: scores.roadmap.next60days },
+              { title: 'Next 6 months', subtitle: 'Стратегический рост', items: scores.roadmap.next6months },
             ].map((col) => (
               <div key={col.title}>
                 <p className="font-mono text-xs text-accent mb-0.5">{col.title}</p>
-                <p className="text-xs text-text-muted mb-3">{col.subtitle}</p>
-                <ul className="flex flex-col gap-2.5">
+                <p className="text-xs text-text-muted mb-4 pb-3 border-b border-border-subtle">{col.subtitle}</p>
+                <ul className="flex flex-col gap-4">
                   {col.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-text-secondary leading-relaxed">
-                      <span className="text-accent mt-0.5 shrink-0">→</span>
-                      {item}
+                    <li key={i} className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="font-mono text-2xs px-1.5 py-0.5 rounded shrink-0"
+                          style={{
+                            color: item.priority === 'P0' ? '#EF4444' : item.priority === 'P1' ? '#F59E0B' : '#6B7280',
+                            backgroundColor: item.priority === 'P0' ? '#EF444415' : item.priority === 'P1' ? '#F59E0B15' : '#6B728015',
+                            border: `1px solid ${item.priority === 'P0' ? '#EF444430' : item.priority === 'P1' ? '#F59E0B30' : '#6B728030'}`,
+                          }}
+                        >{item.priority}</span>
+                        <span className="font-mono text-2xs text-accent">{item.module}</span>
+                        <span className="text-xs font-medium text-text-primary">{item.title}</span>
+                      </div>
+                      <p className="text-xs text-text-muted leading-relaxed">{item.action}</p>
                     </li>
                   ))}
                 </ul>

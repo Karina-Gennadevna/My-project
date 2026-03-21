@@ -73,10 +73,17 @@ export interface ReportSection {
   content: string
 }
 
+export interface RoadmapItem {
+  priority: RiskLevel        // P0 = срочно, P1 = важно, P2 = желательно
+  module: Module             // K / A / Q / S
+  title: string              // короткое название задачи
+  action: string             // конкретное что делать
+}
+
 export interface Roadmap {
-  next14days: string[]
-  next60days: string[]
-  next6months: string[]
+  next14days: RoadmapItem[]
+  next60days: RoadmapItem[]
+  next6months: RoadmapItem[]
 }
 
 export interface Report {

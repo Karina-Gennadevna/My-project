@@ -1,5 +1,5 @@
 import type { Module, MaturityLevel, ModuleScore, Risk, AssessmentResult, Question } from '@/types'
-import { QUESTIONS_BY_MODULE } from './questions'
+import { QUESTIONS_BY_MODULE, ALL_QUESTIONS } from './questions'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -111,9 +111,6 @@ export function collectRisks(
 export function calculateResult(
   answers: Record<string, number>,
 ): AssessmentResult {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { ALL_QUESTIONS } = require('./questions') as typeof import('./questions')
-
   const modules: Record<Module, ModuleScore> = {} as Record<Module, ModuleScore>
   let totalScore = 0
 
@@ -188,27 +185,41 @@ export function generateRoadmap(result: AssessmentResult) {
   const p1Risks = risks.filter((r) => r.level === 'P1')
 
   const next14days = p0Risks.length > 0
-    ? p0Risks.slice(0, 3).map((r) => `Устранить: ${r.label} (${r.module}-блок)`)
-    : ['Провести аудит документации процессов', 'Зафиксировать роли и ответственности', 'Инициировать карту зависимостей систем']
+    ? p0Risks.slice(0, 3).map((r) => ({
+        priority: 'P0' as const,
+        module: r.module,
+        title: `Устранить: ${r.label}`,
+        action: r.description,
+      }))
+    : [
+        { priority: 'P1' as const, module: 'K' as const, title: 'Аудит документации', action: 'Провести аудит записанных процессов и выявить пробелы' },
+        { priority: 'P1' as const, module: 'K' as const, title: 'Зафиксировать роли', action: 'Описать зоны ответственности каждого члена команды' },
+        { priority: 'P1' as const, module: 'A' as const, title: 'Карта зависимостей', action: 'Составить карту систем и их взаимосвязей' },
+      ]
 
   const next60days = p1Risks.length > 0
-    ? p1Risks.slice(0, 3).map((r) => `Закрыть: ${r.label}`)
+    ? p1Risks.slice(0, 4).map((r) => ({
+        priority: 'P1' as const,
+        module: r.module,
+        title: r.label,
+        action: r.description,
+      }))
     : [
-        'Построить операционную карту AI-слоя',
-        'Внедрить базовый мониторинг AI-процессов',
-        'Провести первый архитектурный ревью',
+        { priority: 'P1' as const, module: 'A' as const, title: 'Операционная карта AI', action: 'Построить карту точек применения AI в текущих процессах' },
+        { priority: 'P1' as const, module: 'Q' as const, title: 'Базовый мониторинг', action: 'Внедрить метрики качества для ключевых процессов' },
+        { priority: 'P2' as const, module: 'S' as const, title: 'Архитектурный ревью', action: 'Провести первый архитектурный ревью с командой' },
       ]
 
-  const next6months: string[] = maturityLevel === 'chaotic' || maturityLevel === 'fragmented'
+  const next6months = maturityLevel === 'chaotic' || maturityLevel === 'fragmented'
     ? [
-        'Заложить архитектурную базу: документация, роли, данные',
-        'Разработать AI-стратегию с чёткими зонами применения',
-        'Построить систему мониторинга и контроля качества',
+        { priority: 'P1' as const, module: 'K' as const, title: 'Архитектурная база', action: 'Заложить фундамент: документация процессов, роли, единый источник данных' },
+        { priority: 'P1' as const, module: 'A' as const, title: 'AI-стратегия', action: 'Разработать AI-стратегию с чёткими зонами применения и KPI' },
+        { priority: 'P2' as const, module: 'Q' as const, title: 'Система контроля', action: 'Построить систему мониторинга и контроля качества AI-процессов' },
       ]
     : [
-        'Масштабировать AI-слой в новые зоны бизнеса',
-        'Разработать план найма/развития AI-команды',
-        'Внедрить метрики устойчивости и growth-дашборд',
+        { priority: 'P1' as const, module: 'S' as const, title: 'Масштабирование AI', action: 'Расширить AI-слой на новые зоны бизнеса с учётом зрелости процессов' },
+        { priority: 'P2' as const, module: 'A' as const, title: 'AI-команда', action: 'Разработать план найма или развития AI-компетенций внутри команды' },
+        { priority: 'P2' as const, module: 'Q' as const, title: 'Growth-дашборд', action: 'Внедрить метрики устойчивости и дашборд для отслеживания роста' },
       ]
 
   return { next14days, next60days, next6months }

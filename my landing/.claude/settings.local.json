@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Read(//c/Users/Карина Геннадьевна/AppData/Roaming/**)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/**)",
+      "Bash(cmd /c \"where node\")",
+      "Bash(cmd /c \"where npm\")"
+    ]
+  }
+}

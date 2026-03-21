@@ -46,7 +46,7 @@ export default function AssessmentPage() {
       .catch(() => { setError('Ошибка загрузки диагностики') })
   }, [assessmentId, router])
 
-  // Autosave
+  // Autosave — fires on answer change (debounced) AND on step change
   useEffect(() => {
     if (!loaded || !assessmentId) return
     setSaving(true)
@@ -54,8 +54,11 @@ export default function AssessmentPage() {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ answers: debouncedAnswers, currentStep: currentStep + 1 }),
-    }).finally(() => setSaving(false))
-  }, [debouncedAnswers, assessmentId, loaded]) // eslint-disable-line react-hooks/exhaustive-deps
+    })
+      .then((r) => { if (!r.ok) throw new Error('save failed') })
+      .catch(() => setError('Ошибка автосохранения. Проверьте соединение.'))
+      .finally(() => setSaving(false))
+  }, [debouncedAnswers, currentStep, assessmentId, loaded])
 
   const setAnswer = useCallback((id: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [id]: value }))
@@ -65,8 +68,9 @@ export default function AssessmentPage() {
   const questions = QUESTIONS_BY_MODULE[currentModule]
   const meta = MODULE_META[currentModule]
 
+  const scoringQuestions = questions.filter((q) => q.scoring)
   const answeredInModule = questions.filter((q) => answers[q.id] !== undefined).length
-  const isModuleComplete = answeredInModule >= questions.filter((q) => q.scoring).length
+  const isModuleComplete = scoringQuestions.every((q) => answers[q.id] !== undefined)
 
   async function handleNext() {
     if (currentStep < 3) {
@@ -98,6 +102,21 @@ export default function AssessmentPage() {
     return (
       <div className="flex items-center justify-center min-h-64">
         <span className="text-text-muted text-sm font-mono animate-pulse">Загрузка...</span>
+      </div>
+    )
+  }
+
+  if (submitting) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-64 gap-6 py-12">
+        <div className="relative">
+          <div className="w-16 h-16 rounded-full border-2 border-accent/20" />
+          <div className="absolute inset-0 w-16 h-16 rounded-full border-2 border-transparent border-t-accent animate-spin" />
+        </div>
+        <div className="text-center">
+          <p className="text-text-primary font-medium mb-1">Анализируем результаты</p>
+          <p className="text-text-muted text-sm">AI готовит персональный отчёт — займёт 15–30 секунд</p>
+        </div>
       </div>
     )
   }
@@ -179,7 +198,7 @@ export default function AssessmentPage() {
 
         <div className="text-center">
           <p className="text-xs text-text-muted">
-            {answeredInModule} / {questions.length} вопросов
+            {scoringQuestions.filter((q) => answers[q.id] !== undefined).length} / {scoringQuestions.length} вопросов
           </p>
         </div>
 

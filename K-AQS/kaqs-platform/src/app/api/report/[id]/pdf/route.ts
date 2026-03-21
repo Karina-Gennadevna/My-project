@@ -41,8 +41,8 @@ export async function GET(
     // ──────────────────────────────────────────────────────────────────────────
 
     // Default: redirect to print-ready report page
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
-    return NextResponse.redirect(`${baseUrl}/app/report/${id}?print=1`)
+    const origin = request.nextUrl.origin
+    return NextResponse.redirect(`${origin}/app/report/${id}?print=1`)
   } catch (error) {
     console.error('[pdf]', error)
     return NextResponse.json({ error: 'Внутренняя ошибка' }, { status: 500 })
