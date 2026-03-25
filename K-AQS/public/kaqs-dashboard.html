@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — K-AQS™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #080A0C;
+      --bg2:     #0F1215;
+      --bg3:     #161A1F;
+      --border:  #1E2530;
+      --text:    #F1F5F9;
+      --text2:   #94A3B8;
+      --muted:   #475569;
+      --accent:  #F97316;
+      --accent2: #FB923C;
+      --green:   #22C55E;
+      --yellow:  #EAB308;
+      --red:     #EF4444;
+      --k:       #3B82F6;
+      --a:       #F97316;
+      --q:       #22C55E;
+      --s:       #A855F7;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-user {
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .nav-quiz {
+      font-size: 13px;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background .2s;
+    }
+    .nav-quiz:hover { background: rgba(249,115,22,.1); }
+
+    /* ── Layout ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .page-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: .4;
+    }
+    .empty h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .empty p {
+      font-size: 15px;
+      color: var(--text2);
+      margin-bottom: 28px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--accent2); }
+
+    /* ── Grid ── */
+    .grid-top {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Card base ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* ── Score card ── */
+    .score-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .score-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 4px;
+    }
+    .score-ring svg {
+      transform: rotate(-90deg);
+    }
+    .score-ring-bg { stroke: var(--bg3); }
+    .score-ring-fill {
+      stroke: var(--accent);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+    .score-ring-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-num {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .score-denom {
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .score-status {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .score-date {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .score-name {
+      font-size: 14px;
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    /* ── Axes card ── */
+    .axes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .axis-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .axis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .axis-name {
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .axis-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .axis-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .axis-bar {
+      height: 6px;
+      background: var(--bg3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .axis-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease;
+      width: 0;
+    }
+
+    /* ── History card ── */
+    .history-card {
+      margin-bottom: 16px;
+    }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .history-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .history-row:last-child { border-bottom: none; }
+    .history-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 80px;
+    }
+    .history-name {
+      font-size: 13px;
+      color: var(--text2);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .history-score {
+      font-size: 15px;
+      font-weight: 700;
+      min-width: 50px;
+      text-align: right;
+    }
+    .history-delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      min-width: 40px;
+      text-align: right;
+    }
+    .delta-up { color: var(--green); }
+    .delta-down { color: var(--red); }
+    .delta-same { color: var(--muted); }
+
+    /* ── CTA card ── */
+    .cta-card {
+      background: linear-gradient(135deg, rgba(249,115,22,.08) 0%, var(--bg2) 60%);
+      border-color: rgba(249,115,22,.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .cta-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .cta-text p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .cta-btn:hover { background: var(--accent2); }
+
+    /* ── Retake ── */
+    .retake-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .btn-outline {
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text2);
+      font-size: 14px;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--text2); color: var(--text); }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      nav { padding: 16px 20px; }
+      .grid-top { grid-template-columns: 1fr; }
+      .cta-card { flex-direction: column; align-items: flex-start; }
+      .history-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">K-<span>A</span>QS<sup>™</sup></a>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user"></span>
+    <a href="kaqs-quiz.html" class="nav-quiz">Новая диагностика</a>
+  </div>
+</nav>
+
+<!-- Empty state -->
+<div class="empty" id="empty-state">
+  <div class="empty-icon">◎</div>
+  <h2>Диагностика не пройдена</h2>
+  <p>Пройдите диагностику — и здесь появятся ваши результаты,<br>история и рекомендации.</p>
+  <a href="kaqs-quiz.html" class="btn-primary">Пройти диагностику →</a>
+</div>
+
+<!-- Dashboard -->
+<div class="page" id="dashboard" style="display:none">
+  <p class="page-label">// Личный кабинет</p>
+  <h1 class="page-title" id="page-title">Ваш индекс управляемости</h1>
+
+  <div class="grid-top">
+    <!-- Score -->
+    <div class="card score-card">
+      <p class="card-label">// Индекс K-AQS</p>
+      <div class="score-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="score-ring-bg" cx="60" cy="60" r="52" stroke-width="8" fill="none"/>
+          <circle class="score-ring-fill" id="ring-fill" cx="60" cy="60" r="52"
+            stroke-width="8" fill="none"
+            stroke-dasharray="326.7"
+            stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="score-ring-val">
+          <span class="score-num" id="score-num">—</span>
+          <span class="score-denom">/100</span>
+        </div>
+      </div>
+      <div class="score-status" id="score-status"></div>
+      <div class="score-name" id="score-name"></div>
+      <div class="score-date" id="score-date"></div>
+    </div>
+
+    <!-- Axes -->
+    <div class="card">
+      <p class="card-label">// Оси управляемости</p>
+      <div class="axes-list">
+        <div class="axis-row">
+          <div class="axis-header">
+            <div class="axis-name">
+              <span class="axis-key" style="background:rgba(59,130,246,.15);color:#3B82F6">K</span>
+              Знания и прозрачность
+            </div>
+            <span class="axis-val" id="val-K">—%</span>
+          </div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="bar-K" style="background:var(--k)"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-header">
+            <div class="axis-name">
+              <span class="axis-key" style="background:rgba(249,115,22,.15);color:#F97316">A</span>
+              Автоматизация
+            </div>
+            <span class="axis-val" id="val-A">—%</span>
+          </div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="bar-A" style="background:var(--a)"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-header">
+            <div class="axis-name">
+              <span class="axis-key" style="background:rgba(34,197,94,.15);color:#22C55E">Q</span>
+              Качество и контроль
+            </div>
+            <span class="axis-val" id="val-Q">—%</span>
+          </div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="bar-Q" style="background:var(--q)"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-header">
+            <div class="axis-name">
+              <span class="axis-key" style="background:rgba(168,85,247,.15);color:#A855F7">S</span>
+              Масштабируемость
+            </div>
+            <span class="axis-val" id="val-S">—%</span>
+          </div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="bar-S" style="background:var(--s)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="card history-card" id="history-card" style="display:none">
+    <p class="card-label">// История диагностик</p>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="card cta-card">
+    <div class="cta-text">
+      <h3>Превратите результаты в план</h3>
+      <p>Персональный Roadmap на 90 дней — конкретные шаги по вашей диагностике.</p>
+    </div>
+    <a href="kaqs-order.html?tariff=roadmap-pro" class="cta-btn">Заказать Roadmap →</a>
+  </div>
+
+  <div class="retake-row">
+    <a href="kaqs-quiz.html" class="btn-outline">Пройти диагностику повторно</a>
+  </div>
+</div>
+
+<script>
+  const STATUSES = [
+    { max: 35,  label: 'Критично',     color: '#EF4444', bg: 'rgba(239,68,68,.12)' },
+    { max: 55,  label: 'Нестабильно',  color: '#F97316', bg: 'rgba(249,115,22,.12)' },
+    { max: 75,  label: 'Управляемо',   color: '#EAB308', bg: 'rgba(234,179,8,.12)' },
+    { max: 90,  label: 'Устойчиво',    color: '#22C55E', bg: 'rgba(34,197,94,.12)' },
+    { max: 100, label: 'Превосходно',  color: '#3B82F6', bg: 'rgba(59,130,246,.12)' },
+  ]
+
+  function getStatus(index) {
+    return STATUSES.find(s => index <= s.max) || STATUSES[STATUSES.length - 1]
+  }
+
+  const history = JSON.parse(localStorage.getItem('kaqs_results') || '[]')
+
+  if (!history.length) {
+    document.getElementById('empty-state').style.display = 'block'
+  } else {
+    document.getElementById('dashboard').style.display = 'block'
+
+    const latest = history[0]
+    const status = getStatus(latest.index)
+
+    // Nav
+    if (latest.name) {
+      document.getElementById('nav-user').textContent = latest.name
+      document.getElementById('page-title').textContent = 'Привет, ' + latest.name.split(' ')[0]
+    }
+
+    // Score ring
+    const circumference = 326.7
+    const offset = circumference - (latest.index / 100) * circumference
+    setTimeout(() => {
+      document.getElementById('ring-fill').style.strokeDashoffset = offset
+      document.getElementById('ring-fill').style.stroke = status.color
+    }, 100)
+
+    document.getElementById('score-num').textContent = latest.index
+    document.getElementById('score-num').style.color = status.color
+
+    const statusEl = document.getElementById('score-status')
+    statusEl.textContent = status.label
+    statusEl.style.color = status.color
+    statusEl.style.background = status.bg
+
+    if (latest.name) document.getElementById('score-name').textContent = latest.name
+    document.getElementById('score-date').textContent = latest.date
+
+    // Axes
+    const axes = ['K', 'A', 'Q', 'S']
+    axes.forEach(a => {
+      const val = latest.scores[a] || 0
+      document.getElementById('val-' + a).textContent = val + '%'
+      setTimeout(() => {
+        document.getElementById('bar-' + a).style.width = val + '%'
+      }, 200)
+    })
+
+    // History (if more than 1 result)
+    if (history.length > 1) {
+      document.getElementById('history-card').style.display = 'block'
+      const list = document.getElementById('history-list')
+      history.forEach((r, i) => {
+        const prev = history[i + 1]
+        const delta = prev ? r.index - prev.index : null
+        const deltaStr = delta === null ? '' : (delta > 0 ? '+' + delta : delta === 0 ? '=' : String(delta))
+        const deltaClass = delta === null ? '' : delta > 0 ? 'delta-up' : delta < 0 ? 'delta-down' : 'delta-same'
+        const st = getStatus(r.index)
+
+        const row = document.createElement('div')
+        row.className = 'history-row'
+        row.innerHTML = `
+          <span class="history-date">${r.date}</span>
+          <span class="history-name">${r.name || '—'}</span>
+          <span class="history-score" style="color:${st.color}">${r.index}<span style="font-size:11px;color:var(--muted)">/100</span></span>
+          <span class="history-delta ${deltaClass}">${deltaStr}</span>
+        `
+        list.appendChild(row)
+      })
+    }
+  }
+</script>
+
+</body>
+</html>
