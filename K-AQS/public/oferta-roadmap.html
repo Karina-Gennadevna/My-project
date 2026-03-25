@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оферта на Roadmap — K-A-Q-S™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base: #080A0C;
+      --bg-surface: #0F1215;
+      --bg-elevated: #161B20;
+      --text-primary: #F0F4F8;
+      --text-secondary: #8A97A8;
+      --text-muted: #4A5568;
+      --accent: #F97316;
+      --accent-muted: rgba(249,115,22,0.10);
+      --accent-border: rgba(249,115,22,0.30);
+      --border-default: rgba(255,255,255,0.08);
+      --border-subtle: rgba(255,255,255,0.05);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-secondary);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.75;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(8,10,12,0.92);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-dot { color: var(--accent); }
+    .back-link {
+      font-size: .8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .back-link:hover { color: var(--text-secondary); }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    .doc-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -.025em;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .doc-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .doc-meta-item {
+      font-size: .78rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .doc-meta-item span { color: var(--text-secondary); }
+
+    .intro {
+      background: var(--accent-muted);
+      border: 1px solid var(--accent-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+    .intro strong { color: var(--text-primary); }
+
+    /* ── ТАРИФЫ ── */
+    .tariff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .tariff-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 24px 22px;
+    }
+    .tariff-card.featured {
+      border-color: var(--accent-border);
+      background: var(--accent-muted);
+    }
+    .tariff-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .tariff-card.featured .tariff-badge { color: var(--accent); }
+    .tariff-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .tariff-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -.03em;
+      margin-bottom: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tariff-price sup {
+      font-size: .75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      vertical-align: super;
+      margin-right: 2px;
+    }
+    .tariff-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .tariff-features li {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .tariff-features li::before {
+      content: '—';
+      color: var(--text-muted);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      margin-top: 2px;
+    }
+    .tariff-card.featured .tariff-features li::before { color: var(--accent); }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 48px;
+    }
+    .toc-title {
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 4px 24px;
+    }
+    .toc-list li a {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      transition: color .15s;
+    }
+    .toc-list li a:hover { color: var(--text-primary); }
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      scroll-margin-top: 80px;
+    }
+    h2 .sec-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .63rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .clause {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .clause-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      padding-top: 3px;
+      min-width: 34px;
+      letter-spacing: .03em;
+    }
+    .clause-text {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .clause-text strong { color: var(--text-primary); font-weight: 500; }
+
+    .highlight-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 14px 0 10px;
+    }
+    .highlight-box.green {
+      background: rgba(34,197,94,0.05);
+      border-color: rgba(34,197,94,0.20);
+    }
+    .highlight-box.orange {
+      background: var(--accent-muted);
+      border-color: var(--accent-border);
+    }
+    .hb-title {
+      font-size: .72rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .highlight-box.green .hb-title { color: #22C55E; }
+    .highlight-box.orange .hb-title { color: var(--accent); }
+    .highlight-box p {
+      font-size: .85rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .highlight-box p:last-child { margin-bottom: 0; }
+    .highlight-box p strong { color: var(--text-primary); font-weight: 500; }
+
+    .requisites {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-top: 14px;
+    }
+    .req-row {
+      display: flex;
+      gap: 16px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: .85rem;
+    }
+    .req-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .req-key {
+      color: var(--text-muted);
+      width: 170px;
+      flex-shrink: 0;
+      font-size: .78rem;
+    }
+    .req-val { color: var(--text-primary); }
+    .req-val a { color: var(--accent); text-decoration: none; }
+    .req-val a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 24px;
+      text-align: center;
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 2;
+    }
+
+    @media (max-width: 800px) {
+      .tariff-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      main { padding: 32px 18px 64px; }
+      .tariff-grid { grid-template-columns: 1fr; }
+      .req-row { flex-direction: column; gap: 2px; }
+      .req-key { width: auto; }
+      .toc-list { grid-template-columns: 1fr; }
+      .doc-meta { flex-direction: column; gap: 10px; }
+    }
+
+    @media print {
+      body { background: #fff; color: #374151; }
+      header { background: #fff; border-color: #e5e7eb; position: static; }
+      .logo { color: #111; }
+      .logo-dot { color: #EA580C; }
+      .back-link { display: none; }
+      h1, h2, .clause-text strong, .req-val, .tariff-name, .tariff-price { color: #111; }
+      h2 { border-color: #e5e7eb; }
+      h2 .sec-num { color: #EA580C; }
+      .intro, .highlight-box.orange { background: #fff7ed; border-color: #fed7aa; }
+      .highlight-box.green { background: #f0fdf4; border-color: #bbf7d0; }
+      .tariff-card, .requisites, .toc { background: #f9fafb; border-color: #e5e7eb; }
+      .tariff-card.featured { background: #fff7ed; border-color: #fed7aa; }
+      .clause-text, .clause-num, .req-key { color: #6b7280; }
+      footer { color: #9ca3af; border-color: #e5e7eb; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="kaqs-landing.html" class="logo">K<span class="logo-dot">·</span>A<span class="logo-dot">·</span>Q<span class="logo-dot">·</span>S™</a>
+  <a href="kaqs-landing.html" class="back-link">← На главную</a>
+</header>
+
+<main>
+
+  <p class="doc-label">// Юридический документ · Договор-оферта</p>
+  <h1>Договор возмездного оказания услуг — Персональный Roadmap</h1>
+
+  <div class="doc-meta">
+    <span class="doc-meta-item">Редакция от <span>25 марта 2026 года</span></span>
+    <span class="doc-meta-item">Вступает в силу с <span>25 марта 2026 года</span></span>
+    <span class="doc-meta-item">Регистрация: <span>ИНН 641305221167</span></span>
+  </div>
+
+  <div class="intro">
+    Настоящий документ является публичной офертой Кузнецовой Карины Геннадьевны на оказание консультационной услуги «Персональный Roadmap». <strong>Оплата услуги означает полное и безоговорочное принятие условий настоящего договора.</strong><br><br>
+    Вопросы до оплаты: <strong>miss.kuznetsov@mail.ru</strong>
+  </div>
+
+  <!-- Тарифы -->
+  <div class="tariff-grid">
+    <div class="tariff-card">
+      <div class="tariff-badge">// Тариф 01</div>
+      <div class="tariff-name">Базовый</div>
+      <div class="tariff-price"><sup>₽</sup>9 900</div>
+      <ul class="tariff-features">
+        <li>Пошаговый план на 90 дней на основе вашей диагностики</li>
+        <li>Приоритеты роста по каждой из 5 осей K-AQS</li>
+        <li>Конкретные действия с указанием сроков</li>
+        <li>Формат: структурированный PDF-документ</li>
+        <li>Срок: 3 рабочих дня</li>
+      </ul>
+    </div>
+    <div class="tariff-card featured">
+      <div class="tariff-badge">// Тариф 02 · Рекомендуем</div>
+      <div class="tariff-name">Расширенный</div>
+      <div class="tariff-price"><sup>₽</sup>19 900</div>
+      <ul class="tariff-features">
+        <li>Всё из тарифа «Базовый»</li>
+        <li>Готовые шаблоны для внедрения каждого шага</li>
+        <li>Чеклисты по каждому блоку плана</li>
+        <li>Ту-ду листы с разбивкой по неделям</li>
+        <li>Таблицы для отслеживания результатов</li>
+        <li>Срок: 3 рабочих дня</li>
+      </ul>
+    </div>
+    <div class="tariff-card">
+      <div class="tariff-badge">// Тариф 03 · Максимум</div>
+      <div class="tariff-name">Комбо</div>
+      <div class="tariff-price"><sup>₽</sup>24 900</div>
+      <ul class="tariff-features">
+        <li>Всё из тарифа «Расширенный»</li>
+        <li>1 месяц доступа к платформе K-AQS</li>
+        <li>Диагностика, дашборд, AI-агент, задачи</li>
+        <li>Постановка задач прямо по пунктам Roadmap</li>
+        <li>Срок Roadmap: 3 рабочих дня</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Оглавление -->
+  <div class="toc">
+    <div class="toc-title">// Содержание</div>
+    <ul class="toc-list">
+      <li><a href="#s1"><span class="toc-num">01</span> Термины и определения</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Предмет договора</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Порядок заключения</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Стоимость и оплата</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Порядок оказания услуги</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Возврат денежных средств</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Права и обязанности сторон</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Конфиденциальность</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Ответственность</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Споры и реквизиты</a></li>
+    </ul>
+  </div>
+
+
+  <!-- 01 -->
+  <h2 id="s1"><span class="sec-num">01</span> Термины и определения</h2>
+
+  <div class="clause"><span class="clause-num">1.1</span><span class="clause-text"><strong>Исполнитель</strong> — Кузнецова Карина Геннадьевна, самозанятый, ИНН 641305221167.</span></div>
+  <div class="clause"><span class="clause-num">1.2</span><span class="clause-text"><strong>Заказчик</strong> — физическое или юридическое лицо, акцептовавшее настоящую оферту путём оплаты услуги.</span></div>
+  <div class="clause"><span class="clause-num">1.3</span><span class="clause-text"><strong>Услуга</strong> — разработка «Персонального Roadmap» — индивидуального пошагового плана на 90 дней по внедрению рекомендаций и улучшению показателей бизнеса Заказчика, составленного на основе результатов диагностики K-A-Q-S™. Состав услуги определяется выбранным Тарифом.</span></div>
+  <div class="clause"><span class="clause-num">1.4</span><span class="clause-text"><strong>Тариф «Базовый»</strong> — стоимость 9 900 (девять тысяч девятьсот) рублей. Включает: структурированный план на 90 дней с приоритетами по 5 осям K-AQS, конкретными действиями и сроками.</span></div>
+  <div class="clause"><span class="clause-num">1.5</span><span class="clause-text"><strong>Тариф «Расширенный»</strong> — стоимость 19 900 (девятнадцать тысяч девятьсот) рублей. Включает всё из тарифа «Базовый», а также: готовые шаблоны для внедрения каждого шага, чеклисты, ту-ду листы с разбивкой по неделям, таблицы для отслеживания результатов.</span></div>
+  <div class="clause"><span class="clause-num">1.6</span><span class="clause-text"><strong>Тариф «Комбо»</strong> — стоимость 24 900 (двадцать четыре тысячи девятьсот) рублей. Включает всё из тарифа «Расширенный», а также 1 (один) календарный месяц доступа к Платформе K-AQS по тарифу «Платформа» (подробнее — см. оферту на подписку: kaqs.ru/oferta). Доступ к Платформе предоставляется Исполнителем не позднее 1 рабочего дня с момента передачи Roadmap.</span></div>
+  <div class="clause"><span class="clause-num">1.7</span><span class="clause-text"><strong>Результат</strong> — PDF-документ, содержащий Персональный Roadmap, направляемый Заказчику на email по завершении оказания услуги.</span></div>
+  <div class="clause"><span class="clause-num">1.8</span><span class="clause-text"><strong>Акцепт</strong> — полное и безоговорочное принятие условий оферты путём оплаты услуги в размере, соответствующем выбранному Тарифу.</span></div>
+  <div class="clause"><span class="clause-num">1.9</span><span class="clause-text"><strong>Диагностика K-AQS</strong> — результаты прохождения Заказчиком бизнес-диагностики на платформе kaqs.ru, на основании которых составляется Roadmap.</span></div>
+
+
+  <!-- 02 -->
+  <h2 id="s2"><span class="sec-num">02</span> Предмет договора</h2>
+
+  <div class="clause"><span class="clause-num">2.1</span><span class="clause-text">Исполнитель обязуется разработать и передать Заказчику Персональный Roadmap на 90 дней в соответствии с выбранным Тарифом, а Заказчик обязуется принять и оплатить услугу.</span></div>
+  <div class="clause"><span class="clause-num">2.2</span><span class="clause-text">Roadmap разрабатывается индивидуально на основании результатов диагностики K-AQS, пройденной Заказчиком. <strong>Каждый документ уникален</strong> и не является стандартным шаблоном.</span></div>
+  <div class="clause"><span class="clause-num">2.3</span><span class="clause-text">Услуга оказывается <strong>однократно</strong>. Настоящий договор не является договором подписки и не предусматривает периодических выплат или автоматического продления.</span></div>
+  <div class="clause"><span class="clause-num">2.4</span><span class="clause-text">Roadmap содержит рекомендации и инструменты для самостоятельного применения Заказчиком. Сопровождение внедрения, переговоры с сотрудниками или партнёрами Заказчика в рамках данной услуги не предусмотрены.</span></div>
+
+
+  <!-- 03 -->
+  <h2 id="s3"><span class="sec-num">03</span> Порядок заключения договора</h2>
+
+  <div class="clause"><span class="clause-num">3.1</span><span class="clause-text">Договор считается заключённым с момента <strong>поступления оплаты</strong> на расчётный счёт Исполнителя. Отдельного подписания не требуется.</span></div>
+  <div class="clause"><span class="clause-num">3.2</span><span class="clause-text">Условием разработки Roadmap является наличие у Исполнителя результатов диагностики K-AQS, пройденной Заказчиком. Если на момент оплаты диагностика не пройдена, Исполнитель уведомляет Заказчика и начинает работу после её прохождения.</span></div>
+  <div class="clause"><span class="clause-num">3.3</span><span class="clause-text">Настоящий договор является договором присоединения в соответствии со ст. 428 ГК РФ.</span></div>
+
+
+  <!-- 04 -->
+  <h2 id="s4"><span class="sec-num">04</span> Стоимость и порядок оплаты</h2>
+
+  <div class="clause"><span class="clause-num">4.1</span><span class="clause-text">Стоимость услуги определяется выбранным Тарифом:<br>
+    — Тариф «Базовый» — <strong>9 900 (девять тысяч девятьсот) рублей;</strong><br>
+    — Тариф «Расширенный» — <strong>19 900 (девятнадцать тысяч девятьсот) рублей;</strong><br>
+    — Тариф «Комбо» — <strong>24 900 (двадцать четыре тысячи девятьсот) рублей.</strong></span></div>
+  <div class="clause"><span class="clause-num">4.2</span><span class="clause-text">Оплата производится единовременно, в полном объёме, до начала оказания услуги.</span></div>
+  <div class="clause"><span class="clause-num">4.3</span><span class="clause-text">Принимаются: банковские карты Visa, Mastercard, МИР; Система быстрых платежей (СБП); иные способы, доступные в платёжной форме на сайте.</span></div>
+  <div class="clause"><span class="clause-num">4.4</span><span class="clause-text">Исполнитель применяет специальный налоговый режим «Налог на профессиональный доход». <strong>НДС не облагается.</strong> Чек формируется автоматически и направляется Заказчику.</span></div>
+
+
+  <!-- 05 -->
+  <h2 id="s5"><span class="sec-num">05</span> Порядок оказания услуги</h2>
+
+  <div class="highlight-box orange">
+    <div class="hb-title">// Как это работает</div>
+    <p>Вы оплачиваете тариф → Исполнитель изучает результаты вашей диагностики → в течение 3 рабочих дней получаете готовый документ на email.</p>
+  </div>
+
+  <div class="clause"><span class="clause-num">5.1</span><span class="clause-text">Исполнитель приступает к разработке Roadmap <strong>в течение 1 рабочего дня</strong> с момента поступления оплаты и получения результатов диагностики Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">5.2</span><span class="clause-text">Срок передачи готового Результата Заказчику — <strong>не более 3 (трёх) рабочих дней</strong> с момента начала работы. В случае наступления обстоятельств, препятствующих соблюдению срока, Исполнитель уведомляет Заказчика не позднее дня истечения срока.</span></div>
+  <div class="clause"><span class="clause-num">5.3</span><span class="clause-text">Результат направляется на email-адрес, указанный Заказчиком при регистрации или оплате. Заказчик несёт ответственность за актуальность указанного email.</span></div>
+  <div class="clause"><span class="clause-num">5.4</span><span class="clause-text"><strong>Услуга считается оказанной</strong> с момента отправки Результата на email Заказчика. Если Заказчик не получил документ в течение 24 часов после истечения срока — он обязан сообщить об этом на miss.kuznetsov@mail.ru.</span></div>
+  <div class="clause"><span class="clause-num">5.5</span><span class="clause-text">Исполнитель вправе задавать Заказчику уточняющие вопросы по результатам диагностики для повышения качества Roadmap. Ответы на вопросы предоставляются Заказчиком в разумные сроки; задержка ответа соразмерно продлевает срок оказания услуги.</span></div>
+  <div class="clause"><span class="clause-num">5.6</span><span class="clause-text"><strong>Для тарифа «Комбо».</strong> Доступ к Платформе K-AQS на 1 (один) месяц предоставляется Исполнителем не позднее 1 рабочего дня с момента передачи Roadmap. Условия использования Платформы регулируются офертой на подписку, опубликованной на странице kaqs.ru/oferta. Автопродление подписки при тарифе «Комбо» не применяется — по истечении 1 месяца доступ прекращается автоматически.</span></div>
+
+
+  <!-- 06 -->
+  <h2 id="s6"><span class="sec-num">06</span> Возврат денежных средств</h2>
+
+  <div class="highlight-box green">
+    <div class="hb-title">// Условия возврата</div>
+    <p>До передачи готового документа — <strong>полный возврат</strong> по запросу без объяснения причин.</p>
+    <p>После передачи — возврат не производится: услуга оказана в полном объёме.</p>
+  </div>
+
+  <div class="clause"><span class="clause-num">6.1</span><span class="clause-text"><strong>До передачи Результата.</strong> Заказчик вправе отказаться от услуги и получить полный возврат уплаченных средств в любой момент до отправки готового Roadmap на его email.</span></div>
+  <div class="clause"><span class="clause-num">6.2</span><span class="clause-text"><strong>После передачи Результата.</strong> После отправки готового документа на email Заказчика возврат не производится — услуга считается оказанной в полном объёме вне зависимости от факта прочтения документа Заказчиком.</span></div>
+  <div class="clause"><span class="clause-num">6.3</span><span class="clause-text">Для отказа от услуги и получения возврата Заказчик направляет запрос на <strong>miss.kuznetsov@mail.ru</strong> с указанием email, использованного при оплате, и реквизитов для перечисления средств.</span></div>
+  <div class="clause"><span class="clause-num">6.4</span><span class="clause-text">Возврат осуществляется в течение <strong>10 (десяти) рабочих дней</strong> с момента получения запроса. Средства возвращаются тем же способом, которым была произведена оплата.</span></div>
+
+
+  <!-- 07 -->
+  <h2 id="s7"><span class="sec-num">07</span> Права и обязанности сторон</h2>
+
+  <div class="clause"><span class="clause-num">7.1</span><span class="clause-text"><strong>Исполнитель обязуется:</strong><br>
+    — разработать Roadmap индивидуально на основе диагностики Заказчика;<br>
+    — передать Результат в установленный срок;<br>
+    — обеспечить конфиденциальность данных о бизнесе Заказчика;<br>
+    — ответить на вопросы Заказчика по содержанию переданного Roadmap в течение 5 рабочих дней после передачи Результата.</span></div>
+  <div class="clause"><span class="clause-num">7.2</span><span class="clause-text"><strong>Заказчик обязуется:</strong><br>
+    — оплатить услугу в полном объёме до её начала;<br>
+    — предоставить корректные контактные данные;<br>
+    — пройти диагностику K-AQS до или сразу после оплаты;<br>
+    — своевременно отвечать на уточняющие вопросы Исполнителя (п. 5.5).</span></div>
+  <div class="clause"><span class="clause-num">7.3</span><span class="clause-text"><strong>Права Исполнителя:</strong><br>
+    — запрашивать уточняющую информацию у Заказчика для повышения качества Roadmap;<br>
+    — использовать обезличенные данные о структуре и типичных проблемах бизнесов для развития методологии K-A-Q-S™ без указания наименования и персональных данных Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">7.4</span><span class="clause-text"><strong>Права Заказчика:</strong><br>
+    — использовать полученный Roadmap для нужд собственного бизнеса без ограничений;<br>
+    — задавать вопросы по содержанию документа в течение 5 рабочих дней после получения;</span></div>
+
+
+  <!-- 08 -->
+  <h2 id="s8"><span class="sec-num">08</span> Конфиденциальность и персональные данные</h2>
+
+  <div class="clause"><span class="clause-num">8.1</span><span class="clause-text">Исполнитель обязуется не передавать третьим лицам персональные данные Заказчика, результаты его диагностики и содержание разработанного Roadmap без явного письменного согласия Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">8.2</span><span class="clause-text">Акцептуя оферту, Заказчик даёт согласие на обработку своих персональных данных (имя, email, результаты диагностики, сведения о бизнесе) исключительно в целях оказания услуги в соответствии с Федеральным законом № 152-ФЗ.</span></div>
+  <div class="clause"><span class="clause-num">8.3</span><span class="clause-text">Данные Заказчика хранятся у Исполнителя в течение срока, необходимого для оказания услуги и урегулирования возможных споров, но не более <strong>1 (одного) года</strong> после передачи Результата. По письменному запросу Заказчика данные удаляются досрочно в течение 5 рабочих дней.</span></div>
+  <div class="clause"><span class="clause-num">8.4</span><span class="clause-text">Данные передаются платёжному сервису исключительно в объёме, необходимом для проведения платежа.</span></div>
+
+
+  <!-- 09 -->
+  <h2 id="s9"><span class="sec-num">09</span> Ответственность и ограничения</h2>
+
+  <div class="clause"><span class="clause-num">9.1</span><span class="clause-text">Исполнитель несёт ответственность за передачу услуги в установленный срок и за соответствие содержания Roadmap выбранному Тарифу.</span></div>
+  <div class="clause"><span class="clause-num">9.2</span><span class="clause-text"><strong>Исполнитель не гарантирует</strong> конкретных финансовых, операционных или иных результатов от применения рекомендаций Roadmap. Результат зависит исключительно от действий самого Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">9.3</span><span class="clause-text">Максимальная ответственность Исполнителя по любым основаниям ограничена <strong>суммой фактически оплаченной услуги.</strong></span></div>
+  <div class="clause"><span class="clause-num">9.4</span><span class="clause-text">Заказчик не вправе передавать, копировать, публиковать, перепродавать полученный Roadmap третьим лицам. Roadmap предназначен исключительно для использования в бизнесе Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">9.5</span><span class="clause-text"><strong>Форс-мажор.</strong> Стороны освобождаются от ответственности при наступлении обстоятельств непреодолимой силы. О наступлении форс-мажора сторона уведомляет другую в течение 3 рабочих дней.</span></div>
+
+
+  <!-- 10 -->
+  <h2 id="s10"><span class="sec-num">10</span> Разрешение споров и реквизиты</h2>
+
+  <div class="clause"><span class="clause-num">10.1</span><span class="clause-text">Настоящий договор регулируется законодательством Российской Федерации.</span></div>
+  <div class="clause"><span class="clause-num">10.2</span><span class="clause-text"><strong>Досудебный порядок.</strong> Претензии направляются на miss.kuznetsov@mail.ru. Срок рассмотрения — 10 (десять) рабочих дней с момента получения.</span></div>
+  <div class="clause"><span class="clause-num">10.3</span><span class="clause-text">При невозможности урегулировать спор в досудебном порядке — суд по месту регистрации Исполнителя в соответствии с законодательством РФ.</span></div>
+  <div class="clause"><span class="clause-num">10.4</span><span class="clause-text">Если какое-либо положение настоящего договора будет признано недействительным, это не влечёт недействительности остальных положений.</span></div>
+
+  <div class="requisites">
+    <div class="req-row">
+      <span class="req-key">Исполнитель</span>
+      <span class="req-val">Кузнецова Карина Геннадьевна</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Статус</span>
+      <span class="req-val">Самозанятый (НПД)</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">ИНН</span>
+      <span class="req-val">641305221167</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Email</span>
+      <span class="req-val"><a href="mailto:miss.kuznetsov@mail.ru">miss.kuznetsov@mail.ru</a></span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Телефон</span>
+      <span class="req-val">+7 909 338 53 87</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Сайт</span>
+      <span class="req-val"><a href="https://kaqs.ru">kaqs.ru</a></span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  K-A-Q-S™ · Договор-оферта на Персональный Roadmap · Редакция от 25.03.2026<br>
+  Вопросы: miss.kuznetsov@mail.ru
+</footer>
+
+</body>
+</html>

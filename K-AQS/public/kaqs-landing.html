@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-A-Q-S™ Platform — AI Maturity Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #121212;
+      --surface:  #1F1F1F;
+      --elevated: #252525;
+      --border:   #2A2A2A;
+      --border2:  #383838;
+      --text:     #E6E6E6;
+      --text2:    #B8B8B8;
+      --muted:    #707070;
+      --accent:   #1F5F5B;
+      --accent-l: #2A7A75;
+      --accent-d: rgba(31,95,91,.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(18,18,18,.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent-l);
+    }
+
+    .logo-sep { color: var(--border2); font-size: .9rem; }
+
+    .logo-label {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .nav-link {
+      font-size: .82rem;
+      color: var(--text2);
+      transition: color .2s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    /* ── Grid background ── */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-l);
+    }
+
+    .eyebrow-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    h1 .accent { color: var(--accent-l); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text2);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .hero-desc {
+      font-size: .9rem;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.7;
+      margin-bottom: 44px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 500;
+      font-size: .88rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--accent-l); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(.98); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      padding: 14px 32px;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      font-size: .88rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+      background: none;
+      text-decoration: none;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+
+    /* ── Section ── */
+    section { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    .section-block { padding: 72px 0; }
+
+    .section-block + .section-block {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-full {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-full .section-block {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 72px 24px;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 40px;
+    }
+
+    /* ── Module grid ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .module-card {
+      background: var(--surface);
+      padding: 32px;
+      display: flex;
+      gap: 20px;
+      transition: background .2s;
+    }
+    .module-card:hover { background: var(--elevated); }
+
+    .module-letter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--accent-l);
+      opacity: .7;
+      min-width: 28px;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .module-name {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .module-desc {
+      font-size: .8rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── Deliverables ── */
+    .deliverables {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .deliv-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color .2s;
+    }
+    .deliv-card:hover { border-color: var(--border2); }
+
+    .deliv-line {
+      width: 24px; height: 2px;
+      background: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .deliv-title {
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .deliv-desc {
+      font-size: .75rem;
+      color: var(--text2);
+      line-height: 1.55;
+    }
+
+    /* ── CTA block ── */
+    .cta-block {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .cta-block .section-label { text-align: center; }
+
+    .cta-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--text);
+      margin: 12px 0 10px;
+    }
+
+    .cta-desc {
+      font-size: .9rem;
+      color: var(--text2);
+      max-width: 400px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+
+    /* ── Pricing ── */
+    .pricing-group-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pricing-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .pricing-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .pricing-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 660px;
+    }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .price-card.featured {
+      border-color: var(--accent-l);
+    }
+    .price-card__tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .price-card.featured .price-card__tag { color: var(--accent-l); }
+    .price-card__name {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .price-card__amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .price-card__period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      color: var(--muted);
+    }
+    .price-card__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex: 1;
+    }
+    .price-card__list li {
+      font-size: .82rem;
+      color: var(--text2);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .price-card__list li::before {
+      content: '—';
+      color: var(--muted);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      margin-top: 2px;
+    }
+    .price-card__oferta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-align: center;
+      transition: color .15s;
+    }
+    .price-card__oferta:hover { color: var(--text2); }
+
+    @media (max-width: 720px) {
+      .pricing-grid-3 { grid-template-columns: 1fr; }
+      .pricing-grid-2 { grid-template-columns: 1fr; max-width: 100%; }
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .module-grid { grid-template-columns: 1fr; }
+      .deliverables { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; }
+      .deliverables { grid-template-columns: 1fr; }
+      .hero-inner { padding: 64px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">K-A-Q-S™</span>
+        <span class="logo-sep">|</span>
+        <span class="logo-label">Platform</span>
+      </div>
+      <a href="kaqs-auth.html" class="nav-link">Войти</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="bg-grid hero">
+    <div class="hero-fade"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        <span class="eyebrow-text">AI Maturity Assessment Framework</span>
+      </div>
+      <h1>
+        Устойчивость.<br>
+        Контроль.<br>
+        <span class="accent">Архитектура.</span>
+      </h1>
+      <p class="hero-sub">
+        Диагностика зрелости AI-систем бизнеса по стандарту K-A-Q-S™.
+      </p>
+      <p class="hero-desc">
+        Структурированная оценка по 4 блокам: Knowledge, AI Design, Quality, Scalability.
+        На выходе — индекс зрелости, карта рисков и дорожная карта.
+      </p>
+      <div class="btn-row">
+        <a href="kaqs-auth.html" class="btn-primary">Пройти диагностику</a>
+        <a href="#methodology" class="btn-ghost">Как это работает</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Methodology -->
+  <div class="section-full">
+    <div class="section-block" id="methodology" style="max-width:960px;margin:0 auto;padding:72px 24px;">
+      <p class="section-label">// Методология</p>
+      <p class="section-title">4 блока диагностики</p>
+
+      <div class="module-grid">
+        <div class="module-card">
+          <span class="module-letter">K</span>
+          <div>
+            <p class="module-name">Knowledge Architecture</p>
+            <p class="module-desc">Процессы, роли, данные, зависимости. Архитектура знаний как фундамент для AI.</p>
+          </div>
+        </div>
+        <div class="module-card">
+          <span class="module-letter">A</span>
+          <div>
+            <p class="module-name">AI System Design</p>
+            <p class="module-desc">Как встроен AI-слой в систему. Целостность интеграций. Контроль и управление.</p>
+          </div>
+        </div>
+        <div class="module-card">
+          <span class="module-letter">Q</span>
+          <div>
+            <p class="module-name">Quality & Risk Control</p>
+            <p class="module-desc">Устойчивость, тестирование, безопасность, управление рисками и инцидентами.</p>
+          </div>
+        </div>
+        <div class="module-card">
+          <span class="module-letter">S</span>
+          <div>
+            <p class="module-name">Scalability Framework</p>
+            <p class="module-desc">Готовность к росту, модульность, план масштабирования и метрики устойчивости.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deliverables -->
+  <div class="section-full">
+    <div style="max-width:960px;margin:0 auto;padding:72px 24px;">
+      <p class="section-label">// Что вы получите</p>
+      <p class="section-title">Результат диагностики</p>
+
+      <div class="deliverables">
+        <div class="deliv-card">
+          <div class="deliv-line"></div>
+          <p class="deliv-title">Индекс зрелости</p>
+          <p class="deliv-desc">Общий Score 0–120 и 4 отдельных индекса по блокам K/A/Q/S.</p>
+        </div>
+        <div class="deliv-card">
+          <div class="deliv-line"></div>
+          <p class="deliv-title">Карта рисков</p>
+          <p class="deliv-desc">Приоритизированные риски P0/P1/P2 с описанием и привязкой к блоку.</p>
+        </div>
+        <div class="deliv-card">
+          <div class="deliv-line"></div>
+          <p class="deliv-title">Дорожная карта</p>
+          <p class="deliv-desc">Конкретные шаги: что делать за 14 дней, 60 дней и 6 месяцев.</p>
+        </div>
+        <div class="deliv-card">
+          <div class="deliv-line"></div>
+          <p class="deliv-title">Архитектурный отчёт</p>
+          <p class="deliv-desc">Полный структурированный отчёт для скачивания в PDF.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="section-full" id="pricing">
+    <div class="section-block">
+      <p class="section-label">// Тарифы</p>
+      <p class="section-title" style="margin-bottom:8px">Форматы работы с результатами</p>
+      <p style="font-size:.9rem;color:var(--text2);margin-bottom:36px;max-width:480px">Диагностика бесплатна. После получения отчёта выберите, как двигаться дальше.</p>
+
+      <!-- Roadmap -->
+      <div class="pricing-group-label">// Разовая услуга · Персональный Roadmap</div>
+      <div class="pricing-grid-3">
+        <div class="price-card">
+          <div>
+            <div class="price-card__tag">Тариф 01</div>
+            <div class="price-card__name">Roadmap Базовый</div>
+          </div>
+          <div>
+            <div class="price-card__amount">9 900 ₽</div>
+            <div class="price-card__period">разово</div>
+          </div>
+          <ul class="price-card__list">
+            <li>90-дневный план по результатам диагностики</li>
+            <li>Приоритеты по 5 осям K-AQS</li>
+            <li>Конкретные шаги и сроки</li>
+            <li>PDF-документ, 3 рабочих дня</li>
+          </ul>
+          <a href="kaqs-auth.html" class="btn-primary" style="text-align:center">Пройти диагностику</a>
+          <a href="oferta-roadmap.html" class="price-card__oferta">Условия договора</a>
+        </div>
+        <div class="price-card featured">
+          <div>
+            <div class="price-card__tag">Тариф 02 · Рекомендуем</div>
+            <div class="price-card__name">Roadmap Расширенный</div>
+          </div>
+          <div>
+            <div class="price-card__amount">19 900 ₽</div>
+            <div class="price-card__period">разово</div>
+          </div>
+          <ul class="price-card__list">
+            <li>Всё из «Базового»</li>
+            <li>Шаблоны для каждого шага</li>
+            <li>Чеклисты и ту-ду листы по неделям</li>
+            <li>Таблицы отслеживания результатов</li>
+          </ul>
+          <a href="kaqs-auth.html" class="btn-primary" style="text-align:center">Пройти диагностику</a>
+          <a href="oferta-roadmap.html" class="price-card__oferta">Условия договора</a>
+        </div>
+        <div class="price-card">
+          <div>
+            <div class="price-card__tag">Тариф 03 · Максимум</div>
+            <div class="price-card__name">Комбо</div>
+          </div>
+          <div>
+            <div class="price-card__amount">24 900 ₽</div>
+            <div class="price-card__period">разово</div>
+          </div>
+          <ul class="price-card__list">
+            <li>Всё из «Расширенного»</li>
+            <li>1 месяц доступа к платформе K-AQS</li>
+            <li>Задачи, AI-агент, дашборд</li>
+            <li>Внедрение по пунктам Roadmap</li>
+          </ul>
+          <a href="kaqs-auth.html" class="btn-primary" style="text-align:center">Пройти диагностику</a>
+          <a href="oferta-roadmap.html" class="price-card__oferta">Условия договора</a>
+        </div>
+      </div>
+
+      <!-- Платформа -->
+      <div class="pricing-group-label">// Подписка · Платформа K-AQS</div>
+      <div class="pricing-grid-2">
+        <div class="price-card">
+          <div>
+            <div class="price-card__tag">Тариф 04</div>
+            <div class="price-card__name">Платформа</div>
+          </div>
+          <div>
+            <div class="price-card__amount">4 900 ₽</div>
+            <div class="price-card__period">/ месяц</div>
+          </div>
+          <ul class="price-card__list">
+            <li>Диагностика по 5 осям K-AQS</li>
+            <li>Дашборд с динамикой показателей</li>
+            <li>Постановка задач и AI-агент контроля</li>
+            <li>Рекомендации и трекинг прогресса</li>
+          </ul>
+          <a href="kaqs-auth.html" class="btn-primary" style="text-align:center">Пройти диагностику</a>
+          <a href="oferta.html" class="price-card__oferta">Условия подписки</a>
+        </div>
+        <div class="price-card featured">
+          <div>
+            <div class="price-card__tag">Тариф 05 · С наставником</div>
+            <div class="price-card__name">Платформа + Консультант</div>
+          </div>
+          <div>
+            <div class="price-card__amount">9 900 ₽</div>
+            <div class="price-card__period">/ месяц</div>
+          </div>
+          <ul class="price-card__list">
+            <li>Всё из «Платформы»</li>
+            <li>2 персональных разбора в месяц</li>
+            <li>Ответ в течение 48 часов</li>
+            <li>Голос или текст — на ваш выбор</li>
+          </ul>
+          <a href="kaqs-auth.html" class="btn-primary" style="text-align:center">Пройти диагностику</a>
+          <a href="oferta.html" class="price-card__oferta">Условия подписки</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section-full">
+    <div class="cta-block">
+      <p class="section-label">// Начать диагностику</p>
+      <h2 class="cta-title">Займёт 20–30 минут.</h2>
+      <p class="cta-desc">
+        Ответьте на вопросы по 4 блокам — получите структурированный отчёт о зрелости AI-систем вашего бизнеса.
+      </p>
+      <a href="kaqs-auth.html" class="btn-primary">Пройти диагностику</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-copy">K-A-Q-S™ Platform</span>
+      <div style="display:flex;gap:20px">
+        <a href="oferta.html"         class="footer-copy" style="transition:color .15s" onmouseover="this.style.color='#B8B8B8'" onmouseout="this.style.color=''">Оферта (подписка)</a>
+        <a href="oferta-roadmap.html" class="footer-copy" style="transition:color .15s" onmouseover="this.style.color='#B8B8B8'" onmouseout="this.style.color=''">Оферта (Roadmap)</a>
+      </div>
+      <span class="footer-copy">© 2026 Karina AI Systems Architect</span>
+    </div>
+  </footer>
+
+</body>
+</html>
