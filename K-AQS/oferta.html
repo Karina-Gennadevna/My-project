@@ -10,135 +10,304 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg-base: #080A0C;
+      --bg-surface: #0F1215;
+      --bg-elevated: #161B20;
+      --text-primary: #F0F4F8;
+      --text-secondary: #8A97A8;
+      --text-muted: #4A5568;
+      --accent: #F97316;
+      --accent-muted: rgba(249,115,22,0.10);
+      --accent-border: rgba(249,115,22,0.30);
+      --border-default: rgba(255,255,255,0.08);
+      --border-subtle: rgba(255,255,255,0.05);
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: #0B0F14;
-      color: #CBD5E1;
+      background: var(--bg-base);
+      color: var(--text-secondary);
       -webkit-font-smoothing: antialiased;
       line-height: 1.75;
     }
 
+    /* ── HEADER ── */
     header {
-      border-bottom: 1px solid rgba(255,255,255,.07);
+      border-bottom: 1px solid var(--border-subtle);
       padding: 20px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
-      background: rgba(11,15,20,.92);
+      background: rgba(8,10,12,0.92);
       backdrop-filter: blur(14px);
       z-index: 10;
     }
     .logo {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .8rem;
+      font-size: .75rem;
       font-weight: 600;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: #3B82F6;
+      color: var(--text-primary);
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+    .logo-dot { color: var(--accent); }
     .back-link {
       font-size: .8rem;
-      color: #4A5568;
+      color: var(--text-muted);
       text-decoration: none;
       transition: color .15s;
     }
-    .back-link:hover { color: #8A97A8; }
+    .back-link:hover { color: var(--text-secondary); }
 
+    /* ── LAYOUT ── */
     main {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 56px 24px 96px;
     }
 
+    /* ── DOCUMENT HEADER ── */
     .doc-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: .62rem;
       letter-spacing: .16em;
       text-transform: uppercase;
-      color: #4A5568;
-      margin-bottom: 12px;
+      color: var(--accent);
+      margin-bottom: 14px;
     }
     h1 {
-      font-size: clamp(22px, 4vw, 30px);
+      font-size: clamp(22px, 4vw, 32px);
       font-weight: 700;
-      color: #F0F4F8;
-      letter-spacing: -.02em;
-      margin-bottom: 6px;
+      color: var(--text-primary);
+      letter-spacing: -.025em;
+      margin-bottom: 8px;
       line-height: 1.2;
     }
-    .doc-date {
-      font-size: .8rem;
-      color: #4A5568;
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 36px;
-    }
-
-    .intro {
-      background: rgba(59,130,246,.06);
-      border: 1px solid rgba(59,130,246,.15);
-      border-radius: 10px;
-      padding: 18px 20px;
-      font-size: .88rem;
-      color: #8A97A8;
-      line-height: 1.7;
+    .doc-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
       margin-bottom: 40px;
     }
+    .doc-meta-item {
+      font-size: .78rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .doc-meta-item span { color: var(--text-secondary); }
 
-    h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #F0F4F8;
-      margin-top: 40px;
+    /* ── INTRO BLOCK ── */
+    .intro {
+      background: var(--accent-muted);
+      border: 1px solid var(--accent-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 48px;
+    }
+    .intro strong { color: var(--text-primary); }
+
+    /* ── ADVANTAGE BANNER ── */
+    .advantage-block {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .adv-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .adv-icon {
+      font-size: .75rem;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+    .adv-title {
+      font-size: .85rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .adv-desc {
+      font-size: .78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 48px;
+    }
+    .toc-title {
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
       margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 4px 24px;
+    }
+    .toc-list li a {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      padding: 4px 0;
+      transition: color .15s;
+    }
+    .toc-list li a:hover { color: var(--text-primary); }
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── SECTIONS ── */
+    .section { margin-bottom: 8px; }
+
+    h2 {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      scroll-margin-top: 80px;
     }
     h2 .sec-num {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .65rem;
-      color: #3B82F6;
+      font-size: .63rem;
+      color: var(--accent);
       letter-spacing: .1em;
       font-weight: 500;
       flex-shrink: 0;
     }
 
-    p {
-      font-size: .9rem;
-      color: #8A97A8;
-      margin-bottom: 12px;
-      line-height: 1.75;
-    }
-    p:last-child { margin-bottom: 0; }
-
+    /* ── CLAUSES ── */
     .clause {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 10px;
+      align-items: flex-start;
     }
     .clause-num {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .72rem;
-      color: #4A5568;
+      font-size: .68rem;
+      color: var(--text-muted);
       flex-shrink: 0;
-      padding-top: 2px;
-      min-width: 32px;
+      padding-top: 3px;
+      min-width: 34px;
+      letter-spacing: .03em;
     }
     .clause-text {
-      font-size: .9rem;
-      color: #8A97A8;
+      font-size: .88rem;
+      color: var(--text-secondary);
       line-height: 1.75;
     }
-    .clause-text strong { color: #CBD5E1; font-weight: 500; }
+    .clause-text strong { color: var(--text-primary); font-weight: 500; }
+    .clause-text em { color: var(--text-muted); font-style: normal; font-size: .83rem; }
 
+    /* ── HIGHLIGHT BOXES ── */
+    .highlight-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 14px 0 10px;
+    }
+    .highlight-box.green {
+      background: rgba(34,197,94,0.05);
+      border-color: rgba(34,197,94,0.20);
+    }
+    .highlight-box.orange {
+      background: var(--accent-muted);
+      border-color: var(--accent-border);
+    }
+    .highlight-box.red {
+      background: rgba(239,68,68,0.05);
+      border-color: rgba(239,68,68,0.20);
+    }
+    .hb-title {
+      font-size: .72rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .highlight-box.green .hb-title { color: #22C55E; }
+    .highlight-box.orange .hb-title { color: var(--accent); }
+    .highlight-box.red .hb-title { color: #EF4444; }
+    .highlight-box p {
+      font-size: .85rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .highlight-box p:last-child { margin-bottom: 0; }
+    .highlight-box p strong { color: var(--text-primary); font-weight: 500; }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: .83rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 8px 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: .72rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .data-table td {
+      padding: 10px 12px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .data-table td:first-child { color: var(--text-primary); font-weight: 500; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* ── REQUISITES ── */
     .requisites {
-      background: #0F141B;
-      border: 1px solid rgba(255,255,255,.08);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
       border-radius: 10px;
       padding: 20px 22px;
       margin-top: 14px;
@@ -146,138 +315,473 @@
     .req-row {
       display: flex;
       gap: 16px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-subtle);
       font-size: .85rem;
     }
     .req-row:last-child { border-bottom: none; padding-bottom: 0; }
     .req-key {
-      color: #4A5568;
-      width: 160px;
+      color: var(--text-muted);
+      width: 170px;
       flex-shrink: 0;
-      font-size: .8rem;
+      font-size: .78rem;
     }
-    .req-val { color: #CBD5E1; }
+    .req-val { color: var(--text-primary); }
+    .req-val a { color: var(--accent); text-decoration: none; }
+    .req-val a:hover { text-decoration: underline; }
 
+    /* ── FOOTER ── */
     footer {
-      border-top: 1px solid rgba(255,255,255,.06);
+      border-top: 1px solid var(--border-subtle);
       padding: 24px;
       text-align: center;
-      font-size: .75rem;
-      color: #4A5568;
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 2;
+    }
+
+    /* ── TARIFF GRID ── */
+    .tariff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .tariff-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 24px 22px;
+    }
+    .tariff-card.featured {
+      border-color: var(--accent-border);
+      background: var(--accent-muted);
+    }
+    .tariff-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .tariff-card.featured .tariff-badge { color: var(--accent); }
+    .tariff-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .tariff-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -.03em;
+      margin-bottom: 4px;
       font-family: 'JetBrains Mono', monospace;
     }
+    .tariff-price sup {
+      font-size: .75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      vertical-align: super;
+      margin-right: 2px;
+    }
+    .tariff-period {
+      font-size: .75rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 16px;
+    }
+    .tariff-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .tariff-features li {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .tariff-features li::before {
+      content: '—';
+      color: var(--text-muted);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      margin-top: 2px;
+    }
+    .tariff-card.featured .tariff-features li::before { color: var(--accent); }
 
-    @media (max-width: 480px) {
-      main { padding: 32px 18px 60px; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 540px) {
+      .tariff-grid { grid-template-columns: 1fr; }
+      main { padding: 32px 18px 64px; }
       .req-row { flex-direction: column; gap: 2px; }
       .req-key { width: auto; }
+      .toc-list { grid-template-columns: 1fr; }
+      .advantage-block { grid-template-columns: 1fr; }
+      .doc-meta { gap: 12px; flex-direction: column; }
     }
 
+    /* ── PRINT ── */
     @media print {
-      body { background: #fff; color: #111; }
+      body { background: #fff; color: #374151; }
       header { background: #fff; border-color: #e5e7eb; position: static; }
-      .logo { color: #2563EB; }
+      .logo { color: #111; }
+      .logo-dot { color: #EA580C; }
       .back-link { display: none; }
-      h1, h2 { color: #111; }
+      h1, h2, .clause-text strong, .req-val, .adv-title { color: #111; }
       h2 { border-color: #e5e7eb; }
-      .intro { background: #f0f7ff; border-color: #bfdbfe; }
-      .clause-text, p { color: #374151; }
-      .clause-num, .req-key { color: #9ca3af; }
-      .req-val { color: #111; }
-      .requisites { background: #f9fafb; border-color: #e5e7eb; }
-      footer { border-color: #e5e7eb; color: #9ca3af; }
+      h2 .sec-num { color: #EA580C; }
+      .intro { background: #fff7ed; border-color: #fed7aa; }
+      .highlight-box { background: #f9fafb; border-color: #e5e7eb; }
+      .highlight-box.green { background: #f0fdf4; border-color: #bbf7d0; }
+      .highlight-box.red { background: #fef2f2; border-color: #fecaca; }
+      .requisites, .toc, .adv-item { background: #f9fafb; border-color: #e5e7eb; }
+      .clause-text, .clause-num, .req-key, .adv-desc, .toc-list li a { color: #6b7280; }
+      .data-table td { color: #374151; border-color: #e5e7eb; }
+      .data-table th { color: #9ca3af; border-color: #e5e7eb; }
+      footer { color: #9ca3af; border-color: #e5e7eb; }
+      .advantage-block { display: none; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="logo">K-A-Q-S™</a>
-  <a href="index.html" class="back-link">← На главную</a>
+  <a href="kaqs-landing.html" class="logo">K<span class="logo-dot">·</span>A<span class="logo-dot">·</span>Q<span class="logo-dot">·</span>S™</a>
+  <a href="kaqs-landing.html" class="back-link">← На главную</a>
 </header>
 
 <main>
-  <p class="doc-label">// Юридический документ</p>
-  <h1>Публичная оферта на оказание консультационных услуг</h1>
-  <p class="doc-date">Редакция от 19 марта 2026 года</p>
 
-  <div class="intro">
-    Настоящий документ является публичной офертой Кузнецовой Карины Геннадьевны (самозанятый) и содержит все существенные условия договора на оказание консультационных услуг. Оплата услуги означает полное и безоговорочное принятие условий настоящей оферты.
+  <p class="doc-label">// Юридический документ · Публичная оферта</p>
+  <h1>Договор на предоставление доступа к программному обеспечению</h1>
+
+  <div class="doc-meta">
+    <span class="doc-meta-item">Редакция от <span>25 марта 2026 года</span></span>
+    <span class="doc-meta-item">Вступает в силу с <span>25 марта 2026 года</span></span>
+    <span class="doc-meta-item">Регистрация: <span>ИНН 641305221167</span></span>
   </div>
 
-  <!-- 1 -->
-  <h2><span class="sec-num">01</span> Термины и определения</h2>
+  <div class="intro">
+    Настоящий документ является публичной офертой Кузнецовой Карины Геннадьевны (далее — Исполнитель) на предоставление доступа к программной платформе K-A-Q-S™ по подписке. <strong>Оплата подписки означает полное и безоговорочное принятие условий настоящего договора.</strong><br><br>
+    Если вы не согласны с какими-либо условиями — не оплачивайте подписку. Если у вас есть вопросы — напишите нам до оплаты: <strong>miss.kuznetsov@mail.ru</strong>
+  </div>
+
+  <!-- Тарифы подписки -->
+  <div class="tariff-grid">
+    <div class="tariff-card">
+      <div class="tariff-badge">// Тариф 01</div>
+      <div class="tariff-name">Платформа</div>
+      <div class="tariff-price"><sup>₽</sup>4 900</div>
+      <div class="tariff-period">/ месяц</div>
+      <ul class="tariff-features">
+        <li>Бизнес-диагностика по 5 осям K-AQS</li>
+        <li>Персональный дашборд с динамикой</li>
+        <li>Постановка задач на основе диагностики</li>
+        <li>AI-агент контроля исполнения задач</li>
+        <li>Автоматические рекомендации по росту</li>
+        <li>Трекинг прогресса по периодам</li>
+      </ul>
+    </div>
+    <div class="tariff-card featured">
+      <div class="tariff-badge">// Тариф 02 · С наставником</div>
+      <div class="tariff-name">Платформа + Консультант</div>
+      <div class="tariff-price"><sup>₽</sup>9 900</div>
+      <div class="tariff-period">/ месяц</div>
+      <ul class="tariff-features">
+        <li>Всё из тарифа «Платформа»</li>
+        <li>2 асинхронных разбора в месяц лично с Исполнителем</li>
+        <li>Ответ в течение 48 часов</li>
+        <li>Формат: голосовое сообщение или текст</li>
+        <li>Разбор текущих задач и точек роста</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Преимущества перед конкурентами -->
+  <div class="advantage-block">
+    <div class="adv-item">
+      <div class="adv-icon">01 // ВОЗВРАТ</div>
+      <div class="adv-title">14 дней — полный возврат</div>
+      <div class="adv-desc">Для новых пользователей. Никаких вопросов и условий.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">02 // АВТОПРОДЛЕНИЕ</div>
+      <div class="adv-title">Уведомим за 7 дней</div>
+      <div class="adv-desc">Перед каждым списанием — напомним и дадим время отменить.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">03 // ДАННЫЕ</div>
+      <div class="adv-title">Ваши данные — ваши</div>
+      <div class="adv-desc">Выгрузка в любой момент. После отмены — 30 дней на вывод.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">04 // ИЗМЕНЕНИЯ</div>
+      <div class="adv-title">30 дней на уведомление</div>
+      <div class="adv-desc">Любые изменения условий — с предупреждением за месяц.</div>
+    </div>
+  </div>
+
+  <!-- Оглавление -->
+  <div class="toc">
+    <div class="toc-title">// Содержание</div>
+    <ul class="toc-list">
+      <li><a href="#s1"><span class="toc-num">01</span> Термины и определения</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Предмет договора</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Порядок заключения</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Тарифы и оплата</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Автопродление подписки</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Возврат денежных средств</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Приостановка и расторжение</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Данные и конфиденциальность</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Интеллектуальная собственность</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Ответственность сторон</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Изменение условий</a></li>
+      <li><a href="#s12"><span class="toc-num">12</span> Споры и реквизиты</a></li>
+    </ul>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       01. ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s1"><span class="sec-num">01</span> Термины и определения</h2>
+
   <div class="clause"><span class="clause-num">1.1</span><span class="clause-text"><strong>Исполнитель</strong> — Кузнецова Карина Геннадьевна, самозанятый, ИНН 641305221167.</span></div>
-  <div class="clause"><span class="clause-num">1.2</span><span class="clause-text"><strong>Заказчик</strong> — физическое или юридическое лицо, акцептовавшее настоящую оферту путём оплаты услуги.</span></div>
-  <div class="clause"><span class="clause-num">1.3</span><span class="clause-text"><strong>Услуга</strong> — «Персональный Roadmap на 90 дней» — консультационный документ в формате PDF, разработанный на основе результатов диагностики управляемости бизнеса K-A-Q-S™.</span></div>
-  <div class="clause"><span class="clause-num">1.4</span><span class="clause-text"><strong>Акцепт</strong> — полное принятие условий оферты путём оплаты услуги в установленном размере.</span></div>
-  <div class="clause"><span class="clause-num">1.5</span><span class="clause-text"><strong>Сайт</strong> — интернет-ресурс Исполнителя, через который осуществляется доступ к диагностике и услуге.</span></div>
+  <div class="clause"><span class="clause-num">1.2</span><span class="clause-text"><strong>Пользователь</strong> — физическое или юридическое лицо, акцептовавшее настоящую оферту путём оплаты подписки.</span></div>
+  <div class="clause"><span class="clause-num">1.3</span><span class="clause-text"><strong>Платформа K-AQS</strong> — программное обеспечение в виде веб-сервиса (SaaS), доступное по адресу kaqs.ru, включающее инструменты диагностики бизнеса по методологии K-A-Q-S™, личный кабинет, дашборд с аналитикой, систему рекомендаций и трекинг прогресса.</span></div>
+  <div class="clause"><span class="clause-num">1.4</span><span class="clause-text"><strong>Подписка</strong> — возмездный доступ к Платформе на определённый период (месяц или год) в рамках выбранного Тарифа.</span></div>
+  <div class="clause"><span class="clause-num">1.5</span><span class="clause-text"><strong>Тариф «Платформа»</strong> — стоимость 4 900 (четыре тысячи девятьсот) рублей в месяц. Включает: диагностику, дашборд, постановку задач, AI-агент контроля исполнения, рекомендации, трекинг прогресса.</span></div>
+  <div class="clause"><span class="clause-num">1.6</span><span class="clause-text"><strong>Тариф «Платформа + Консультант»</strong> — стоимость 9 900 (девять тысяч девятьсот) рублей в месяц. Включает всё из тарифа «Платформа», а также 2 (два) асинхронных персональных разбора в месяц лично с Исполнителем в формате голосового сообщения или текста. Срок ответа Исполнителя — не более 48 часов с момента обращения.</span></div>
+  <div class="clause"><span class="clause-num">1.7</span><span class="clause-text"><strong>Асинхронный разбор</strong> — консультация в формате текстового или голосового сообщения: Пользователь описывает задачу или вопрос, Исполнитель отвечает в течение 48 часов. Один разбор — один вопрос или одна задача. Неиспользованные разборы на следующий месяц не переносятся.</span></div>
+  <div class="clause"><span class="clause-num">1.8</span><span class="clause-text"><strong>Период подписки</strong> — оплаченный период доступа к Платформе: один календарный месяц или один календарный год, в зависимости от выбранного Тарифа.</span></div>
+  <div class="clause"><span class="clause-num">1.9</span><span class="clause-text"><strong>Личный кабинет</strong> — защищённый раздел Платформы, доступный после авторизации, через который Пользователь управляет подпиской, данными и настройками.</span></div>
+  <div class="clause"><span class="clause-num">1.10</span><span class="clause-text"><strong>Контент Пользователя</strong> — любые данные, которые Пользователь вносит в Платформу: результаты диагностики, ответы, финансовые показатели, заметки и иная информация о его бизнесе.</span></div>
+  <div class="clause"><span class="clause-num">1.11</span><span class="clause-text"><strong>Автопродление</strong> — автоматическое продление Подписки на следующий Период по истечении текущего при наличии сохранённого способа оплаты.</span></div>
+  <div class="clause"><span class="clause-num">1.12</span><span class="clause-text"><strong>Сайт</strong> — домен kaqs.ru и все его поддомены.</span></div>
 
-  <!-- 2 -->
-  <h2><span class="sec-num">02</span> Предмет договора</h2>
-  <div class="clause"><span class="clause-num">2.1</span><span class="clause-text">Исполнитель обязуется предоставить Заказчику «Персональный Roadmap на 90 дней» — структурированный план повышения управляемости бизнеса по четырём осям методологии K-A-Q-S™ (знания, автоматизация, качество, масштаб) на основании результатов пройденной Заказчиком диагностики.</span></div>
-  <div class="clause"><span class="clause-num">2.2</span><span class="clause-text">Услуга оказывается в дистанционном формате. Результат передаётся Заказчику в виде PDF-документа на электронный адрес, указанный при прохождении диагностики.</span></div>
-  <div class="clause"><span class="clause-num">2.3</span><span class="clause-text">Roadmap содержит конкретные рекомендации, чеклисты и шаблоны для самостоятельного выполнения Заказчиком. Исполнитель не осуществляет сопровождение или контроль внедрения в рамках данной услуги.</span></div>
 
-  <!-- 3 -->
-  <h2><span class="sec-num">03</span> Стоимость и порядок оплаты</h2>
-  <div class="clause"><span class="clause-num">3.1</span><span class="clause-text">Стоимость услуги составляет <strong>7 990 (семь тысяч девятьсот девяносто) рублей</strong>.</span></div>
-  <div class="clause"><span class="clause-num">3.2</span><span class="clause-text">Оплата производится единовременно, в полном объёме, до начала оказания услуги.</span></div>
-  <div class="clause"><span class="clause-num">3.3</span><span class="clause-text">Оплата осуществляется посредством платёжного сервиса Prodamus через форму на сайте. Принимаются банковские карты, СБП и другие способы, доступные в платёжной форме.</span></div>
-  <div class="clause"><span class="clause-num">3.4</span><span class="clause-text">Договор считается заключённым с момента поступления оплаты на счёт Исполнителя.</span></div>
-  <div class="clause"><span class="clause-num">3.5</span><span class="clause-text">Исполнитель применяет налоговый режим «Налог на профессиональный доход». НДС не облагается. Чек формируется автоматически и направляется Заказчику.</span></div>
+  <!-- ══════════════════════════════════════════════
+       02. ПРЕДМЕТ ДОГОВОРА
+  ══════════════════════════════════════════════ -->
+  <h2 id="s2"><span class="sec-num">02</span> Предмет договора</h2>
 
-  <!-- 4 -->
-  <h2><span class="sec-num">04</span> Порядок оказания услуги</h2>
-  <div class="clause"><span class="clause-num">4.1</span><span class="clause-text">После подтверждения оплаты Исполнитель формирует Roadmap на основании результатов диагностики Заказчика.</span></div>
-  <div class="clause"><span class="clause-num">4.2</span><span class="clause-text">Срок передачи готового документа — <strong>не более 3 рабочих дней</strong> с момента поступления оплаты.</span></div>
-  <div class="clause"><span class="clause-num">4.3</span><span class="clause-text">Документ направляется на email-адрес, указанный Заказчиком при прохождении диагностики. Заказчик обязан указать корректный email-адрес.</span></div>
-  <div class="clause"><span class="clause-num">4.4</span><span class="clause-text">Услуга считается оказанной с момента отправки документа на email Заказчика.</span></div>
+  <div class="clause"><span class="clause-num">2.1</span><span class="clause-text">Исполнитель предоставляет Пользователю неисключительное право использования Платформы K-AQS в течение оплаченного Периода подписки в объёме, определённом выбранным Тарифом.</span></div>
+  <div class="clause"><span class="clause-num">2.2</span><span class="clause-text">В рамках тарифа «Платформа» Пользователь получает:<br>
+    — бизнес-диагностику по методологии K-A-Q-S™ (5 осей: Финансы, Маркетинг, Команда, Операции, Собственник);<br>
+    — персональный дашборд с результатами диагностики и динамикой показателей;<br>
+    — постановку задач на основе результатов диагностики;<br>
+    — AI-агент контроля исполнения поставленных задач;<br>
+    — автоматические рекомендации по приоритетным зонам роста;<br>
+    — трекинг прогресса по периодам.</span></div>
+  <div class="clause"><span class="clause-num">2.3</span><span class="clause-text">В рамках тарифа «Платформа + Консультант» Пользователь дополнительно получает 2 (два) асинхронных персональных разбора в месяц лично с Исполнителем в порядке, установленном п. 1.7 настоящего договора.</span></div>
+  <div class="clause"><span class="clause-num">2.4</span><span class="clause-text">Платформа предоставляется как инструмент анализа, планирования и контроля. <strong>Исполнитель не гарантирует достижения каких-либо конкретных финансовых или операционных результатов</strong> — они зависят исключительно от действий самого Пользователя.</span></div>
+  <div class="clause"><span class="clause-num">2.5</span><span class="clause-text">Доступ к Платформе предоставляется через браузер и/или мобильное приложение. Для использования необходимо подключение к интернету.</span></div>
 
-  <!-- 5 -->
-  <h2><span class="sec-num">05</span> Права и обязанности сторон</h2>
-  <div class="clause"><span class="clause-num">5.1</span><span class="clause-text">Исполнитель обязуется: предоставить услугу в установленный срок; обеспечить конфиденциальность данных Заказчика; отвечать на вопросы Заказчика по существу оказанной услуги в течение 5 рабочих дней.</span></div>
-  <div class="clause"><span class="clause-num">5.2</span><span class="clause-text">Заказчик обязуется: оплатить услугу в полном объёме; предоставить корректные контактные данные; использовать полученный документ только в личных целях.</span></div>
-  <div class="clause"><span class="clause-num">5.3</span><span class="clause-text">Заказчик не вправе передавать, копировать, публиковать или перепродавать полученный документ третьим лицам без письменного согласия Исполнителя.</span></div>
 
-  <!-- 6 -->
-  <h2><span class="sec-num">06</span> Возврат денежных средств</h2>
-  <div class="clause"><span class="clause-num">6.1</span><span class="clause-text">Заказчик вправе отказаться от услуги и получить полный возврат средств до момента передачи готового документа.</span></div>
-  <div class="clause"><span class="clause-num">6.2</span><span class="clause-text">После передачи документа возврат не производится, поскольку услуга считается оказанной в полном объёме.</span></div>
-  <div class="clause"><span class="clause-num">6.3</span><span class="clause-text">Для отказа от услуги Заказчик направляет письмо на email Исполнителя: <strong>miss.kuznetsov@mail.ru</strong>. Возврат осуществляется в течение 10 рабочих дней.</span></div>
+  <!-- ══════════════════════════════════════════════
+       03. ПОРЯДОК ЗАКЛЮЧЕНИЯ ДОГОВОРА
+  ══════════════════════════════════════════════ -->
+  <h2 id="s3"><span class="sec-num">03</span> Порядок заключения договора</h2>
 
-  <!-- 7 -->
-  <h2><span class="sec-num">07</span> Конфиденциальность и персональные данные</h2>
-  <div class="clause"><span class="clause-num">7.1</span><span class="clause-text">Исполнитель обязуется не передавать персональные данные и результаты диагностики Заказчика третьим лицам без его согласия.</span></div>
-  <div class="clause"><span class="clause-num">7.2</span><span class="clause-text">Акцептуя оферту, Заказчик даёт согласие на обработку своих персональных данных (имя, email, результаты диагностики) исключительно в целях оказания услуги.</span></div>
-  <div class="clause"><span class="clause-num">7.3</span><span class="clause-text">Данные хранятся на устройствах Исполнителя и не передаются третьим лицам, за исключением платёжного сервиса Prodamus в объёме, необходимом для проведения платежа.</span></div>
+  <div class="clause"><span class="clause-num">3.1</span><span class="clause-text">Договор считается заключённым с момента <strong>поступления оплаты</strong> на расчётный счёт Исполнителя. Отдельное подписание документов не требуется.</span></div>
+  <div class="clause"><span class="clause-num">3.2</span><span class="clause-text">Регистрируясь на Сайте и оплачивая Подписку, Пользователь подтверждает, что:<br>
+    — ознакомлен с настоящей офертой и Политикой конфиденциальности;<br>
+    — согласен с условиями в полном объёме;<br>
+    — является дееспособным физическим лицом или уполномоченным представителем юридического лица.</span></div>
+  <div class="clause"><span class="clause-num">3.3</span><span class="clause-text">Если Пользователь не согласен с условиями настоящей оферты, он обязан воздержаться от оплаты.</span></div>
+  <div class="clause"><span class="clause-num">3.4</span><span class="clause-text">Настоящий договор является договором присоединения в соответствии со ст. 428 ГК РФ.</span></div>
 
-  <!-- 8 -->
-  <h2><span class="sec-num">08</span> Ответственность и ограничения</h2>
-  <div class="clause"><span class="clause-num">8.1</span><span class="clause-text">Исполнитель несёт ответственность за передачу услуги в установленный срок и за качество содержания документа.</span></div>
-  <div class="clause"><span class="clause-num">8.2</span><span class="clause-text">Исполнитель не гарантирует конкретный финансовый или операционный результат от применения рекомендаций — результат зависит от действий самого Заказчика.</span></div>
-  <div class="clause"><span class="clause-num">8.3</span><span class="clause-text">Максимальная ответственность Исполнителя ограничена суммой оплаченной услуги.</span></div>
 
-  <!-- 9 -->
-  <h2><span class="sec-num">09</span> Разрешение споров</h2>
-  <div class="clause"><span class="clause-num">9.1</span><span class="clause-text">Все споры решаются путём переговоров. Для этого Заказчик направляет претензию на email <strong>miss.kuznetsov@mail.ru</strong>. Срок ответа — 10 рабочих дней.</span></div>
-  <div class="clause"><span class="clause-num">9.2</span><span class="clause-text">При невозможности урегулировать спор в досудебном порядке он передаётся на рассмотрение суда по месту нахождения Исполнителя в соответствии с законодательством РФ.</span></div>
+  <!-- ══════════════════════════════════════════════
+       04. ТАРИФЫ И ОПЛАТА
+  ══════════════════════════════════════════════ -->
+  <h2 id="s4"><span class="sec-num">04</span> Тарифы и оплата</h2>
 
-  <!-- 10 -->
-  <h2><span class="sec-num">10</span> Реквизиты исполнителя</h2>
+  <div class="clause"><span class="clause-num">4.1</span><span class="clause-text">Актуальные тарифы и их стоимость публикуются на странице kaqs.ru/pricing. Информация обновляется при изменении тарифов с соблюдением требований раздела 11 настоящего договора.</span></div>
+  <div class="clause"><span class="clause-num">4.2</span><span class="clause-text">Оплата производится в российских рублях, <strong>100% предоплата</strong> за выбранный Период подписки.</span></div>
+  <div class="clause"><span class="clause-num">4.3</span><span class="clause-text">Принимаются следующие способы оплаты: банковские карты Visa, Mastercard, МИР; Система быстрых платежей (СБП); иные способы, доступные в платёжной форме на момент оплаты.</span></div>
+  <div class="clause"><span class="clause-num">4.4</span><span class="clause-text">Исполнитель применяет специальный налоговый режим «Налог на профессиональный доход». <strong>НДС не облагается.</strong> Чек о получении оплаты формируется и направляется Пользователю в соответствии с требованиями Федерального закона № 422-ФЗ.</span></div>
+  <div class="clause"><span class="clause-num">4.5</span><span class="clause-text">Все комиссии платёжных систем при оплате включены в стоимость Тарифа. Дополнительные комиссии с Пользователя не взимаются.</span></div>
+  <div class="clause"><span class="clause-num">4.6</span><span class="clause-text">При оплате картой Пользователь может сохранить платёжные данные для последующего Автопродления. Данные карты хранятся на стороне платёжного сервиса в зашифрованном виде; Исполнитель доступа к реквизитам карты не имеет.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       05. АВТОПРОДЛЕНИЕ ПОДПИСКИ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s5"><span class="sec-num">05</span> Автопродление подписки</h2>
+
+  <div class="highlight-box orange">
+    <div class="hb-title">// Как это работает</div>
+    <p>Если вы сохранили карту при оплате — подписка продлевается автоматически. За 7 дней до списания мы пришлём уведомление на email. У вас будет время отменить.</p>
+  </div>
+
+  <div class="clause"><span class="clause-num">5.1</span><span class="clause-text">Автопродление подписки возможно только при наличии у Пользователя сохранённого способа оплаты (банковской карты).</span></div>
+  <div class="clause"><span class="clause-num">5.2</span><span class="clause-text">Исполнитель направляет Пользователю <strong>уведомление о предстоящем списании не позднее чем за 7 (семь) календарных дней</strong> до окончания текущего Периода подписки. Уведомление направляется на email, указанный при регистрации.</span></div>
+  <div class="clause"><span class="clause-num">5.3</span><span class="clause-text">Для отмены Автопродления Пользователь вправе:<br>
+    — отключить его в Личном кабинете в разделе «Подписка» — в любой момент;<br>
+    — направить запрос на email miss.kuznetsov@mail.ru.<br>
+    Отмена должна быть произведена <strong>не позднее чем за 24 часа</strong> до даты очередного списания.</span></div>
+  <div class="clause"><span class="clause-num">5.4</span><span class="clause-text">При неуспешной попытке списания Исполнитель предпринимает повторные попытки: на следующий день и через три дня. Если все три попытки неуспешны — Автопродление считается несостоявшимся, доступ к Платформе сохраняется до конца оплаченного Периода.</span></div>
+  <div class="clause"><span class="clause-num">5.5</span><span class="clause-text">Если Пользователь не сохранил карту, Автопродление не применяется. По истечении Периода доступ к полному функционалу приостанавливается до внесения новой оплаты.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       06. ВОЗВРАТ ДЕНЕЖНЫХ СРЕДСТВ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s6"><span class="sec-num">06</span> Возврат денежных средств</h2>
+
+  <div class="highlight-box green">
+    <div class="hb-title">// Гарантия для новых пользователей</div>
+    <p>Если вы оплатили подписку впервые и в течение <strong>14 дней</strong> решили, что Платформа вам не подходит — мы вернём полную сумму без вопросов.</p>
+  </div>
+
+  <div class="clause"><span class="clause-num">6.1</span><span class="clause-text"><strong>Гарантия для новых пользователей.</strong> В течение 14 (четырнадцати) календарных дней с момента первой оплаты Пользователь вправе запросить полный возврат уплаченных средств. Никаких дополнительных условий, обоснований или объяснений не требуется.</span></div>
+  <div class="clause"><span class="clause-num">6.2</span><span class="clause-text"><strong>Пропорциональный возврат при досрочном расторжении.</strong> После истечения 14-дневного гарантийного периода, но до окончания оплаченного Периода подписки, Пользователь вправе расторгнуть договор и получить возврат за неиспользованные дни. Сумма возврата рассчитывается пропорционально: (стоимость Тарифа / количество дней в Периоде) × количество оставшихся дней.</span></div>
+  <div class="clause"><span class="clause-num">6.3</span><span class="clause-text">Для получения возврата Пользователь направляет заявление в произвольной форме на email <strong>miss.kuznetsov@mail.ru</strong> с указанием:<br>
+    — email, использованного при регистрации;<br>
+    — реквизитов для возврата (номер карты или расчётного счёта).</span></div>
+  <div class="clause"><span class="clause-num">6.4</span><span class="clause-text">Возврат осуществляется в течение <strong>10 (десяти) рабочих дней</strong> с момента получения заявления. Средства возвращаются тем же способом, которым была произведена оплата, если Пользователь не указал иное.</span></div>
+  <div class="clause"><span class="clause-num">6.5</span><span class="clause-text">Банковские комиссии, возникающие при возврате на карты зарубежных банков или при международных переводах, вычитаются из суммы возврата.</span></div>
+
+  <div class="highlight-box red">
+    <div class="hb-title">// Когда возврат не производится</div>
+    <p>Возврат не осуществляется, если:</p>
+    <p>— с момента первой оплаты прошло более 14 дней <strong>и</strong> текущий Период подписки уже завершён;</p>
+    <p>— подписка была прекращена Исполнителем по основаниям, указанным в п. 7.4 (нарушение условий договора).</p>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       07. ПРИОСТАНОВКА И РАСТОРЖЕНИЕ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s7"><span class="sec-num">07</span> Приостановка и расторжение</h2>
+
+  <div class="clause"><span class="clause-num">7.1</span><span class="clause-text"><strong>Расторжение по инициативе Пользователя.</strong> Пользователь вправе расторгнуть договор в любой момент, отключив Автопродление в Личном кабинете или направив уведомление на email miss.kuznetsov@mail.ru. После расторжения доступ к Платформе сохраняется до конца оплаченного Периода.</span></div>
+  <div class="clause"><span class="clause-num">7.2</span><span class="clause-text"><strong>Что происходит после расторжения.</strong> По истечении оплаченного Периода:<br>
+    — доступ к полному функционалу Платформы прекращается;<br>
+    — Контент Пользователя сохраняется в течение 30 (тридцати) календарных дней — за это время Пользователь может выгрузить свои данные;<br>
+    — по истечении 30 дней Контент Пользователя удаляется без возможности восстановления.</span></div>
+  <div class="clause"><span class="clause-num">7.3</span><span class="clause-text"><strong>Приостановка Исполнителем.</strong> Исполнитель вправе временно приостановить доступ к Платформе:<br>
+    — для проведения технических работ — с предупреждением за 24 часа (плановые работы) или без предупреждения (аварийные работы). Плановые технические работы проводятся не чаще одного раза в месяц и не превышают 4 часов;<br>
+    — при возникновении форс-мажорных обстоятельств (раздел 10).</span></div>
+  <div class="clause"><span class="clause-num">7.4</span><span class="clause-text"><strong>Расторжение Исполнителем.</strong> Исполнитель вправе досрочно расторгнуть договор и прекратить доступ Пользователя к Платформе при нарушении им условий раздела 9 настоящего договора. Пользователь уведомляется за <strong>3 (три) рабочих дня</strong> до прекращения доступа (за исключением случаев, когда нарушение несёт непосредственный ущерб для Платформы или третьих лиц — в таких случаях доступ может быть прекращён немедленно). При расторжении по данному основанию возврат уплаченных средств не производится.</span></div>
+  <div class="clause"><span class="clause-num">7.5</span><span class="clause-text"><strong>Прекращение деятельности Исполнителя.</strong> В случае прекращения деятельности Исполнителя или прекращения работы Платформы Пользователь уведомляется <strong>не менее чем за 30 (тридцать) календарных дней</strong>. В течение этого срока Пользователь вправе выгрузить все свои данные, а Исполнитель обязан вернуть пропорциональную часть оплаты за неиспользованный Период.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       08. ДАННЫЕ И КОНФИДЕНЦИАЛЬНОСТЬ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s8"><span class="sec-num">08</span> Данные и конфиденциальность</h2>
+
+  <div class="clause"><span class="clause-num">8.1</span><span class="clause-text"><strong>Какие данные собираются.</strong> При использовании Платформы обрабатываются: имя, email, телефон (при указании), данные о компании (название, отрасль, оборот), ответы на диагностические вопросы, технические данные (IP-адрес, тип браузера, cookies).</span></div>
+  <div class="clause"><span class="clause-num">8.2</span><span class="clause-text"><strong>Где хранятся данные.</strong> Все данные Пользователей хранятся на серверах, расположенных <strong>на территории Российской Федерации</strong>, в соответствии с требованиями Федерального закона № 152-ФЗ «О персональных данных».</span></div>
+  <div class="clause"><span class="clause-num">8.3</span><span class="clause-text"><strong>Передача третьим лицам.</strong> Данные Пользователя не передаются третьим лицам без его согласия, за исключением:<br>
+    — платёжного сервиса — в объёме, необходимом для обработки платежа;<br>
+    — органов государственной власти — по требованию, в соответствии с действующим законодательством РФ.</span></div>
+  <div class="clause"><span class="clause-num">8.4</span><span class="clause-text"><strong>Право на выгрузку данных.</strong> В любой момент действия Подписки Пользователь вправе выгрузить весь свой Контент через Личный кабинет в формате CSV/PDF. Инструмент экспорта доступен без обращения в поддержку.</span></div>
+  <div class="clause"><span class="clause-num">8.5</span><span class="clause-text"><strong>Удаление данных.</strong> После расторжения договора данные хранятся 30 (тридцать) календарных дней, после чего удаляются. По письменному запросу Пользователя удаление производится досрочно в течение 5 рабочих дней.</span></div>
+  <div class="clause"><span class="clause-num">8.6</span><span class="clause-text"><strong>Безопасность.</strong> Передача данных осуществляется по зашифрованному протоколу HTTPS. Пароли хранятся в хэшированном виде. Доступ сотрудников к данным Пользователей возможен только при наличии обоснованной необходимости и оформляется внутренними процедурами.</span></div>
+  <div class="clause"><span class="clause-num">8.7</span><span class="clause-text">Акцептуя оферту, Пользователь даёт согласие на обработку своих персональных данных в целях исполнения настоящего договора. Согласие может быть отозвано в любой момент путём направления заявления на miss.kuznetsov@mail.ru. Отзыв согласия влечёт прекращение доступа к Платформе.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       09. ИНТЕЛЛЕКТУАЛЬНАЯ СОБСТВЕННОСТЬ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s9"><span class="sec-num">09</span> Интеллектуальная собственность</h2>
+
+  <div class="clause"><span class="clause-num">9.1</span><span class="clause-text">Платформа K-AQS, методология K-A-Q-S™, дизайн, программный код, алгоритмы диагностики, база рекомендаций, товарные знаки и иные объекты интеллектуальной собственности, составляющие Платформу, принадлежат Исполнителю.</span></div>
+  <div class="clause"><span class="clause-num">9.2</span><span class="clause-text">Настоящий договор предоставляет Пользователю <strong>неисключительное, непередаваемое право использования Платформы</strong> исключительно для нужд собственного бизнеса в личных целях на период действия Подписки.</span></div>
+  <div class="clause"><span class="clause-num">9.3</span><span class="clause-text">Пользователю <strong>запрещается</strong>:<br>
+    — копировать, воспроизводить, модифицировать программный код или алгоритмы Платформы;<br>
+    — осуществлять реверс-инжиниринг;<br>
+    — передавать доступ к Личному кабинету третьим лицам (за исключением уполномоченных сотрудников Пользователя);<br>
+    — перепродавать, сублицензировать или иным образом коммерчески использовать право доступа к Платформе;<br>
+    — публично распространять скриншоты, отчёты или иные материалы Платформы без письменного согласия Исполнителя.</span></div>
+  <div class="clause"><span class="clause-num">9.4</span><span class="clause-text"><strong>Контент Пользователя принадлежит Пользователю.</strong> Исполнитель не приобретает никаких прав на данные о бизнесе Пользователя, внесённые в Платформу, и не использует их в коммерческих целях.</span></div>
+  <div class="clause"><span class="clause-num">9.5</span><span class="clause-text">Исполнитель вправе использовать обезличенные и агрегированные данные (без идентификации конкретного Пользователя) для улучшения алгоритмов Платформы и формирования отраслевых бенчмарков.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       10. ОТВЕТСТВЕННОСТЬ СТОРОН
+  ══════════════════════════════════════════════ -->
+  <h2 id="s10"><span class="sec-num">10</span> Ответственность сторон</h2>
+
+  <div class="clause"><span class="clause-num">10.1</span><span class="clause-text"><strong>Платформа предоставляется «как есть» (as is).</strong> Исполнитель стремится обеспечить корректную работу Платформы, однако не гарантирует её бесперебойную и безошибочную работу, соответствие ожиданиям Пользователя или пригодность для решения конкретных бизнес-задач.</span></div>
+  <div class="clause"><span class="clause-num">10.2</span><span class="clause-text"><strong>Бизнес-результаты.</strong> Рекомендации Платформы носят информационно-аналитический характер. Исполнитель не несёт ответственности за финансовые, операционные или иные результаты, полученные Пользователем в результате применения или неприменения рекомендаций Платформы.</span></div>
+  <div class="clause"><span class="clause-num">10.3</span><span class="clause-text"><strong>Ограничение ответственности.</strong> Совокупная ответственность Исполнителя перед Пользователем по всем основаниям ограничена суммой фактически уплаченных Пользователем средств за <strong>последние 6 (шесть) месяцев</strong>, предшествующих событию, послужившему основанием для предъявления требований.</span></div>
+  <div class="clause"><span class="clause-num">10.4</span><span class="clause-text">Исполнитель не несёт ответственности за:<br>
+    — потерю данных вследствие действий самого Пользователя;<br>
+    — сбои в работе интернет-провайдеров, платёжных систем и иных третьих лиц;<br>
+    — несанкционированный доступ к аккаунту Пользователя, произошедший по причине компрометации учётных данных на стороне Пользователя;<br>
+    — убытки, вызванные неиспользованием Платформы.</span></div>
+  <div class="clause"><span class="clause-num">10.5</span><span class="clause-text"><strong>Форс-мажор.</strong> Стороны освобождаются от ответственности за частичное или полное неисполнение обязательств при наступлении обстоятельств непреодолимой силы: стихийные бедствия, военные действия, действия государственных органов, блокировки со стороны регуляторов, масштабные атаки на инфраструктуру интернета, иные обстоятельства, на которые сторона не могла повлиять. О наступлении форс-мажора сторона уведомляет другую в течение 3 рабочих дней.</span></div>
+  <div class="clause"><span class="clause-num">10.6</span><span class="clause-text"><strong>Ответственность Пользователя.</strong> Пользователь несёт полную ответственность за достоверность данных, вносимых в Платформу, за безопасность своих учётных данных, а также за соответствие своих действий в Платформе требованиям действующего законодательства.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       11. ИЗМЕНЕНИЕ УСЛОВИЙ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s11"><span class="sec-num">11</span> Изменение условий</h2>
+
+  <div class="clause"><span class="clause-num">11.1</span><span class="clause-text">Исполнитель вправе в одностороннем порядке изменять условия настоящего договора и Тарифы. Любые существенные изменения вступают в силу <strong>не ранее чем через 30 (тридцать) календарных дней</strong> после публикации обновлённой редакции на Сайте и уведомления Пользователей по email.</span></div>
+  <div class="clause"><span class="clause-num">11.2</span><span class="clause-text">Уведомление об изменении условий направляется Пользователю на email, указанный при регистрации. Пользователь несёт ответственность за актуальность контактных данных.</span></div>
+  <div class="clause"><span class="clause-num">11.3</span><span class="clause-text">Продолжение использования Платформы после вступления изменений в силу означает согласие Пользователя с обновлёнными условиями.</span></div>
+  <div class="clause"><span class="clause-num">11.4</span><span class="clause-text">Если Пользователь не согласен с изменёнными условиями, он вправе расторгнуть договор до даты их вступления в силу. В этом случае Пользователю возвращаются средства пропорционально неиспользованному Периоду в соответствии с п. 6.2.</span></div>
+  <div class="clause"><span class="clause-num">11.5</span><span class="clause-text">Технические изменения, улучшение функционала и исправление ошибок не являются изменением условий договора и могут вноситься в любое время без предварительного уведомления.</span></div>
+
+
+  <!-- ══════════════════════════════════════════════
+       12. ПРИМЕНИМОЕ ПРАВО, СПОРЫ, РЕКВИЗИТЫ
+  ══════════════════════════════════════════════ -->
+  <h2 id="s12"><span class="sec-num">12</span> Применимое право, споры и реквизиты</h2>
+
+  <div class="clause"><span class="clause-num">12.1</span><span class="clause-text">Настоящий договор регулируется <strong>законодательством Российской Федерации</strong>. К отношениям, не урегулированным настоящим договором, применяются нормы ГК РФ и иных применимых нормативно-правовых актов.</span></div>
+  <div class="clause"><span class="clause-num">12.2</span><span class="clause-text"><strong>Досудебный порядок.</strong> Все споры, разногласия и претензии, возникающие в связи с исполнением настоящего договора, решаются путём переговоров. Претензия направляется на email miss.kuznetsov@mail.ru. Срок рассмотрения претензии — <strong>10 (десять) рабочих дней</strong> с момента её получения.</span></div>
+  <div class="clause"><span class="clause-num">12.3</span><span class="clause-text">При невозможности урегулировать спор в досудебном порядке он передаётся на рассмотрение суда <strong>по месту регистрации Исполнителя</strong> в соответствии с действующим законодательством РФ.</span></div>
+  <div class="clause"><span class="clause-num">12.4</span><span class="clause-text">Если какое-либо положение настоящего договора будет признано недействительным или неисполнимым, это не влечёт недействительности остальных положений договора.</span></div>
+  <div class="clause"><span class="clause-num">12.5</span><span class="clause-text">Настоящий договор составлен на русском языке. При наличии версий на других языках приоритет имеет русскоязычная версия.</span></div>
+
   <div class="requisites">
-    <div class="req-row"><span class="req-key">Исполнитель</span><span class="req-val">Кузнецова Карина Геннадьевна</span></div>
-    <div class="req-row"><span class="req-key">Статус</span><span class="req-val">Самозанятый</span></div>
-    <div class="req-row"><span class="req-key">ИНН</span><span class="req-val">641305221167</span></div>
-    <div class="req-row"><span class="req-key">Email</span><span class="req-val">miss.kuznetsov@mail.ru</span></div>
-    <div class="req-row"><span class="req-key">Телефон</span><span class="req-val">+7 909 338 53 87</span></div>
+    <div class="req-row">
+      <span class="req-key">Исполнитель</span>
+      <span class="req-val">Кузнецова Карина Геннадьевна</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Статус</span>
+      <span class="req-val">Самозанятый (НПД)</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">ИНН</span>
+      <span class="req-val">641305221167</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Email</span>
+      <span class="req-val"><a href="mailto:miss.kuznetsov@mail.ru">miss.kuznetsov@mail.ru</a></span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Телефон</span>
+      <span class="req-val">+7 909 338 53 87</span>
+    </div>
+    <div class="req-row">
+      <span class="req-key">Сайт платформы</span>
+      <span class="req-val"><a href="https://kaqs.ru">kaqs.ru</a></span>
+    </div>
   </div>
 
 </main>
 
 <footer>
-  K-A-Q-S™ · Публичная оферта · Редакция от 19.03.2026
+  K-A-Q-S™ · Публичная оферта · Редакция от 25.03.2026<br>
+  Вопросы по документу: miss.kuznetsov@mail.ru
 </footer>
 
 </body>

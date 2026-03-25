@@ -422,10 +422,135 @@
       color: var(--text);
     }
 
+    /* Upsell */
+    .upsell-section {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .upsell-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .upsell-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .upsell-desc {
+      font-size: .85rem;
+      color: var(--text2);
+      margin-bottom: 28px;
+      max-width: 480px;
+      line-height: 1.65;
+    }
+    .upsell-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .upsell-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .upsell-card.featured { border-color: var(--accent-l); }
+    .upsell-card__tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .58rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .upsell-card.featured .upsell-card__tag { color: var(--accent-l); }
+    .upsell-card__name { font-size: .88rem; font-weight: 600; color: var(--text); }
+    .upsell-card__price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .upsell-card__period { font-size: .68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .upsell-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+    .upsell-card__features li {
+      font-size: .78rem;
+      color: var(--text2);
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      line-height: 1.4;
+    }
+    .upsell-card__features li::before {
+      content: '—';
+      color: var(--muted);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      margin-top: 1px;
+    }
+    .upsell-card__cta {
+      display: block;
+      text-align: center;
+      padding: 9px 12px;
+      background: var(--accent);
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 500;
+      border-radius: 7px;
+      transition: background .2s;
+    }
+    .upsell-card__cta:hover { background: var(--accent-l); }
+    .upsell-card__oferta {
+      display: block;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .58rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+    .upsell-card__oferta:hover { color: var(--text2); }
+    .upsell-sub-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .upsell-sub-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .upsell-cards-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 600px;
+    }
+
     @media (max-width: 680px) {
       .module-grid { grid-template-columns: 1fr; }
       .roadmap-grid { grid-template-columns: 1fr; }
       .score-right { max-width: 100%; }
+      .upsell-cards { grid-template-columns: 1fr; }
+      .upsell-cards-2 { grid-template-columns: 1fr; max-width: 100%; }
     }
   </style>
 </head>
@@ -740,6 +865,106 @@
           <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);">14 февраля 2025</span>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Upsell -->
+    <div class="upsell-section">
+      <p class="upsell-label">// Следующий шаг</p>
+      <h3 class="upsell-title">Что делать с этими результатами?</h3>
+      <p class="upsell-desc">Диагностика показала слабые места. Теперь нужно превратить это в конкретный план действий.</p>
+
+      <div class="upsell-sub-label">// Разовая услуга · Персональный Roadmap</div>
+      <div class="upsell-cards">
+        <div class="upsell-card">
+          <div>
+            <div class="upsell-card__tag">Тариф 01</div>
+            <div class="upsell-card__name">Roadmap Базовый</div>
+          </div>
+          <div>
+            <div class="upsell-card__price">9 900 ₽</div>
+            <div class="upsell-card__period">разово</div>
+          </div>
+          <ul class="upsell-card__features">
+            <li>90-дневный план по вашей диагностике</li>
+            <li>Приоритеты по 5 осям K-AQS</li>
+            <li>Конкретные шаги с датами</li>
+            <li>PDF, 3 рабочих дня</li>
+          </ul>
+          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
+          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
+        </div>
+        <div class="upsell-card featured">
+          <div>
+            <div class="upsell-card__tag">Тариф 02 · Рекомендуем</div>
+            <div class="upsell-card__name">Roadmap Расширенный</div>
+          </div>
+          <div>
+            <div class="upsell-card__price">19 900 ₽</div>
+            <div class="upsell-card__period">разово</div>
+          </div>
+          <ul class="upsell-card__features">
+            <li>Всё из «Базового»</li>
+            <li>Шаблоны для каждого шага</li>
+            <li>Чеклисты и ту-ду листы</li>
+            <li>Таблицы отслеживания</li>
+          </ul>
+          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
+          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
+        </div>
+        <div class="upsell-card">
+          <div>
+            <div class="upsell-card__tag">Тариф 03 · Максимум</div>
+            <div class="upsell-card__name">Комбо</div>
+          </div>
+          <div>
+            <div class="upsell-card__price">24 900 ₽</div>
+            <div class="upsell-card__period">разово</div>
+          </div>
+          <ul class="upsell-card__features">
+            <li>Всё из «Расширенного»</li>
+            <li>1 мес. платформы K-AQS</li>
+            <li>Дашборд, задачи, AI-агент</li>
+          </ul>
+          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
+          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
+        </div>
+      </div>
+
+      <div class="upsell-sub-label">// Подписка · Платформа K-AQS</div>
+      <div class="upsell-cards-2">
+        <div class="upsell-card">
+          <div>
+            <div class="upsell-card__tag">Тариф 04</div>
+            <div class="upsell-card__name">Платформа</div>
+          </div>
+          <div>
+            <div class="upsell-card__price">4 900 ₽</div>
+            <div class="upsell-card__period">/ месяц</div>
+          </div>
+          <ul class="upsell-card__features">
+            <li>Диагностика, дашборд, AI-агент</li>
+            <li>Задачи и трекинг прогресса</li>
+          </ul>
+          <a href="kaqs-quiz.html" class="upsell-card__cta">Подключить</a>
+          <a href="oferta.html" class="upsell-card__oferta">Условия подписки</a>
+        </div>
+        <div class="upsell-card featured">
+          <div>
+            <div class="upsell-card__tag">Тариф 05 · С наставником</div>
+            <div class="upsell-card__name">Платформа + Консультант</div>
+          </div>
+          <div>
+            <div class="upsell-card__price">9 900 ₽</div>
+            <div class="upsell-card__period">/ месяц</div>
+          </div>
+          <ul class="upsell-card__features">
+            <li>Платформа + 2 разбора в месяц</li>
+            <li>Ответ Карины за 48 часов</li>
+          </ul>
+          <a href="kaqs-quiz.html" class="upsell-card__cta">Подключить</a>
+          <a href="oferta.html" class="upsell-card__oferta">Условия подписки</a>
+        </div>
       </div>
     </div>
 

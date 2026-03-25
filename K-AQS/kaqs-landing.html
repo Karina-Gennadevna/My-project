@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -335,6 +335,111 @@
       line-height: 1.65;
     }
 
+    /* ── Pricing ── */
+    .pricing-group-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pricing-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .pricing-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .pricing-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 660px;
+    }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .price-card.featured {
+      border-color: var(--accent-l);
+    }
+    .price-card__tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .price-card.featured .price-card__tag { color: var(--accent-l); }
+    .price-card__name {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .price-card__amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .price-card__period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      color: var(--muted);
+    }
+    .price-card__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex: 1;
+    }
+    .price-card__list li {
+      font-size: .82rem;
+      color: var(--text2);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .price-card__list li::before {
+      content: '—';
+      color: var(--muted);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      margin-top: 2px;
+    }
+    .price-card__oferta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-align: center;
+      transition: color .15s;
+    }
+    .price-card__oferta:hover { color: var(--text2); }
+
+    @media (max-width: 720px) {
+      .pricing-grid-3 { grid-template-columns: 1fr; }
+      .pricing-grid-2 { grid-template-columns: 1fr; max-width: 100%; }
+    }
+
     /* ── Footer ── */
     footer {
       border-top: 1px solid var(--border);
@@ -496,7 +601,11 @@
   <footer>
     <div class="footer-inner">
       <span class="footer-copy">K-A-Q-S™ Platform</span>
-      <span class="footer-copy">© 2025 Karina AI Systems Architect</span>
+      <div style="display:flex;gap:20px">
+        <a href="oferta.html"         class="footer-copy" style="transition:color .15s" onmouseover="this.style.color='#B8B8B8'" onmouseout="this.style.color=''">Оферта (подписка)</a>
+        <a href="oferta-roadmap.html" class="footer-copy" style="transition:color .15s" onmouseover="this.style.color='#B8B8B8'" onmouseout="this.style.color=''">Оферта (Roadmap)</a>
+      </div>
+      <span class="footer-copy">© 2026 Karina AI Systems Architect</span>
     </div>
   </footer>
 

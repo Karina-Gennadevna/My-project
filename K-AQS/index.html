@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -1238,6 +1238,374 @@
   });
 })();
 </script>
+
+<!-- 02.5 QUICK CHECK -->
+<section class="section" id="quick-check" style="border-top:1px solid var(--border-subtle)">
+  <div class="container qc-wrap">
+    <div class="reveal" style="margin-bottom:56px;max-width:640px">
+      <p class="idx">02.5</p>
+      <h2>Проверьте управляемость<br>бизнеса за 30 секунд</h2>
+      <p style="margin-top:16px;font-size:17px;color:var(--text-secondary);line-height:1.65">
+        Три вопроса — и вы увидите, где ваша система даёт трещину.
+      </p>
+    </div>
+
+    <div class="reveal qc-panel" id="qc-panel">
+      <div class="qc-prog-row">
+        <div class="qc-prog"><div class="qc-prog__fill" id="qc-prog-fill"></div></div>
+        <span class="qc-prog-pct" id="qc-prog-pct">0%</span>
+      </div>
+
+      <!-- Q1: Процессы (K axis) -->
+      <div class="qc-step qc-step--active" id="qc-step-1">
+        <div class="qc-step-label">Вопрос 1 из 3 · K — Контроль процессов</div>
+        <div class="qc-q-text">Ваши ключевые бизнес-процессы зафиксированы в регламентах?</div>
+        <div class="qc-opts">
+          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,3,this)">Да — всё задокументировано, команда работает по инструкциям</button>
+          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,2,this)">Частично — ключевые процессы есть, остальное — «в головах»</button>
+          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,1,this)">Почти нет — работаем по договорённостям, без письменных правил</button>
+          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,0,this)">Нет — каждый делает как считает нужным</button>
+        </div>
+        <div class="qc-reaction" id="qc-reaction-1"></div>
+        <button class="qc-next-btn" id="qc-next-1" onclick="qcNext(1)">Следующий вопрос <span>→</span></button>
+      </div>
+
+      <!-- Q2: Решения (Q axis) -->
+      <div class="qc-step" id="qc-step-2">
+        <div class="qc-step-label">Вопрос 2 из 3 · Q — Качество решений</div>
+        <div class="qc-q-text">Что происходит с операционными решениями, когда вас нет рядом?</div>
+        <div class="qc-opts">
+          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,3,this)">Команда решает сама — есть критерии, полномочия и ответственность</button>
+          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,2,this)">Большинство решают, но сложные вопросы ждут меня</button>
+          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,1,this)">Решения откладываются или принимаются кое-как</button>
+          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,0,this)">Всё стопорится — без меня ничего не двигается</button>
+        </div>
+        <div class="qc-reaction" id="qc-reaction-2"></div>
+        <button class="qc-next-btn" id="qc-next-2" onclick="qcNext(2)">Следующий вопрос <span>→</span></button>
+      </div>
+
+      <!-- Q3: Масштабирование (S axis) -->
+      <div class="qc-step" id="qc-step-3">
+        <div class="qc-step-label">Вопрос 3 из 3 · S — Масштабируемость</div>
+        <div class="qc-q-text">Что произойдёт, если команда вырастет вдвое за три месяца?</div>
+        <div class="qc-opts">
+          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,3,this)">Справимся — есть онбординг, структура и прописанные роли</button>
+          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,2,this)">Справимся, но с напряжением — придётся многое переделывать</button>
+          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,1,this)">Скорее всего будет хаос — система к этому не готова</button>
+          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,0,this)">Полный хаос — мы с трудом держим нынешний размер</button>
+        </div>
+        <div class="qc-reaction" id="qc-reaction-3"></div>
+        <button class="qc-next-btn" id="qc-next-3" onclick="qcNext(3)">Посмотреть результат <span>→</span></button>
+      </div>
+
+      <!-- Result -->
+      <div class="qc-res" id="qc-res">
+        <div class="qc-res-top">
+          <div class="qc-index-block">
+            <div class="qc-index-num" id="qc-idx-num">—</div>
+            <div class="qc-index-label">Manageability<br>Index</div>
+          </div>
+          <div class="qc-hint" id="qc-hint"></div>
+        </div>
+
+        <div class="qc-axes">
+          <div class="qc-axis">
+            <div class="qc-axis-hd">
+              <span class="qc-axis-name" style="color:rgba(59,130,246,0.85)">K — Kontrol</span>
+              <span class="qc-axis-val" id="qc-val-k">0</span>
+            </div>
+            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-k" style="background:rgba(59,130,246,0.75)"></div></div>
+          </div>
+          <div class="qc-axis">
+            <div class="qc-axis-hd">
+              <span class="qc-axis-name" style="color:rgba(34,211,238,0.85)">A — Analytics</span>
+              <span class="qc-axis-val" id="qc-val-a">0</span>
+            </div>
+            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-a" style="background:rgba(34,211,238,0.75)"></div></div>
+          </div>
+          <div class="qc-axis">
+            <div class="qc-axis-hd">
+              <span class="qc-axis-name" style="color:rgba(99,102,241,0.85)">Q — Quality</span>
+              <span class="qc-axis-val" id="qc-val-q">0</span>
+            </div>
+            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-q" style="background:rgba(99,102,241,0.75)"></div></div>
+          </div>
+          <div class="qc-axis">
+            <div class="qc-axis-hd">
+              <span class="qc-axis-name" style="color:rgba(16,185,129,0.85)">S — Scale</span>
+              <span class="qc-axis-val" id="qc-val-s">0</span>
+            </div>
+            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-s" style="background:rgba(16,185,129,0.75)"></div></div>
+          </div>
+        </div>
+
+        <!-- Mini diamond graph -->
+        <div class="qc-graph-row">
+          <svg id="qc-graph-svg" width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="qcgw" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- Grid -->
+            <polygon points="70,18 118,70 70,122 22,70" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <polygon points="70,34 102,70 70,106 38,70" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="70" y1="18" x2="70" y2="122" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="22" y1="70" x2="118" y2="70" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <!-- Score polygon -->
+            <polygon id="qcgp" points="70,70 70,70 70,70 70,70" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.35)" stroke-width="1.5" style="transition:points 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+            <!-- Axis lines -->
+            <line id="qcgl-k" x1="70" y1="70" x2="70" y2="70" stroke="rgba(59,130,246,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
+            <line id="qcgl-a" x1="70" y1="70" x2="70" y2="70" stroke="rgba(34,211,238,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
+            <line id="qcgl-q" x1="70" y1="70" x2="70" y2="70" stroke="rgba(99,102,241,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
+            <line id="qcgl-s" x1="70" y1="70" x2="70" y2="70" stroke="rgba(16,185,129,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
+            <!-- Nodes -->
+            <circle id="qcgn-k" cx="70" cy="70" r="0" fill="rgba(59,130,246,0.9)" style="transition:all 0.9s 0.2s"/>
+            <circle id="qcgn-a" cx="70" cy="70" r="0" fill="rgba(34,211,238,0.9)" style="transition:all 0.9s 0.3s"/>
+            <circle id="qcgn-q" cx="70" cy="70" r="0" fill="rgba(99,102,241,0.9)" style="transition:all 0.9s 0.4s"/>
+            <circle id="qcgn-s" cx="70" cy="70" r="0" fill="rgba(16,185,129,0.9)" style="transition:all 0.9s 0.5s"/>
+            <!-- Labels -->
+            <text x="70" y="10" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(59,130,246,0.7)">K</text>
+            <text x="128" y="73" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(34,211,238,0.7)">A</text>
+            <text x="70" y="137" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(99,102,241,0.7)">Q</text>
+            <text x="12" y="73" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(16,185,129,0.7)">S</text>
+            <!-- CORE -->
+            <text x="70" y="67" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">CORE</text>
+            <text id="qcg-idx" x="70" y="78" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">—</text>
+          </svg>
+          <div class="qc-graph-legend">
+            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(59,130,246,0.9)"></div>K — Kontrol</div>
+            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(34,211,238,0.9)"></div>A — Analytics</div>
+            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(99,102,241,0.9)"></div>Q — Quality</div>
+            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(16,185,129,0.9)"></div>S — Scale</div>
+          </div>
+        </div>
+
+        <div class="qc-cta-row">
+          <a href="#cta" class="qc-cta-btn">Пройти полную диагностику →</a>
+          <button class="qc-restart" onclick="qcReset()">← Пройти ещё раз</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var answers = {};
+
+  function calcScores(a1, a2, a3) {
+    var K  = Math.round([22,42,62,78][a1] * 0.8 + [15,25,38,48][a3] * 0.2);
+    var A  = Math.round([18,35,52,68][a1] * 0.4 + [15,32,52,68][a2] * 0.6);
+    var Q  = [20,40,60,76][a2];
+    var S  = Math.round([18,35,52,70][a3] * 0.75 + [12,22,32,42][a1] * 0.25);
+    var idx = Math.round((K + A + Q + S) / 4);
+    return { K: K, A: A, Q: Q, S: S, idx: idx };
+  }
+
+  function hintText(idx) {
+    if (idx < 30) return 'Бизнес плохо управляем. Без системной работы рост будет генерировать только хаос.';
+    if (idx < 45) return 'Ниже нормы. Есть отдельные процессы, но система не работает как единое целое.';
+    if (idx < 60) return 'Средняя управляемость. Основа есть, но слабые оси тянут всё вниз.';
+    return 'Хорошая база. Система управляема — но есть точки, где рост обнажит слабости.';
+  }
+
+  function countUp(el, target, delay, dur) {
+    setTimeout(function(){
+      var start = null;
+      var from = 0;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(from + (target - from) * ease);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+
+  function animateBar(fillId, valId, score, delay) {
+    setTimeout(function(){
+      document.getElementById(fillId).style.width = score + '%';
+      var el = document.getElementById(valId);
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / 700, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(score * ease);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+
+  function updateGraph(sc) {
+    var cx = 70, cy = 70, r = 52; // max radius to diamond edge
+    var kS  = sc.K  / 100;
+    var aS  = sc.A  / 100;
+    var qS  = sc.Q  / 100;
+    var sS  = sc.S  / 100;
+    var kY  = cy - r * kS; // K top
+    var aX  = cx + r * aS; // A right
+    var qY  = cy + r * qS; // Q bottom
+    var sX  = cx - r * sS; // S left
+
+    setTimeout(function(){
+      var poly = document.getElementById('qcgp');
+      poly.setAttribute('points', cx+','+kY+' '+aX+','+cy+' '+cx+','+qY+' '+sX+','+cy);
+
+      document.getElementById('qcgl-k').setAttribute('x2', cx); document.getElementById('qcgl-k').setAttribute('y2', kY);
+      document.getElementById('qcgl-a').setAttribute('x2', aX); document.getElementById('qcgl-a').setAttribute('y2', cy);
+      document.getElementById('qcgl-q').setAttribute('x2', cx); document.getElementById('qcgl-q').setAttribute('y2', qY);
+      document.getElementById('qcgl-s').setAttribute('x2', sX); document.getElementById('qcgl-s').setAttribute('y2', cy);
+
+      var nr = function(v){ return 3 + v * 7; };
+      var nk = document.getElementById('qcgn-k'); nk.setAttribute('cx', cx); nk.setAttribute('cy', kY); nk.setAttribute('r', nr(kS));
+      var na = document.getElementById('qcgn-a'); na.setAttribute('cx', aX); na.setAttribute('cy', cy); na.setAttribute('r', nr(aS));
+      var nq = document.getElementById('qcgn-q'); nq.setAttribute('cx', cx); nq.setAttribute('cy', qY); nq.setAttribute('r', nr(qS));
+      var ns = document.getElementById('qcgn-s'); ns.setAttribute('cx', sX); ns.setAttribute('cy', cy); ns.setAttribute('r', nr(sS));
+
+      document.getElementById('qcg-idx').textContent = sc.idx;
+    }, 300);
+  }
+
+  function showResult(sc) {
+    document.getElementById('qc-hint').textContent = hintText(sc.idx);
+    ['k','a','q','s'].forEach(function(ax){ document.getElementById('qc-fill-'+ax).style.width = '0%'; });
+
+    var res = document.getElementById('qc-res');
+    res.classList.add('qc-res--active');
+
+    var idxEl = document.getElementById('qc-idx-num');
+    idxEl.textContent = '0';
+    countUp(idxEl, sc.idx, 200, 1000);
+
+    animateBar('qc-fill-k','qc-val-k', sc.K, 350);
+    animateBar('qc-fill-a','qc-val-a', sc.A, 500);
+    animateBar('qc-fill-q','qc-val-q', sc.Q, 650);
+    animateBar('qc-fill-s','qc-val-s', sc.S, 800);
+
+    updateGraph(sc);
+  }
+
+  var reactions = {
+    1: [
+      { type:'crit', text:'✖ Критическая зона — нет системы знаний' },
+      { type:'warn', text:'⚠ Риск потери знаний при смене кадров' },
+      { type:'warn', text:'⚠ Знания частично зафиксированы' },
+      { type:'ok',   text:'✔ Хорошая структура знаний' },
+    ],
+    2: [
+      { type:'crit', text:'✖ Критическая зона — всё на одном человеке' },
+      { type:'warn', text:'⚠ Решения блокируются — низкая скорость' },
+      { type:'warn', text:'⚠ Частичная зависимость от руководителя' },
+      { type:'ok',   text:'✔ Высокая автономность команды' },
+    ],
+    3: [
+      { type:'crit', text:'✖ Критическая зона — масштабирование невозможно' },
+      { type:'warn', text:'⚠ Текущая система не выдержит роста' },
+      { type:'warn', text:'⚠ Масштабирование возможно, но болезненно' },
+      { type:'ok',   text:'✔ Система готова к масштабированию' },
+    ],
+  };
+
+  function setPct(n) {
+    var el = document.getElementById('qc-prog-pct');
+    if(el) el.textContent = n + '%';
+  }
+
+  window.qcAnswer = function(q, val, btn) {
+    answers[q] = val;
+
+    // Disable all options, highlight selected
+    var step = document.getElementById('qc-step-' + q);
+    step.querySelectorAll('.qc-opt').forEach(function(opt) {
+      opt.style.opacity = '0.32';
+      opt.style.pointerEvents = 'none';
+      opt.classList.remove('qc-opt--selected');
+    });
+    if(btn) {
+      btn.style.opacity = '1';
+      btn.classList.add('qc-opt--selected');
+    }
+
+    // Update progress
+    var pct = Math.round(q * 33.33);
+    document.getElementById('qc-prog-fill').style.width = pct + '%';
+    setPct(pct);
+
+    // Show reaction
+    var rx = reactions[q][val];
+    var rxEl = document.getElementById('qc-reaction-' + q);
+    if(rxEl && rx) {
+      rxEl.textContent = rx.text;
+      rxEl.className = 'qc-reaction qc-reaction--' + rx.type + ' qc-reaction--visible';
+    }
+
+    // Show next button
+    var nextBtn = document.getElementById('qc-next-' + q);
+    if(nextBtn) nextBtn.classList.add('qc-next-btn--visible');
+  };
+
+  window.qcNext = function(q) {
+    if(q < 3) {
+      document.getElementById('qc-step-' + q).classList.remove('qc-step--active');
+      var next = document.getElementById('qc-step-' + (q+1));
+      next.classList.add('qc-step--active');
+      next.style.opacity = '0'; next.style.transform = 'translateX(20px)';
+      requestAnimationFrame(function(){
+        next.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+        next.style.opacity = '1'; next.style.transform = 'translateX(0)';
+      });
+    } else {
+      document.getElementById('qc-prog-fill').style.width = '100%';
+      setPct(100);
+      document.getElementById('qc-step-3').classList.remove('qc-step--active');
+      var sc = calcScores(answers[1], answers[2], answers[3]);
+      showResult(sc);
+    }
+  };
+
+  window.qcReset = function() {
+    answers = {};
+    document.getElementById('qc-prog-fill').style.width = '0%';
+    setPct(0);
+    document.getElementById('qc-res').classList.remove('qc-res--active');
+    document.getElementById('qc-idx-num').textContent = '—';
+    document.getElementById('qcg-idx').textContent = '—';
+    ['k','a','q','s'].forEach(function(ax){
+      document.getElementById('qc-fill-'+ax).style.width = '0%';
+      document.getElementById('qc-val-'+ax).textContent = '0';
+      var n = document.getElementById('qcgn-'+ax); n.setAttribute('r','0');
+    });
+    document.getElementById('qcgp').setAttribute('points','70,70 70,70 70,70 70,70');
+    ['k','a','q','s'].forEach(function(ax){
+      var l = document.getElementById('qcgl-'+ax);
+      l.setAttribute('x2','70'); l.setAttribute('y2','70');
+    });
+    for(var i=1; i<=3; i++) {
+      var s = document.getElementById('qc-step-'+i);
+      s.classList.remove('qc-step--active');
+      s.querySelectorAll('.qc-opt').forEach(function(opt){
+        opt.style.opacity = '';
+        opt.style.pointerEvents = '';
+        opt.classList.remove('qc-opt--selected');
+      });
+      var rx = document.getElementById('qc-reaction-'+i);
+      if(rx) rx.className = 'qc-reaction';
+      var nb = document.getElementById('qc-next-'+i);
+      if(nb) nb.classList.remove('qc-next-btn--visible');
+    }
+    var s1 = document.getElementById('qc-step-1');
+    s1.classList.add('qc-step--active');
+    s1.style.transition = ''; s1.style.opacity = ''; s1.style.transform = '';
+  };
+})();
+</script>
+
 
 <!-- 03 ARCHITECTURE -->
 <section class="section section--dense" id="architecture" style="border-top:1px solid var(--border-subtle)">
@@ -3188,373 +3556,6 @@
   .qc-restart:hover { color: var(--text-secondary); }
 </style>
 
-<!-- 05.5 QUICK CHECK -->
-<section class="section" id="quick-check" style="border-top:1px solid var(--border-subtle)">
-  <div class="container qc-wrap">
-    <div class="reveal" style="margin-bottom:56px;max-width:640px">
-      <p class="idx">05.5</p>
-      <h2>Проверьте управляемость<br>бизнеса за 30 секунд</h2>
-      <p style="margin-top:16px;font-size:17px;color:var(--text-secondary);line-height:1.65">
-        Три вопроса — и вы увидите, где ваша система даёт трещину.
-      </p>
-    </div>
-
-    <div class="reveal qc-panel" id="qc-panel">
-      <div class="qc-prog-row">
-        <div class="qc-prog"><div class="qc-prog__fill" id="qc-prog-fill"></div></div>
-        <span class="qc-prog-pct" id="qc-prog-pct">0%</span>
-      </div>
-
-      <!-- Q1: Процессы (K axis) -->
-      <div class="qc-step qc-step--active" id="qc-step-1">
-        <div class="qc-step-label">Вопрос 1 из 3 · K — Контроль процессов</div>
-        <div class="qc-q-text">Ваши ключевые бизнес-процессы зафиксированы в регламентах?</div>
-        <div class="qc-opts">
-          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,3,this)">Да — всё задокументировано, команда работает по инструкциям</button>
-          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,2,this)">Частично — ключевые процессы есть, остальное — «в головах»</button>
-          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,1,this)">Почти нет — работаем по договорённостям, без письменных правил</button>
-          <button class="qc-opt qc-opt--k" onclick="qcAnswer(1,0,this)">Нет — каждый делает как считает нужным</button>
-        </div>
-        <div class="qc-reaction" id="qc-reaction-1"></div>
-        <button class="qc-next-btn" id="qc-next-1" onclick="qcNext(1)">Следующий вопрос <span>→</span></button>
-      </div>
-
-      <!-- Q2: Решения (Q axis) -->
-      <div class="qc-step" id="qc-step-2">
-        <div class="qc-step-label">Вопрос 2 из 3 · Q — Качество решений</div>
-        <div class="qc-q-text">Что происходит с операционными решениями, когда вас нет рядом?</div>
-        <div class="qc-opts">
-          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,3,this)">Команда решает сама — есть критерии, полномочия и ответственность</button>
-          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,2,this)">Большинство решают, но сложные вопросы ждут меня</button>
-          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,1,this)">Решения откладываются или принимаются кое-как</button>
-          <button class="qc-opt qc-opt--q" onclick="qcAnswer(2,0,this)">Всё стопорится — без меня ничего не двигается</button>
-        </div>
-        <div class="qc-reaction" id="qc-reaction-2"></div>
-        <button class="qc-next-btn" id="qc-next-2" onclick="qcNext(2)">Следующий вопрос <span>→</span></button>
-      </div>
-
-      <!-- Q3: Масштабирование (S axis) -->
-      <div class="qc-step" id="qc-step-3">
-        <div class="qc-step-label">Вопрос 3 из 3 · S — Масштабируемость</div>
-        <div class="qc-q-text">Что произойдёт, если команда вырастет вдвое за три месяца?</div>
-        <div class="qc-opts">
-          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,3,this)">Справимся — есть онбординг, структура и прописанные роли</button>
-          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,2,this)">Справимся, но с напряжением — придётся многое переделывать</button>
-          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,1,this)">Скорее всего будет хаос — система к этому не готова</button>
-          <button class="qc-opt qc-opt--s" onclick="qcAnswer(3,0,this)">Полный хаос — мы с трудом держим нынешний размер</button>
-        </div>
-        <div class="qc-reaction" id="qc-reaction-3"></div>
-        <button class="qc-next-btn" id="qc-next-3" onclick="qcNext(3)">Посмотреть результат <span>→</span></button>
-      </div>
-
-      <!-- Result -->
-      <div class="qc-res" id="qc-res">
-        <div class="qc-res-top">
-          <div class="qc-index-block">
-            <div class="qc-index-num" id="qc-idx-num">—</div>
-            <div class="qc-index-label">Manageability<br>Index</div>
-          </div>
-          <div class="qc-hint" id="qc-hint"></div>
-        </div>
-
-        <div class="qc-axes">
-          <div class="qc-axis">
-            <div class="qc-axis-hd">
-              <span class="qc-axis-name" style="color:rgba(59,130,246,0.85)">K — Kontrol</span>
-              <span class="qc-axis-val" id="qc-val-k">0</span>
-            </div>
-            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-k" style="background:rgba(59,130,246,0.75)"></div></div>
-          </div>
-          <div class="qc-axis">
-            <div class="qc-axis-hd">
-              <span class="qc-axis-name" style="color:rgba(34,211,238,0.85)">A — Analytics</span>
-              <span class="qc-axis-val" id="qc-val-a">0</span>
-            </div>
-            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-a" style="background:rgba(34,211,238,0.75)"></div></div>
-          </div>
-          <div class="qc-axis">
-            <div class="qc-axis-hd">
-              <span class="qc-axis-name" style="color:rgba(99,102,241,0.85)">Q — Quality</span>
-              <span class="qc-axis-val" id="qc-val-q">0</span>
-            </div>
-            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-q" style="background:rgba(99,102,241,0.75)"></div></div>
-          </div>
-          <div class="qc-axis">
-            <div class="qc-axis-hd">
-              <span class="qc-axis-name" style="color:rgba(16,185,129,0.85)">S — Scale</span>
-              <span class="qc-axis-val" id="qc-val-s">0</span>
-            </div>
-            <div class="qc-axis-track"><div class="qc-axis-fill" id="qc-fill-s" style="background:rgba(16,185,129,0.75)"></div></div>
-          </div>
-        </div>
-
-        <!-- Mini diamond graph -->
-        <div class="qc-graph-row">
-          <svg id="qc-graph-svg" width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <filter id="qcgw" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <!-- Grid -->
-            <polygon points="70,18 118,70 70,122 22,70" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-            <polygon points="70,34 102,70 70,106 38,70" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="70" y1="18" x2="70" y2="122" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="22" y1="70" x2="118" y2="70" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <!-- Score polygon -->
-            <polygon id="qcgp" points="70,70 70,70 70,70 70,70" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.35)" stroke-width="1.5" style="transition:points 0.9s cubic-bezier(0.4,0,0.2,1)"/>
-            <!-- Axis lines -->
-            <line id="qcgl-k" x1="70" y1="70" x2="70" y2="70" stroke="rgba(59,130,246,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
-            <line id="qcgl-a" x1="70" y1="70" x2="70" y2="70" stroke="rgba(34,211,238,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
-            <line id="qcgl-q" x1="70" y1="70" x2="70" y2="70" stroke="rgba(99,102,241,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
-            <line id="qcgl-s" x1="70" y1="70" x2="70" y2="70" stroke="rgba(16,185,129,0.5)" stroke-width="1.5" style="transition:all 0.9s"/>
-            <!-- Nodes -->
-            <circle id="qcgn-k" cx="70" cy="70" r="0" fill="rgba(59,130,246,0.9)" style="transition:all 0.9s 0.2s"/>
-            <circle id="qcgn-a" cx="70" cy="70" r="0" fill="rgba(34,211,238,0.9)" style="transition:all 0.9s 0.3s"/>
-            <circle id="qcgn-q" cx="70" cy="70" r="0" fill="rgba(99,102,241,0.9)" style="transition:all 0.9s 0.4s"/>
-            <circle id="qcgn-s" cx="70" cy="70" r="0" fill="rgba(16,185,129,0.9)" style="transition:all 0.9s 0.5s"/>
-            <!-- Labels -->
-            <text x="70" y="10" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(59,130,246,0.7)">K</text>
-            <text x="128" y="73" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(34,211,238,0.7)">A</text>
-            <text x="70" y="137" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(99,102,241,0.7)">Q</text>
-            <text x="12" y="73" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(16,185,129,0.7)">S</text>
-            <!-- CORE -->
-            <text x="70" y="67" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">CORE</text>
-            <text id="qcg-idx" x="70" y="78" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">—</text>
-          </svg>
-          <div class="qc-graph-legend">
-            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(59,130,246,0.9)"></div>K — Kontrol</div>
-            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(34,211,238,0.9)"></div>A — Analytics</div>
-            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(99,102,241,0.9)"></div>Q — Quality</div>
-            <div class="qc-graph-legend-item"><div class="qc-graph-legend-dot" style="background:rgba(16,185,129,0.9)"></div>S — Scale</div>
-          </div>
-        </div>
-
-        <div class="qc-cta-row">
-          <a href="#cta" class="qc-cta-btn">Пройти полную диагностику →</a>
-          <button class="qc-restart" onclick="qcReset()">← Пройти ещё раз</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-(function(){
-  var answers = {};
-
-  function calcScores(a1, a2, a3) {
-    var K  = Math.round([22,42,62,78][a1] * 0.8 + [15,25,38,48][a3] * 0.2);
-    var A  = Math.round([18,35,52,68][a1] * 0.4 + [15,32,52,68][a2] * 0.6);
-    var Q  = [20,40,60,76][a2];
-    var S  = Math.round([18,35,52,70][a3] * 0.75 + [12,22,32,42][a1] * 0.25);
-    var idx = Math.round((K + A + Q + S) / 4);
-    return { K: K, A: A, Q: Q, S: S, idx: idx };
-  }
-
-  function hintText(idx) {
-    if (idx < 30) return 'Бизнес плохо управляем. Без системной работы рост будет генерировать только хаос.';
-    if (idx < 45) return 'Ниже нормы. Есть отдельные процессы, но система не работает как единое целое.';
-    if (idx < 60) return 'Средняя управляемость. Основа есть, но слабые оси тянут всё вниз.';
-    return 'Хорошая база. Система управляема — но есть точки, где рост обнажит слабости.';
-  }
-
-  function countUp(el, target, delay, dur) {
-    setTimeout(function(){
-      var start = null;
-      var from = 0;
-      function step(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / dur, 1);
-        var ease = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(from + (target - from) * ease);
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }, delay);
-  }
-
-  function animateBar(fillId, valId, score, delay) {
-    setTimeout(function(){
-      document.getElementById(fillId).style.width = score + '%';
-      var el = document.getElementById(valId);
-      var start = null;
-      function step(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / 700, 1);
-        var ease = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(score * ease);
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }, delay);
-  }
-
-  function updateGraph(sc) {
-    var cx = 70, cy = 70, r = 52; // max radius to diamond edge
-    var kS  = sc.K  / 100;
-    var aS  = sc.A  / 100;
-    var qS  = sc.Q  / 100;
-    var sS  = sc.S  / 100;
-    var kY  = cy - r * kS; // K top
-    var aX  = cx + r * aS; // A right
-    var qY  = cy + r * qS; // Q bottom
-    var sX  = cx - r * sS; // S left
-
-    setTimeout(function(){
-      var poly = document.getElementById('qcgp');
-      poly.setAttribute('points', cx+','+kY+' '+aX+','+cy+' '+cx+','+qY+' '+sX+','+cy);
-
-      document.getElementById('qcgl-k').setAttribute('x2', cx); document.getElementById('qcgl-k').setAttribute('y2', kY);
-      document.getElementById('qcgl-a').setAttribute('x2', aX); document.getElementById('qcgl-a').setAttribute('y2', cy);
-      document.getElementById('qcgl-q').setAttribute('x2', cx); document.getElementById('qcgl-q').setAttribute('y2', qY);
-      document.getElementById('qcgl-s').setAttribute('x2', sX); document.getElementById('qcgl-s').setAttribute('y2', cy);
-
-      var nr = function(v){ return 3 + v * 7; };
-      var nk = document.getElementById('qcgn-k'); nk.setAttribute('cx', cx); nk.setAttribute('cy', kY); nk.setAttribute('r', nr(kS));
-      var na = document.getElementById('qcgn-a'); na.setAttribute('cx', aX); na.setAttribute('cy', cy); na.setAttribute('r', nr(aS));
-      var nq = document.getElementById('qcgn-q'); nq.setAttribute('cx', cx); nq.setAttribute('cy', qY); nq.setAttribute('r', nr(qS));
-      var ns = document.getElementById('qcgn-s'); ns.setAttribute('cx', sX); ns.setAttribute('cy', cy); ns.setAttribute('r', nr(sS));
-
-      document.getElementById('qcg-idx').textContent = sc.idx;
-    }, 300);
-  }
-
-  function showResult(sc) {
-    document.getElementById('qc-hint').textContent = hintText(sc.idx);
-    ['k','a','q','s'].forEach(function(ax){ document.getElementById('qc-fill-'+ax).style.width = '0%'; });
-
-    var res = document.getElementById('qc-res');
-    res.classList.add('qc-res--active');
-
-    var idxEl = document.getElementById('qc-idx-num');
-    idxEl.textContent = '0';
-    countUp(idxEl, sc.idx, 200, 1000);
-
-    animateBar('qc-fill-k','qc-val-k', sc.K, 350);
-    animateBar('qc-fill-a','qc-val-a', sc.A, 500);
-    animateBar('qc-fill-q','qc-val-q', sc.Q, 650);
-    animateBar('qc-fill-s','qc-val-s', sc.S, 800);
-
-    updateGraph(sc);
-  }
-
-  var reactions = {
-    1: [
-      { type:'crit', text:'✖ Критическая зона — нет системы знаний' },
-      { type:'warn', text:'⚠ Риск потери знаний при смене кадров' },
-      { type:'warn', text:'⚠ Знания частично зафиксированы' },
-      { type:'ok',   text:'✔ Хорошая структура знаний' },
-    ],
-    2: [
-      { type:'crit', text:'✖ Критическая зона — всё на одном человеке' },
-      { type:'warn', text:'⚠ Решения блокируются — низкая скорость' },
-      { type:'warn', text:'⚠ Частичная зависимость от руководителя' },
-      { type:'ok',   text:'✔ Высокая автономность команды' },
-    ],
-    3: [
-      { type:'crit', text:'✖ Критическая зона — масштабирование невозможно' },
-      { type:'warn', text:'⚠ Текущая система не выдержит роста' },
-      { type:'warn', text:'⚠ Масштабирование возможно, но болезненно' },
-      { type:'ok',   text:'✔ Система готова к масштабированию' },
-    ],
-  };
-
-  function setPct(n) {
-    var el = document.getElementById('qc-prog-pct');
-    if(el) el.textContent = n + '%';
-  }
-
-  window.qcAnswer = function(q, val, btn) {
-    answers[q] = val;
-
-    // Disable all options, highlight selected
-    var step = document.getElementById('qc-step-' + q);
-    step.querySelectorAll('.qc-opt').forEach(function(opt) {
-      opt.style.opacity = '0.32';
-      opt.style.pointerEvents = 'none';
-      opt.classList.remove('qc-opt--selected');
-    });
-    if(btn) {
-      btn.style.opacity = '1';
-      btn.classList.add('qc-opt--selected');
-    }
-
-    // Update progress
-    var pct = Math.round(q * 33.33);
-    document.getElementById('qc-prog-fill').style.width = pct + '%';
-    setPct(pct);
-
-    // Show reaction
-    var rx = reactions[q][val];
-    var rxEl = document.getElementById('qc-reaction-' + q);
-    if(rxEl && rx) {
-      rxEl.textContent = rx.text;
-      rxEl.className = 'qc-reaction qc-reaction--' + rx.type + ' qc-reaction--visible';
-    }
-
-    // Show next button
-    var nextBtn = document.getElementById('qc-next-' + q);
-    if(nextBtn) nextBtn.classList.add('qc-next-btn--visible');
-  };
-
-  window.qcNext = function(q) {
-    if(q < 3) {
-      document.getElementById('qc-step-' + q).classList.remove('qc-step--active');
-      var next = document.getElementById('qc-step-' + (q+1));
-      next.classList.add('qc-step--active');
-      next.style.opacity = '0'; next.style.transform = 'translateX(20px)';
-      requestAnimationFrame(function(){
-        next.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-        next.style.opacity = '1'; next.style.transform = 'translateX(0)';
-      });
-    } else {
-      document.getElementById('qc-prog-fill').style.width = '100%';
-      setPct(100);
-      document.getElementById('qc-step-3').classList.remove('qc-step--active');
-      var sc = calcScores(answers[1], answers[2], answers[3]);
-      showResult(sc);
-    }
-  };
-
-  window.qcReset = function() {
-    answers = {};
-    document.getElementById('qc-prog-fill').style.width = '0%';
-    setPct(0);
-    document.getElementById('qc-res').classList.remove('qc-res--active');
-    document.getElementById('qc-idx-num').textContent = '—';
-    document.getElementById('qcg-idx').textContent = '—';
-    ['k','a','q','s'].forEach(function(ax){
-      document.getElementById('qc-fill-'+ax).style.width = '0%';
-      document.getElementById('qc-val-'+ax).textContent = '0';
-      var n = document.getElementById('qcgn-'+ax); n.setAttribute('r','0');
-    });
-    document.getElementById('qcgp').setAttribute('points','70,70 70,70 70,70 70,70');
-    ['k','a','q','s'].forEach(function(ax){
-      var l = document.getElementById('qcgl-'+ax);
-      l.setAttribute('x2','70'); l.setAttribute('y2','70');
-    });
-    for(var i=1; i<=3; i++) {
-      var s = document.getElementById('qc-step-'+i);
-      s.classList.remove('qc-step--active');
-      s.querySelectorAll('.qc-opt').forEach(function(opt){
-        opt.style.opacity = '';
-        opt.style.pointerEvents = '';
-        opt.classList.remove('qc-opt--selected');
-      });
-      var rx = document.getElementById('qc-reaction-'+i);
-      if(rx) rx.className = 'qc-reaction';
-      var nb = document.getElementById('qc-next-'+i);
-      if(nb) nb.classList.remove('qc-next-btn--visible');
-    }
-    var s1 = document.getElementById('qc-step-1');
-    s1.classList.add('qc-step--active');
-    s1.style.transition = ''; s1.style.opacity = ''; s1.style.transform = '';
-  };
-})();
-</script>
-
 <style>
   #cta {
     position: relative;
@@ -3608,6 +3609,12 @@
         <a href="#report-example" class="footer__link">Пример отчёта</a>
         <a href="#cta"            class="footer__link">Начать</a>
       </nav>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase">// Документы</span>
+        <a href="oferta.html"         style="font-size:12px;color:var(--text-muted);transition:color 150ms;font-family:var(--font-mono);" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-muted)'">Условия подписки</a>
+        <span style="color:rgba(255,255,255,0.12);font-size:12px">·</span>
+        <a href="oferta-roadmap.html" style="font-size:12px;color:var(--text-muted);transition:color 150ms;font-family:var(--font-mono);" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-muted)'">Условия Roadmap</a>
+      </div>
       <p style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">
         Методология K-A-Q-S™ разработана Кариной Карабут — AI-стратегом и операционным архитектором.
       </p>
