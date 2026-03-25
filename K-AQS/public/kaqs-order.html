@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заявка — K-AQS™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #080A0C;
+      --bg2:     #0F1215;
+      --bg3:     #161A1F;
+      --border:  #1E2530;
+      --text:    #F1F5F9;
+      --muted:   #64748B;
+      --accent:  #F97316;
+      --accent2: #FB923C;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--text); }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .order-wrap {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .order-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .order-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .tariff-selected {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .tariff-selected__tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .tariff-selected__name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .tariff-selected__price {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .tariff-selected__period {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .step-text strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .cta-tg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background .2s, transform .15s;
+      margin-bottom: 12px;
+    }
+    .cta-tg:hover {
+      background: var(--accent2);
+      transform: translateY(-1px);
+    }
+    .cta-tg svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .cta-hint {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .oferta-link {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 24px;
+    }
+    .oferta-link a {
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .oferta-link a:hover { color: var(--text); }
+
+    .copy-notice {
+      display: none;
+      text-align: center;
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 16px 20px; }
+      .tariff-selected { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">K-<span>A</span>QS<sup>™</sup></a>
+    <a href="javascript:history.back()" class="nav-back">← Назад</a>
+  </nav>
+
+  <main>
+    <div class="order-wrap">
+
+      <p class="order-label">// Заявка</p>
+      <h1 id="order-title">Оформить заказ</h1>
+      <p class="order-sub">Напишите нам в Telegram — ответим в течение 24 часов и пришлём ссылку на оплату.</p>
+
+      <div class="tariff-selected">
+        <div>
+          <div class="tariff-selected__tag" id="card-tag">Тариф</div>
+          <div class="tariff-selected__name" id="card-name">—</div>
+        </div>
+        <div style="text-align:right">
+          <div class="tariff-selected__price" id="card-price">—</div>
+          <div class="tariff-selected__period" id="card-period"></div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Напишите в Telegram</strong>
+            Название тарифа скопируется автоматически — просто отправьте сообщение.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Оплата</strong>
+            Пришлём ссылку на оплату картой через ЮKassa. Безопасно.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text" id="step3-text">
+            <strong>Получаете результат</strong>
+            В течение 3 рабочих дней — PDF с вашим персональным Roadmap.
+          </div>
+        </div>
+      </div>
+
+      <a href="https://t.me/KarinaGen" target="_blank" rel="noopener" class="cta-tg" id="tg-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.77-1.69 7.94c-.12.55-.45.68-.91.42l-2.52-1.86-1.22 1.17c-.13.13-.25.25-.51.25l.18-2.56 4.63-4.18c.2-.18-.05-.28-.31-.1L7.6 14.47l-2.45-.77c-.53-.17-.54-.53.11-.78l9.57-3.69c.44-.16.83.11.1.54z"/>
+        </svg>
+        Написать в Telegram
+      </a>
+      <p class="copy-notice" id="copy-notice">Текст заявки скопирован — вставьте его в чат</p>
+      <p class="cta-hint">@KarinaGen · отвечаю в течение 24 часов</p>
+
+      <p class="oferta-link" id="oferta-link">
+        Оформляя заявку, вы соглашаетесь с <a href="oferta-roadmap.html">условиями договора</a>
+      </p>
+
+    </div>
+  </main>
+
+  <script>
+    const TARIFFS = {
+      'roadmap-basic': {
+        tag: 'Тариф 01 · Разовая услуга',
+        name: 'Roadmap Базовый',
+        price: '9 900 ₽',
+        period: 'разово',
+        step3: '<strong>Получаете результат</strong>В течение 3 рабочих дней — PDF с вашим персональным Roadmap.',
+        oferta: 'oferta-roadmap.html',
+        ofertaText: 'условиями договора',
+        msg: 'Привет! Хочу заказать Roadmap Базовый (9 900 ₽)'
+      },
+      'roadmap-pro': {
+        tag: 'Тариф 02 · Рекомендуем',
+        name: 'Roadmap Расширенный',
+        price: '19 900 ₽',
+        period: 'разово',
+        step3: '<strong>Получаете результат</strong>В течение 3 рабочих дней — Roadmap + шаблоны, чеклисты, таблицы.',
+        oferta: 'oferta-roadmap.html',
+        ofertaText: 'условиями договора',
+        msg: 'Привет! Хочу заказать Roadmap Расширенный (19 900 ₽)'
+      },
+      'combo': {
+        tag: 'Тариф 03 · Максимум',
+        name: 'Комбо',
+        price: '24 900 ₽',
+        period: 'разово',
+        step3: '<strong>Получаете результат</strong>В течение 3 рабочих дней — Roadmap + 1 месяц доступа к платформе.',
+        oferta: 'oferta-roadmap.html',
+        ofertaText: 'условиями договора',
+        msg: 'Привет! Хочу заказать Комбо (24 900 ₽)'
+      },
+      'platform': {
+        tag: 'Тариф 04 · Подписка',
+        name: 'Платформа',
+        price: '4 900 ₽',
+        period: '/ месяц',
+        step3: '<strong>Получаете доступ</strong>В течение 1 рабочего дня после оплаты — доступ к платформе K-AQS.',
+        oferta: 'oferta.html',
+        ofertaText: 'условиями подписки',
+        msg: 'Привет! Хочу подключить Платформу K-AQS (4 900 ₽/мес)'
+      },
+      'platform-pro': {
+        tag: 'Тариф 05 · С наставником',
+        name: 'Платформа + Консультант',
+        price: '9 900 ₽',
+        period: '/ месяц',
+        step3: '<strong>Получаете доступ</strong>Доступ к платформе + первый разбор в течение 3 рабочих дней.',
+        oferta: 'oferta.html',
+        ofertaText: 'условиями подписки',
+        msg: 'Привет! Хочу подключить Платформу + Консультант (9 900 ₽/мес)'
+      }
+    };
+
+    const key = new URLSearchParams(window.location.search).get('tariff');
+    const t = TARIFFS[key];
+
+    if (t) {
+      document.getElementById('order-title').textContent = 'Оформить «' + t.name + '»';
+      document.getElementById('card-tag').textContent = t.tag;
+      document.getElementById('card-name').textContent = t.name;
+      document.getElementById('card-price').textContent = t.price;
+      document.getElementById('card-period').textContent = t.period;
+      document.getElementById('step3-text').innerHTML = t.step3;
+      document.getElementById('oferta-link').innerHTML =
+        'Оформляя заявку, вы соглашаетесь с <a href="' + t.oferta + '">' + t.ofertaText + '</a>';
+
+      document.getElementById('tg-btn').addEventListener('click', function() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(t.msg).then(function() {
+            document.getElementById('copy-notice').style.display = 'block';
+          }).catch(function() {});
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
