@@ -2383,12 +2383,23 @@ function renderResults() {
   }
 
   // Save and compare
+  const fullAnswers = QUESTIONS.map((q, i) => ({
+    axis: q.axis,
+    axisName: q.axisName,
+    question: q.text,
+    chosen: q.answers[S.answers[i]] ? q.answers[S.answers[i]].label : '',
+    score: q.answers[S.answers[i]] ? q.answers[S.answers[i]].score : 0,
+    maxScore: 4
+  }))
+
   const result = {
     ts: Date.now(),
     date: now.toLocaleDateString('ru-RU'),
     name: S.name,
+    contact: S.contact,
     index,
     scores: pct,
+    answers: fullAnswers,
   }
   const prev = getPrevResult()
   saveResult(result)

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ваш Roadmap — K-AQS™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #080A0C;
+      --bg2:     #0F1215;
+      --bg3:     #161A1F;
+      --border:  #1E2530;
+      --text:    #F1F5F9;
+      --text2:   #94A3B8;
+      --muted:   #475569;
+      --accent:  #F97316;
+      --accent2: #FB923C;
+      --green:   #22C55E;
+      --red:     #EF4444;
+      --yellow:  #EAB308;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--bg); z-index: 10;
+    }
+    .nav-logo { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 500; color: var(--text); text-decoration: none; letter-spacing: .05em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-print { font-size: 13px; color: var(--muted); cursor: pointer; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; color: var(--text2); transition: border-color .2s; }
+    .nav-print:hover { border-color: var(--text2); }
+
+    /* Loading */
+    .loading {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 60vh; gap: 20px; text-align: center;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 2px solid var(--border);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; }
+    .loading-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .loading-step { font-size: 13px; color: var(--muted); transition: color .3s; }
+    .loading-step.active { color: var(--text2); }
+    .loading-step.done { color: var(--green); }
+
+    /* Error */
+    .error-state { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; text-align: center; padding: 40px 20px; }
+    .error-state h2 { font-size: 20px; }
+    .error-state p { font-size: 14px; color: var(--text2); max-width: 400px; line-height: 1.6; }
+
+    /* Page */
+    .page { max-width: 860px; margin: 0 auto; padding: 48px 20px 80px; display: none; }
+
+    /* Section */
+    .section { margin-bottom: 24px; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      color: var(--accent); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+
+    /* Card base */
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+
+    /* 1. Status */
+    .status-card {
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+    }
+    .status-ring { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+    .status-ring svg { transform: rotate(-90deg); }
+    .status-ring-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .status-ring-num { font-size: 22px; font-weight: 700; line-height: 1; }
+    .status-ring-sub { font-size: 10px; color: var(--muted); }
+    .status-text { flex: 1; }
+    .status-label { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .status-points { display: flex; flex-direction: column; gap: 6px; }
+    .status-point { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--text2); }
+    .status-point::before { content: '—'; color: var(--accent); flex-shrink: 0; }
+
+    /* 2. Losses */
+    .losses-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .loss-num { background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.2); border-radius: 10px; padding: 16px 20px; }
+    .loss-num-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+    .loss-num-val { font-size: 18px; font-weight: 700; color: var(--text); }
+    .loss-reasons { display: flex; flex-direction: column; gap: 10px; }
+    .loss-reason { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; }
+    .loss-arrow { color: var(--red); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+    .loss-cause { color: var(--text2); }
+    .loss-effect { color: var(--text); font-weight: 500; }
+
+    /* 3. Problems */
+    .problems-list { display: flex; flex-direction: column; gap: 10px; }
+    .problem-item { display: flex; align-items: flex-start; gap: 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .problem-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 7px; }
+    .problem-text { flex: 1; }
+    .problem-main { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .problem-consequence { font-size: 13px; color: var(--text2); }
+    .problem-arrow { color: var(--muted); margin: 0 4px; }
+
+    /* 4. Root cause */
+    .root-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+    .root-row { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; }
+    .root-row + .root-row { border-top: 1px solid var(--border); }
+    .root-badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .root-illusion .root-badge { color: var(--yellow); background: rgba(234,179,8,.1); border: 1px solid rgba(234,179,8,.2); }
+    .root-reality .root-badge { color: var(--green); background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); }
+    .root-text { font-size: 14px; line-height: 1.6; color: var(--text2); }
+    .root-reality .root-text { color: var(--text); font-weight: 500; }
+
+    /* 5. Priorities */
+    .priorities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .priority-col { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .priority-col-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+    .critical-col .priority-col-label { color: var(--red); }
+    .important-col .priority-col-label { color: var(--yellow); }
+    .later-col .priority-col-label { color: var(--text2); }
+    .priority-items { display: flex; flex-direction: column; gap: 6px; }
+    .priority-item { font-size: 13px; color: var(--text2); line-height: 1.5; padding-left: 12px; position: relative; }
+    .priority-item::before { content: ''; position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; }
+    .critical-col .priority-item::before { background: var(--red); }
+    .important-col .priority-item::before { background: var(--yellow); }
+    .later-col .priority-item::before { background: var(--muted); }
+
+    /* 6. Roadmap */
+    .roadmap-phases { display: flex; flex-direction: column; gap: 12px; }
+    .phase-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+    .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .phase-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); background: rgba(249,115,22,.1); border: 1px solid rgba(249,115,22,.2); border-radius: 4px; padding: 3px 8px; white-space: nowrap; }
+    .phase-goal { font-size: 15px; font-weight: 600; }
+    .phase-actions { display: flex; flex-direction: column; gap: 8px; }
+    .phase-action { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .action-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); min-width: 20px; margin-top: 1px; flex-shrink: 0; }
+
+    /* 7. First step */
+    .first-step-card {
+      background: linear-gradient(135deg, rgba(249,115,22,.08) 0%, var(--bg2) 60%);
+      border: 1px solid rgba(249,115,22,.25); border-radius: 12px; padding: 24px;
+    }
+    .first-step-action { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .first-step-effect { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+    /* 8. Finale */
+    .finale-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+    .finale-card p { font-size: 15px; line-height: 1.7; color: var(--text2); margin-bottom: 8px; }
+    .finale-card p:last-of-type { margin-bottom: 24px; }
+    .finale-card strong { color: var(--text); }
+
+    /* CTA */
+    .cta-block { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; border-radius: 8px; text-decoration: none; transition: background .2s; }
+    .btn-cta:hover { background: var(--accent2); }
+    .btn-self { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-size: 14px; text-decoration: none; transition: border-color .2s; }
+    .btn-self:hover { border-color: var(--text2); color: var(--text); }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .status-card { flex-direction: column; }
+      .losses-top { grid-template-columns: 1fr; }
+      .priorities-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      nav { display: none; }
+      .btn-cta, .btn-self, .cta-block { display: none; }
+      body { background: #fff; color: #111; }
+      .card, .phase-card, .problem-item, .root-card, .priority-col, .loss-num, .status-card, .first-step-card, .finale-card { border-color: #ddd; background: #f9f9f9; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">K-<span>A</span>QS<sup>™</sup></a>
+  <div class="nav-right">
+    <button class="nav-print" onclick="window.print()">Сохранить PDF</button>
+  </div>
+</nav>
+
+<!-- Loading -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p class="loading-label">// Анализируем диагностику</p>
+  <div class="loading-steps">
+    <p class="loading-step active" id="ls-1">Читаем ваши ответы...</p>
+    <p class="loading-step" id="ls-2">Выявляем паттерны и проблемы...</p>
+    <p class="loading-step" id="ls-3">Строим план на 90 дней...</p>
+    <p class="loading-step" id="ls-4">Формируем Roadmap...</p>
+  </div>
+</div>
+
+<!-- Error -->
+<div class="error-state" id="error-state">
+  <h2>Не удалось сгенерировать Roadmap</h2>
+  <p id="error-msg">Сначала пройдите диагностику — без результатов Roadmap не составить.</p>
+  <a href="kaqs-quiz.html" class="btn-cta" style="margin-top:8px">Пройти диагностику →</a>
+</div>
+
+<!-- Roadmap -->
+<div class="page" id="page">
+
+  <!-- 1. Статус -->
+  <div class="section">
+    <p class="section-tag">// 01 · Текущая ситуация</p>
+    <div class="status-card" id="block-status"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 2. Потери -->
+  <div class="section">
+    <p class="section-tag">// 02 · Фактические потери</p>
+    <div class="card" id="block-losses"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 3. Проблемы -->
+  <div class="section">
+    <p class="section-tag">// 03 · Ключевые проблемы</p>
+    <div class="problems-list" id="block-problems"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 4. Причина -->
+  <div class="section">
+    <p class="section-tag">// 04 · Главная причина</p>
+    <div class="root-card" id="block-root"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 5. Приоритеты -->
+  <div class="section">
+    <p class="section-tag">// 05 · Приоритеты</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Если не начать с критичного — остальное не даст результата</p>
+    <div class="priorities-grid" id="block-priorities"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 6. Roadmap -->
+  <div class="section">
+    <p class="section-tag">// 06 · Roadmap на 90 дней</p>
+    <div class="roadmap-phases" id="block-roadmap"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 7. Первый шаг -->
+  <div class="section">
+    <p class="section-tag">// 07 · Первый шаг</p>
+    <div class="first-step-card" id="block-first-step"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 8. Финал -->
+  <div class="section">
+    <div class="finale-card">
+      <p><strong>План сам по себе не даёт результата.</strong></p>
+      <p>Без внедрения ничего не изменится. Через месяц этот документ станет просто файлом.</p>
+      <p>Вы уже знаете, что делать. Теперь важно внедрить.</p>
+      <div class="cta-block">
+        <a href="kaqs-order.html?tariff=roadmap-pro" class="btn-cta">Начать внедрение →</a>
+        <a href="kaqs-dashboard.html" class="btn-self">Делать самому</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Animate loading steps
+  const steps = ['ls-1','ls-2','ls-3','ls-4']
+  let stepIdx = 0
+  function advanceStep() {
+    if (stepIdx > 0) document.getElementById(steps[stepIdx-1]).className = 'loading-step done'
+    if (stepIdx < steps.length) {
+      document.getElementById(steps[stepIdx]).className = 'loading-step active'
+      stepIdx++
+    }
+  }
+  advanceStep()
+  const stepTimer = setInterval(advanceStep, 3500)
+
+  // ── Get quiz data
+  const history = JSON.parse(localStorage.getItem('kaqs_results') || '[]')
+  const latest = history[0]
+
+  function showError(msg) {
+    clearInterval(stepTimer)
+    document.getElementById('loading').style.display = 'none'
+    const errEl = document.getElementById('error-state')
+    errEl.style.display = 'flex'
+    if (msg) document.getElementById('error-msg').textContent = msg
+  }
+
+  if (!latest || !latest.answers) {
+    showError('Сначала пройдите диагностику — без результатов Roadmap не составить.')
+  } else {
+    generateRoadmap(latest)
+  }
+
+  async function generateRoadmap(data) {
+    try {
+      const res = await fetch('/api/roadmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+
+      if (!res.ok) throw new Error('API error ' + res.status)
+      const { roadmap } = await res.json()
+
+      clearInterval(stepTimer)
+      steps.forEach(s => document.getElementById(s).className = 'loading-step done')
+
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none'
+        renderRoadmap(roadmap, data)
+        document.getElementById('page').style.display = 'block'
+      }, 600)
+
+    } catch (e) {
+      showError('Ошибка генерации. Попробуйте ещё раз или обратитесь в поддержку.')
+    }
+  }
+
+  function renderRoadmap(r, data) {
+    // 1. Status
+    const statusColors = { 25:'#EF4444', 45:'#F97316', 65:'#EAB308', 80:'#3B82F6', 100:'#22C55E' }
+    const thresholds = [25, 45, 65, 80, 100]
+    const color = statusColors[thresholds.find(t => r.status.index <= t) || 100]
+    const circumference = 226
+    const offset = circumference - (r.status.index / 100) * circumference
+
+    document.getElementById('block-status').innerHTML = `
+      <div class="status-ring">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="36" fill="none" stroke="#1E2530" stroke-width="6"/>
+          <circle cx="40" cy="40" r="36" fill="none" stroke="${color}" stroke-width="6"
+            stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
+            style="transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <div class="status-ring-val">
+          <span class="status-ring-num" style="color:${color}">${r.status.index}</span>
+          <span class="status-ring-sub">/100</span>
+        </div>
+      </div>
+      <div class="status-text">
+        <div class="status-label" style="color:${color}">${r.status.label}</div>
+        <div class="status-points">
+          ${r.status.summary.map(s => `<div class="status-point">${s}</div>`).join('')}
+        </div>
+      </div>`
+
+    // 2. Losses
+    document.getElementById('block-losses').innerHTML = `
+      <div class="losses-top">
+        <div class="loss-num">
+          <div class="loss-num-label">// Потери в месяц</div>
+          <div class="loss-num-val">${r.losses.monthly}</div>
+        </div>
+        <div class="loss-num">
+          <div class="loss-num-label">// Потери в год</div>
+          <div class="loss-num-val">${r.losses.yearly}</div>
+        </div>
+      </div>
+      <div class="loss-reasons">
+        ${r.losses.reasons.map(lr => `
+          <div class="loss-reason">
+            <span class="loss-arrow">→</span>
+            <span><span class="loss-cause">${lr.cause}</span> <span style="color:var(--muted)">·</span> <span class="loss-effect">${lr.effect}</span></span>
+          </div>`).join('')}
+      </div>`
+
+    // 3. Problems
+    document.getElementById('block-problems').innerHTML = r.problems.map(p => `
+      <div class="problem-item">
+        <div class="problem-dot"></div>
+        <div class="problem-text">
+          <div class="problem-main">${p.problem}</div>
+          <div class="problem-consequence"><span class="problem-arrow">→</span> ${p.consequence}</div>
+        </div>
+      </div>`).join('')
+
+    // 4. Root cause
+    document.getElementById('block-root').innerHTML = `
+      <div class="root-row root-illusion">
+        <span class="root-badge">Кажется</span>
+        <span class="root-text">${r.root_cause.illusion}</span>
+      </div>
+      <div class="root-row root-reality">
+        <span class="root-badge">На самом деле</span>
+        <span class="root-text">${r.root_cause.reality}</span>
+      </div>`
+
+    // 5. Priorities
+    document.getElementById('block-priorities').innerHTML = `
+      <div class="priority-col critical-col">
+        <div class="priority-col-label">// Критично</div>
+        <div class="priority-items">${r.priorities.critical.map(p => `<div class="priority-item">${p}</div>`).join('')}</div>
+      </div>
+      <div class="priority-col important-col">
+        <div class="priority-col-label">// Важно</div>
+        <div class="priority-items">${r.priorities.important.map(p => `<div class="priority-item">${p}</div>`).join('')}</div>
+      </div>
+      <div class="priority-col later-col">
+        <div class="priority-col-label">// Доработка</div>
+        <div class="priority-items">${r.priorities.later.map(p => `<div class="priority-item">${p}</div>`).join('')}</div>
+      </div>`
+
+    // 6. Roadmap phases
+    document.getElementById('block-roadmap').innerHTML = r.roadmap.map((phase, i) => `
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num">${phase.phase}</span>
+          <span class="phase-goal">${phase.goal}</span>
+        </div>
+        <div class="phase-actions">
+          ${phase.actions.map((a, j) => `
+            <div class="phase-action">
+              <span class="action-num">0${j+1}</span>
+              <span>${a}</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')
+
+    // 7. First step
+    document.getElementById('block-first-step').innerHTML = `
+      <div class="first-step-action">${r.first_step.action}</div>
+      <div class="first-step-effect">${r.first_step.effect}</div>`
+  }
+</script>
+
+</body>
+</html>
