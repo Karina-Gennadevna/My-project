@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Политика конфиденциальности — K-AQS™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:     #080A0C;
+      --bg-surface:  #0F1215;
+      --bg-elevated: #161B20;
+      --text-primary:   #F0F4F8;
+      --text-secondary: #8A97A8;
+      --text-muted:     #4A5568;
+      --accent:         #F97316;
+      --border:         rgba(255,255,255,0.08);
+      --border-subtle:  rgba(255,255,255,0.05);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-secondary);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.75;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(8,10,12,0.92);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    .back {
+      font-size: .8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .back:hover { color: var(--text-secondary); }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    .page-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+    .updated {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+
+    .intro {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-size: .9rem;
+      margin-bottom: 48px;
+      color: var(--text-secondary);
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 40px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sec-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: var(--accent);
+      background: rgba(249,115,22,.1);
+      border: 1px solid rgba(249,115,22,.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+    }
+
+    .clause {
+      display: flex;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: .88rem;
+    }
+    .clause:last-child { border-bottom: none; }
+    .clause-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: var(--text-muted);
+      min-width: 28px;
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+    .clause-text strong { color: var(--text-primary); }
+
+    ul.data-list {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    ul.data-list li {
+      padding-left: 16px;
+      position: relative;
+      font-size: .88rem;
+    }
+    ul.data-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+
+    .contact-block {
+      margin-top: 48px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+    .contact-block p { font-size: .88rem; margin-bottom: 4px; }
+    .contact-block a { color: var(--accent); text-decoration: none; }
+    .contact-block a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">K-<span>A</span>QS<sup style="font-size:.6em;vertical-align:super">™</sup></a>
+  <a href="javascript:history.back()" class="back">← Назад</a>
+</header>
+
+<main>
+  <p class="page-label">// Документ</p>
+  <h1>Политика конфиденциальности</h1>
+  <p class="updated">Редакция от 26 марта 2026 года</p>
+
+  <div class="intro">
+    Настоящая Политика конфиденциальности описывает, какие персональные данные собирает платформа K-AQS™, с какой целью, как они хранятся и защищаются. Используя сайт и платформу, вы соглашаетесь с условиями настоящей Политики.
+  </div>
+
+  <h2><span class="sec-num">01</span> Оператор персональных данных</h2>
+  <div class="clause"><span class="clause-num">1.1</span><span class="clause-text"><strong>Оператор</strong> — Кузнецова Карина Геннадьевна, самозанятый, ИНН 641305221167.</span></div>
+  <div class="clause"><span class="clause-num">1.2</span><span class="clause-text"><strong>Контакт оператора:</strong> miss.kuznetsov@mail.ru</span></div>
+  <div class="clause"><span class="clause-num">1.3</span><span class="clause-text"><strong>Сайт:</strong> my-project-sooty-chi.vercel.app</span></div>
+
+  <h2><span class="sec-num">02</span> Какие данные мы собираем</h2>
+  <div class="clause"><span class="clause-num">2.1</span><span class="clause-text">
+    При прохождении диагностики и оформлении заявки мы можем собирать следующие данные:
+    <ul class="data-list" style="margin-top:8px">
+      <li>имя или название компании (необязательно);</li>
+      <li>адрес электронной почты;</li>
+      <li>имя пользователя Telegram (по выбору пользователя);</li>
+      <li>ответы на вопросы диагностики бизнеса;</li>
+      <li>технические данные: IP-адрес, тип браузера, дата и время обращения.</li>
+    </ul>
+  </span></div>
+  <div class="clause"><span class="clause-num">2.2</span><span class="clause-text">Результаты диагностики (индекс и оценки по осям) сохраняются локально в браузере пользователя (localStorage) и не передаются на сервер без явного согласия пользователя.</span></div>
+
+  <h2><span class="sec-num">03</span> Цели обработки данных</h2>
+  <div class="clause"><span class="clause-num">3.1</span><span class="clause-text">Предоставление результатов диагностики и отправка отчёта на указанный адрес.</span></div>
+  <div class="clause"><span class="clause-num">3.2</span><span class="clause-text">Коммуникация по вопросам заказа услуг (Roadmap, подписка на платформу).</span></div>
+  <div class="clause"><span class="clause-num">3.3</span><span class="clause-text">Исполнение договора оказания услуг и подписки, включая выставление счетов и оплату.</span></div>
+  <div class="clause"><span class="clause-num">3.4</span><span class="clause-text">Улучшение качества услуг и платформы.</span></div>
+
+  <h2><span class="sec-num">04</span> Срок хранения данных</h2>
+  <div class="clause"><span class="clause-num">4.1</span><span class="clause-text">Персональные данные хранятся в течение срока действия договора и не более <strong>3 (трёх) лет</strong> после его прекращения, если иное не установлено законодательством.</span></div>
+  <div class="clause"><span class="clause-num">4.2</span><span class="clause-text">По письменному запросу пользователя данные могут быть удалены досрочно, за исключением данных, обязательных к хранению по закону.</span></div>
+
+  <h2><span class="sec-num">05</span> Передача данных третьим лицам</h2>
+  <div class="clause"><span class="clause-num">5.1</span><span class="clause-text">Персональные данные <strong>не продаются и не передаются</strong> третьим лицам в коммерческих целях.</span></div>
+  <div class="clause"><span class="clause-num">5.2</span><span class="clause-text">Данные могут быть переданы платёжному сервису <strong>ЮKassa (ООО «ЮМани»)</strong> исключительно в объёме, необходимом для проведения оплаты.</span></div>
+  <div class="clause"><span class="clause-num">5.3</span><span class="clause-text">Передача данных государственным органам возможна только по основаниям, предусмотренным законодательством РФ.</span></div>
+
+  <h2><span class="sec-num">06</span> Права пользователя</h2>
+  <div class="clause"><span class="clause-num">6.1</span><span class="clause-text">Вы вправе в любой момент <strong>отозвать согласие</strong> на обработку персональных данных, направив письмо на miss.kuznetsov@mail.ru.</span></div>
+  <div class="clause"><span class="clause-num">6.2</span><span class="clause-text">Вы вправе запросить <strong>уточнение, исправление или удаление</strong> своих данных.</span></div>
+  <div class="clause"><span class="clause-num">6.3</span><span class="clause-text">Вы вправе получить информацию о том, <strong>какие данные о вас хранятся</strong> и как они используются.</span></div>
+  <div class="clause"><span class="clause-num">6.4</span><span class="clause-text">Запросы рассматриваются в течение <strong>10 рабочих дней</strong> с момента получения.</span></div>
+
+  <h2><span class="sec-num">07</span> Защита данных</h2>
+  <div class="clause"><span class="clause-num">7.1</span><span class="clause-text">Оператор принимает технические и организационные меры для защиты персональных данных от несанкционированного доступа, изменения, раскрытия или уничтожения.</span></div>
+  <div class="clause"><span class="clause-num">7.2</span><span class="clause-text">Передача данных осуществляется по защищённому соединению (HTTPS).</span></div>
+
+  <h2><span class="sec-num">08</span> Изменения политики</h2>
+  <div class="clause"><span class="clause-num">8.1</span><span class="clause-text">Оператор вправе вносить изменения в настоящую Политику. Актуальная редакция всегда доступна на этой странице. При существенных изменениях пользователи уведомляются по email.</span></div>
+
+  <div class="contact-block">
+    <p style="color:var(--text-primary);font-weight:600;margin-bottom:12px">Вопросы и запросы</p>
+    <p>По всем вопросам, связанным с обработкой персональных данных, пишите:</p>
+    <p style="margin-top:8px"><strong>Email:</strong> <a href="mailto:miss.kuznetsov@mail.ru">miss.kuznetsov@mail.ru</a></p>
+    <p><strong>Telegram:</strong> <a href="https://t.me/KarinaGen" target="_blank">@KarinaGen</a></p>
+    <p style="margin-top:12px;font-size:.8rem;color:var(--text-muted)">Кузнецова Карина Геннадьевна · Самозанятый · ИНН 641305221167</p>
+  </div>
+</main>
+
+<footer>© 2026 K-AQS™ · Все права защищены</footer>
+
+</body>
+</html>
