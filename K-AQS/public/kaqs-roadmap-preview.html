@@ -122,6 +122,8 @@
     .phase-action { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.5; }
     .phase-result { font-size: 12px; color: var(--accent2); margin-bottom: 14px; padding-left: 2px; }
     .phase-result::before { content: '✓ '; }
+    .phase-dependency { font-size: 12px; color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-style: italic; }
+    .phase-dependency::before { content: '⚠ '; color: var(--yellow); font-style: normal; }
     .action-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent2); min-width: 20px; margin-top: 3px; flex-shrink: 0; }
     .action-ifnot { font-size: 12px; color: var(--red); margin-top: 5px; opacity: .85; }
 
@@ -353,6 +355,7 @@
           <div class="phase-action"><span class="action-num">03</span><div><div>Назначить ответственного за каждый этап воронки</div><div class="action-ifnot">если не сделать → при сбое непонятно, кто виноват и что делать</div></div></div>
           <div class="phase-action"><span class="action-num">04</span><div><div>Ввести ежедневный 15-минутный стендап с фиксацией блокеров</div><div class="action-ifnot">если не сделать → проблемы накапливаются и всплывают в кризис</div></div></div>
         </div>
+        <div class="phase-dependency">без зафиксированных процессов AI и автоматизация закрепят хаос, а не уберут его</div>
       </div>
       <div class="phase-card">
         <div class="phase-header">
@@ -365,6 +368,7 @@
           <div class="phase-action"><span class="action-num">02</span><div><div>Прописать критерии качества для AI-контента</div><div class="action-ifnot">если не сделать → ошибки выходят к клиентам, бьют по репутации</div></div></div>
           <div class="phase-action"><span class="action-num">03</span><div><div>Создать базу промптов: что работает, что нет</div><div class="action-ifnot">если не сделать → каждый раз начинаете с нуля, теряете время</div></div></div>
         </div>
+        <div class="phase-dependency">без контролируемого AI масштабирование в этапе 3 только умножит ошибки</div>
       </div>
       <div class="phase-card">
         <div class="phase-header">
@@ -377,6 +381,7 @@
           <div class="phase-action"><span class="action-num">02</span><div><div>Расширить AI на 2-3 новых процесса с уже понятным шаблоном</div><div class="action-ifnot">если не сделать → конкуренты автоматизируют быстрее</div></div></div>
           <div class="phase-action"><span class="action-num">03</span><div><div>Запустить систему обучения сотрудников на основе зафиксированных процессов</div><div class="action-ifnot">если не сделать → каждый новый человек — хаос заново</div></div></div>
         </div>
+        <div class="phase-dependency">без этой базы следующий цикл роста начнётся с тех же проблем, что и первый</div>
       </div>
     </div>
   </div>
@@ -387,8 +392,9 @@
   <div class="section">
     <p class="section-tag">// 07 · Первый шаг</p>
     <div class="first-step-card">
-      <div class="first-step-action">Сегодня: выпишите 3 процесса, которые повторяются каждую неделю</div>
-      <div class="first-step-effect">Не нужно делать идеально. Просто напишите, как это происходит сейчас — шаг за шагом. Это займёт 20-30 минут, но даст основу для всего остального.</div>
+      <div class="first-step-action">Выпишите 3 процесса, которые повторяются каждую неделю — прямо сейчас</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);margin:8px 0 4px;">⏱ 30 минут</div>
+      <div class="first-step-effect">это займёт 30 минут, но впервые сделает хаос видимым — вы увидите, где именно теряется время, и получите основу для следующих шагов</div>
     </div>
   </div>
 

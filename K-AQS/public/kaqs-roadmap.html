@@ -143,6 +143,8 @@
     .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
     .phase-result { font-size: 12px; color: var(--accent2); margin-bottom: 14px; padding-left: 2px; }
     .phase-result::before { content: '✓ '; }
+    .phase-dependency { font-size: 12px; color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-style: italic; }
+    .phase-dependency::before { content: '⚠ '; color: var(--yellow); font-style: normal; }
     .phase-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent2); background: rgba(31,95,91,.12); border: 1px solid rgba(42,122,117,.25); border-radius: 4px; padding: 3px 8px; white-space: nowrap; }
     .phase-goal { font-size: 15px; font-weight: 600; }
     .phase-actions { display: flex; flex-direction: column; gap: 8px; }
@@ -465,7 +467,7 @@
       </div>`
 
     // 6. Roadmap phases
-    document.getElementById('block-roadmap').innerHTML = r.roadmap.map((phase: { phase: string; goal: string; result?: string; actions: ({ action: string; if_not: string } | string)[] }) => `
+    document.getElementById('block-roadmap').innerHTML = r.roadmap.map((phase: { phase: string; goal: string; result?: string; dependency?: string; actions: ({ action: string; if_not: string } | string)[] }) => `
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num">${phase.phase}</span>
@@ -485,12 +487,14 @@
               </div>
             </div>`
           }).join('')}
+        ${phase.dependency ? `<div class="phase-dependency">${phase.dependency}</div>` : ''}
         </div>
       </div>`).join('')
 
     // 7. First step
     document.getElementById('block-first-step').innerHTML = `
       <div class="first-step-action">${r.first_step.action}</div>
+      ${r.first_step.time ? `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);margin:8px 0 4px;">⏱ ${r.first_step.time}</div>` : ''}
       <div class="first-step-effect">${r.first_step.effect}</div>`
 
     // 8. Weekly loss calc
