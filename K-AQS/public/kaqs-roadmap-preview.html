@@ -69,11 +69,15 @@
     .loss-num { background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.2); border-radius: 10px; padding: 16px 20px; }
     .loss-num-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
     .loss-num-val { font-size: 18px; font-weight: 700; color: var(--text); }
-    .loss-reasons { display: flex; flex-direction: column; gap: 10px; }
-    .loss-reason { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; }
-    .loss-arrow { color: var(--red); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
-    .loss-cause { color: var(--text2); }
-    .loss-effect { color: var(--text); font-weight: 500; }
+    .loss-reasons { display: flex; flex-direction: column; gap: 12px; }
+    .loss-reason { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .loss-reason-inner { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .loss-category { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent2); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2px; }
+    .loss-cause-line { display: flex; align-items: flex-start; gap: 6px; }
+    .loss-arrow { color: var(--red); font-weight: 600; flex-shrink: 0; font-size: 13px; }
+    .loss-cause { font-size: 13px; color: var(--text); font-weight: 500; }
+    .loss-formula { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); padding-left: 14px; line-height: 1.5; }
+    .loss-amount { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: var(--red); white-space: nowrap; flex-shrink: 0; padding-top: 2px; }
 
     /* 3. Problems */
     .problems-list { display: flex; flex-direction: column; gap: 10px; }
@@ -199,25 +203,45 @@
       <div class="losses-top">
         <div class="loss-num">
           <div class="loss-num-label">// Потери в месяц</div>
-          <div class="loss-num-val">210 000 ₽</div>
+          <div class="loss-num-val">282 140 ₽</div>
         </div>
         <div class="loss-num">
           <div class="loss-num-label">// Потери в год</div>
-          <div class="loss-num-val">2 520 000 ₽</div>
+          <div class="loss-num-val">3 385 680 ₽</div>
         </div>
       </div>
       <div class="loss-reasons">
         <div class="loss-reason">
-          <span class="loss-arrow">→</span>
-          <span><span class="loss-cause">Нет регламентов</span> → <span class="loss-effect">сотрудники тратят 2-3 часа в день на уточнения</span> <span style="color:var(--red);font-weight:600;margin-left:6px">80 000 ₽</span></span>
+          <div class="loss-reason-inner">
+            <div class="loss-category">Время сотрудников</div>
+            <div class="loss-cause-line"><span class="loss-arrow">→</span><span class="loss-cause">Нет регламентов — каждый уточняет задачи вручную</span></div>
+            <div class="loss-formula">2 ч × 3 чел × 22 дня × 400 ₽/ч = 52 800 ₽</div>
+          </div>
+          <div class="loss-amount">52 800 ₽</div>
         </div>
         <div class="loss-reason">
-          <span class="loss-arrow">→</span>
-          <span><span class="loss-cause">Ручная обработка заявок</span> → <span class="loss-effect">30% лидов теряется на стыке этапов</span> <span style="color:var(--red);font-weight:600;margin-left:6px">90 000 ₽</span></span>
+          <div class="loss-reason-inner">
+            <div class="loss-category">Потери лидов</div>
+            <div class="loss-cause-line"><span class="loss-arrow">→</span><span class="loss-cause">Ручная обработка заявок — 25% лидов теряются на стыке этапов</span></div>
+            <div class="loss-formula">40 лидов × 25% × 10 000 ₽ чек = 100 000 ₽</div>
+          </div>
+          <div class="loss-amount">100 000 ₽</div>
         </div>
         <div class="loss-reason">
-          <span class="loss-arrow">→</span>
-          <span><span class="loss-cause">AI без контроля качества</span> → <span class="loss-effect">ошибки бьют по репутации, клиенты уходят</span> <span style="color:var(--red);font-weight:600;margin-left:6px">40 000 ₽</span></span>
+          <div class="loss-reason-inner">
+            <div class="loss-category">Ошибки и потери клиентов</div>
+            <div class="loss-cause-line"><span class="loss-arrow">→</span><span class="loss-cause">AI без контроля качества — ошибки выходят к клиентам</span></div>
+            <div class="loss-formula">80 клиентов × 4% уходят × 20 000 ₽ LTV = 64 000 ₽</div>
+          </div>
+          <div class="loss-amount">64 000 ₽</div>
+        </div>
+        <div class="loss-reason">
+          <div class="loss-reason-inner">
+            <div class="loss-category">Управленческие потери</div>
+            <div class="loss-cause-line"><span class="loss-arrow">→</span><span class="loss-cause">Нет метрик — руководитель тушит пожары вместо роста</span></div>
+            <div class="loss-formula">3 ч × 22 дня × 1 500 ₽/ч = 99 000 ₽ → видимая часть 66% = 65 340 ₽</div>
+          </div>
+          <div class="loss-amount">65 340 ₽</div>
         </div>
       </div>
     </div>
