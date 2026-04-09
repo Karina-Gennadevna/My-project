@@ -1910,7 +1910,17 @@ function showScreen(id) {
 }
 
 function showResults() {
-  showScreen('s-results')
+  const { index, pct } = calcScores()
+  const status = getStatus(index)
+  const data = {
+    index,
+    pct,
+    statusLabel: status.label,
+    statusDesc: status.desc,
+    date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  }
+  localStorage.setItem('kaqs_results', JSON.stringify(data))
+  window.location.href = 'kaqs-results.html'
 }
 
 /* ══════════════════════════════════════════════
@@ -2177,28 +2187,85 @@ function skipContact() {
 /* ══════════════════════════════════════════════
    PROCESSING
 ══════════════════════════════════════════════ */
-function runProcessing() {
+function showStep(i, done) {
+  const el = document.getElementById('step-' + i)
+  if (!el) return
+  el.classList.add('show')
+  if (done) el.classList.add('done')
+}
+
+async function runProcessing() {
   showScreen('s-processing')
-  const steps = [0, 300, 900, 1600]
-  steps.forEach((delay, i) => {
-    setTimeout(() => {
-      const el = document.getElementById('step-' + i)
-      el.classList.add('show')
-    }, delay)
-    setTimeout(() => {
-      const el = document.getElementById('step-' + i)
-      el.classList.add('done')
-    }, delay + 400)
-  })
-  setTimeout(() => {
-    renderResults()
-    // Show thank-you screen with email hint if contact was provided
-    const tyMsg = document.getElementById('ty-msg')
-    if (S.contact && S.contactType === 'email') {
-      tyMsg.textContent = `Диагностика завершена. Результаты готовы — нажмите кнопку ниже, чтобы посмотреть индекс и рекомендации.`
+
+  // Шаг 0 — сразу
+  showStep(0, false)
+  await delay(400)
+  showStep(0, true)
+
+  // Шаг 1
+  showStep(1, false)
+  await delay(300)
+  showStep(1, true)
+
+  // Шаг 2 — отправляем в Claude
+  showStep(2, false)
+
+  // Собираем ответы для API
+  const answers = QUESTIONS.map((q, i) => {
+    const chosen = S.answers[i]
+    return {
+      axis: q.axis,
+      question: q.text,
+      chosen: chosen !== null ? q.answers[chosen].label : 'Нет ответа',
+      score: chosen !== null ? q.answers[chosen].score : 0
     }
-    showScreen('s-thankyou')
-  }, 2600)
+  })
+
+  let result = null
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers })
+    })
+    if (res.ok) {
+      result = await res.json()
+    }
+  } catch (e) {
+    console.warn('API unavailable, using local scoring', e)
+  }
+
+  // Fallback — локальный расчёт если API недоступен
+  if (!result || result.error) {
+    const { index, pct } = calcScores()
+    const status = getStatus(index)
+    result = {
+      index,
+      pct,
+      statusLabel: status.label,
+      statusDesc: status.desc,
+      date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+    }
+  }
+
+  showStep(2, true)
+
+  // Шаг 3
+  showStep(3, false)
+  await delay(400)
+  showStep(3, true)
+
+  await delay(300)
+
+  // Сохраняем и переходим
+  result.date = result.date || new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  localStorage.setItem('kaqs_results', JSON.stringify(result))
+
+  showScreen('s-thankyou')
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 /* ══════════════════════════════════════════════
@@ -2437,13 +2504,13 @@ function renderCompare(prev, curr) {
    LOCALSTORAGE
 ══════════════════════════════════════════════ */
 function saveResult(data) {
-  const history = JSON.parse(localStorage.getItem('kaqs_results') || '[]')
+  const history = JSON.parse(localStorage.getItem('kaqs_history') || '[]')
   history.unshift(data)
   if (history.length > 10) history.pop()
-  localStorage.setItem('kaqs_results', JSON.stringify(history))
+  localStorage.setItem('kaqs_history', JSON.stringify(history))
 }
 function getPrevResult() {
-  const history = JSON.parse(localStorage.getItem('kaqs_results') || '[]')
+  const history = JSON.parse(localStorage.getItem('kaqs_history') || '[]')
   return history[0] || null  // before saving new one
 }
 

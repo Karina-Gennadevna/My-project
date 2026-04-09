@@ -11,16 +11,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #121212;
-      --surface:  #1F1F1F;
-      --elevated: #252525;
-      --border:   #2A2A2A;
-      --border2:  #383838;
-      --text:     #E6E6E6;
-      --text2:    #B8B8B8;
-      --muted:    #707070;
-      --accent:   #1F5F5B;
-      --accent-l: #2A7A75;
+      --bg:       #0B0F14;
+      --surface:  #0F141B;
+      --elevated: #131A22;
+      --border:   rgba(255,255,255,.07);
+      --border2:  rgba(255,255,255,.12);
+      --text:     #F0F4F8;
+      --text2:    #8A97A8;
+      --muted:    #4A5568;
+      --accent:   #3B82F6;
+      --accent-l: #2563EB;
     }
 
     body {
@@ -560,7 +560,7 @@
   <header>
     <div class="header-inner">
       <span class="logo">K-A-Q-S™</span>
-      <a href="kaqs-dashboard.html" class="btn-text">← Кабинет</a>
+      <a href="kaqs-quiz.html" class="btn-text">← Диагностика</a>
     </div>
   </header>
 
@@ -603,121 +603,17 @@
 
       <!-- Modules -->
       <p class="section-label">// Разрез по блокам K/A/Q/S</p>
-      <div class="module-grid">
-
-        <div class="module-card">
-          <div class="mod-head">
-            <div><span class="mod-key">K</span><span class="mod-name">Knowledge Architecture</span></div>
-            <span class="mod-score">18/30</span>
-          </div>
-          <div class="mod-bar">
-            <div class="mod-bar-fill" style="width:60%;background:#D97706;"></div>
-          </div>
-          <p class="mod-interpretation">Управляемый уровень (60%). Документация частично есть, роли определены, но есть пробелы в архитектуре данных. Риск P0: «Хаос данных».</p>
-        </div>
-
-        <div class="module-card">
-          <div class="mod-head">
-            <div><span class="mod-key">A</span><span class="mod-name">AI System Design</span></div>
-            <span class="mod-score">15/30</span>
-          </div>
-          <div class="mod-bar">
-            <div class="mod-bar-fill" style="width:50%;background:#EF4444;"></div>
-          </div>
-          <p class="mod-interpretation">Существенные пробелы (50%). AI внедрён фрагментарно, без системного слоя. Риски P0: «AI без стратегии», «AI без мониторинга».</p>
-        </div>
-
-        <div class="module-card">
-          <div class="mod-head">
-            <div><span class="mod-key">Q</span><span class="mod-name">Quality & Risk Control</span></div>
-            <span class="mod-score">14/30</span>
-          </div>
-          <div class="mod-bar">
-            <div class="mod-bar-fill" style="width:47%;background:#EF4444;"></div>
-          </div>
-          <p class="mod-interpretation">Существенные пробелы (47%). Обработка ошибок и тестирование на минимальном уровне. Риск P0: «Silent fail в AI-процессах».</p>
-        </div>
-
-        <div class="module-card">
-          <div class="mod-head">
-            <div><span class="mod-key">S</span><span class="mod-name">Scalability Framework</span></div>
-            <span class="mod-score">20/30</span>
-          </div>
-          <div class="mod-bar">
-            <div class="mod-bar-fill" style="width:67%;background:#1F5F5B;"></div>
-          </div>
-          <p class="mod-interpretation">Управляемый уровень (67%). Модульность и план роста присутствуют. Метрики устойчивости требуют внимания. Явных рисков не выявлено.</p>
-        </div>
-
-      </div>
+      <div class="module-grid" id="module-grid"></div>
 
       <!-- Executive Summary -->
       <p class="section-label">// Резюме</p>
       <div class="card">
-        <p style="font-size:.88rem;color:var(--text2);line-height:1.7;">
-          Индекс зрелости AI-систем составил <strong style="color:var(--text)">67 из 120 (56%)</strong>. Уровень: «Управляемая». Наиболее сильный блок — Scalability Framework (67%). Наибольший дефицит — Quality & Risk Control (47%). Выявлено 4 критических риска (P0), требующих немедленного внимания. Основные процессы под контролем. AI можно масштабировать при условии закрытия архитектурных разрывов.
-        </p>
+        <p id="summary-text" style="font-size:.88rem;color:var(--text2);line-height:1.7;"></p>
       </div>
 
       <!-- Risks -->
       <p class="section-label">// Карта рисков</p>
-      <div class="risk-list">
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p0">P0</span>
-          <div class="risk-content">
-            <p class="risk-title">Silent fail в AI-процессах</p>
-            <p class="risk-desc">Необработанные ошибки накапливаются незаметно и могут привести к критическим сбоям в операционной системе.</p>
-          </div>
-          <span class="risk-module">Q</span>
-        </div>
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p0">P0</span>
-          <div class="risk-content">
-            <p class="risk-title">AI без стратегии</p>
-            <p class="risk-desc">Бессистемное внедрение AI создаёт технический хаос и блокирует последующую архитектуру.</p>
-          </div>
-          <span class="risk-module">A</span>
-        </div>
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p0">P0</span>
-          <div class="risk-content">
-            <p class="risk-title">Хаос данных</p>
-            <p class="risk-desc">AI-системы работают на данных. Без единой архитектуры данных AI будет принимать решения на основе противоречивых источников.</p>
-          </div>
-          <span class="risk-module">K</span>
-        </div>
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p0">P0</span>
-          <div class="risk-content">
-            <p class="risk-title">AI без мониторинга</p>
-            <p class="risk-desc">AI-процессы без мониторинга могут давать ошибки незаметно, накапливая критические последствия.</p>
-          </div>
-          <span class="risk-module">A</span>
-        </div>
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p1">P1</span>
-          <div class="risk-content">
-            <p class="risk-title">Нет стратегии роста</p>
-            <p class="risk-desc">Без плана роста AI-системы рост бизнеса будет требовать переписывания архитектуры с нуля.</p>
-          </div>
-          <span class="risk-module">S</span>
-        </div>
-
-        <div class="risk-item">
-          <span class="risk-badge risk-p1">P1</span>
-          <div class="risk-content">
-            <p class="risk-title">Нет метрик устойчивости</p>
-            <p class="risk-desc">Без метрик невозможно управлять ростом: деградация системы будет незаметна до критической точки.</p>
-          </div>
-          <span class="risk-module">S</span>
-        </div>
-
-      </div>
+      <div class="risk-list" id="risk-list"></div>
 
       <!-- Roadmap -->
       <p class="section-label">// Дорожная карта</p>
@@ -802,10 +698,10 @@
           <p style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">02 / Разрез по блокам</p>
           <div style="display:flex;flex-direction:column;gap:20px;">
             ${[
-              {m:'K',name:'Knowledge Architecture',score:18,max:30,pct:60,color:'#D97706'},
+              {m:'K',name:'Knowledge Architecture',score:18,max:30,pct:60,color:'#EAB308'},
               {m:'A',name:'AI System Design',score:15,max:30,pct:50,color:'#EF4444'},
               {m:'Q',name:'Quality & Risk Control',score:14,max:30,pct:47,color:'#EF4444'},
-              {m:'S',name:'Scalability Framework',score:20,max:30,pct:67,color:'#1F5F5B'},
+              {m:'S',name:'Scalability Framework',score:20,max:30,pct:67,color:'#3B82F6'},
             ].map(x => `
               <div>
                 <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
@@ -868,117 +764,43 @@
       </div>
     </div>
 
-    <!-- Upsell -->
-    <div class="upsell-section">
-      <p class="upsell-label">// Следующий шаг</p>
-      <h3 class="upsell-title">Что делать с этими результатами?</h3>
-      <p class="upsell-desc">Диагностика показала слабые места. Теперь нужно превратить это в конкретный план действий.</p>
-
-      <div class="upsell-sub-label">// Разовая услуга · Персональный Roadmap</div>
-      <div class="upsell-cards">
-        <div class="upsell-card">
-          <div>
-            <div class="upsell-card__tag">Тариф 01</div>
-            <div class="upsell-card__name">Roadmap Базовый</div>
-          </div>
-          <div>
-            <div class="upsell-card__price">9 900 ₽</div>
-            <div class="upsell-card__period">разово</div>
-          </div>
-          <ul class="upsell-card__features">
-            <li>90-дневный план по вашей диагностике</li>
-            <li>Приоритеты по 5 осям K-AQS</li>
-            <li>Конкретные шаги с датами</li>
-            <li>PDF, 3 рабочих дня</li>
-          </ul>
-          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
-          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
-        </div>
-        <div class="upsell-card featured">
-          <div>
-            <div class="upsell-card__tag">Тариф 02 · Рекомендуем</div>
-            <div class="upsell-card__name">Roadmap Расширенный</div>
-          </div>
-          <div>
-            <div class="upsell-card__price">19 900 ₽</div>
-            <div class="upsell-card__period">разово</div>
-          </div>
-          <ul class="upsell-card__features">
-            <li>Всё из «Базового»</li>
-            <li>Шаблоны для каждого шага</li>
-            <li>Чеклисты и ту-ду листы</li>
-            <li>Таблицы отслеживания</li>
-          </ul>
-          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
-          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
-        </div>
-        <div class="upsell-card">
-          <div>
-            <div class="upsell-card__tag">Тариф 03 · Максимум</div>
-            <div class="upsell-card__name">Комбо</div>
-          </div>
-          <div>
-            <div class="upsell-card__price">24 900 ₽</div>
-            <div class="upsell-card__period">разово</div>
-          </div>
-          <ul class="upsell-card__features">
-            <li>Всё из «Расширенного»</li>
-            <li>1 мес. платформы K-AQS</li>
-            <li>Дашборд, задачи, AI-агент</li>
-          </ul>
-          <a href="kaqs-quiz.html" class="upsell-card__cta">Заказать</a>
-          <a href="oferta-roadmap.html" class="upsell-card__oferta">Условия договора</a>
-        </div>
-      </div>
-
-      <div class="upsell-sub-label">// Подписка · Платформа K-AQS</div>
-      <div class="upsell-cards-2">
-        <div class="upsell-card">
-          <div>
-            <div class="upsell-card__tag">Тариф 04</div>
-            <div class="upsell-card__name">Платформа</div>
-          </div>
-          <div>
-            <div class="upsell-card__price">4 900 ₽</div>
-            <div class="upsell-card__period">/ месяц</div>
-          </div>
-          <ul class="upsell-card__features">
-            <li>Диагностика, дашборд, AI-агент</li>
-            <li>Задачи и трекинг прогресса</li>
-          </ul>
-          <a href="kaqs-quiz.html" class="upsell-card__cta">Подключить</a>
-          <a href="oferta.html" class="upsell-card__oferta">Условия подписки</a>
-        </div>
-        <div class="upsell-card featured">
-          <div>
-            <div class="upsell-card__tag">Тариф 05 · С наставником</div>
-            <div class="upsell-card__name">Платформа + Консультант</div>
-          </div>
-          <div>
-            <div class="upsell-card__price">9 900 ₽</div>
-            <div class="upsell-card__period">/ месяц</div>
-          </div>
-          <ul class="upsell-card__features">
-            <li>Платформа + 2 разбора в месяц</li>
-            <li>Ответ Карины за 48 часов</li>
-          </ul>
-          <a href="kaqs-quiz.html" class="upsell-card__cta">Подключить</a>
-          <a href="oferta.html" class="upsell-card__oferta">Условия подписки</a>
-        </div>
-      </div>
-    </div>
 
     <!-- Actions -->
     <div class="actions">
-      <a href="#" onclick="window.print();return false;" class="btn-primary">Скачать PDF</a>
-      <a href="kaqs-dashboard.html" class="btn-outline">В личный кабинет</a>
+      <a href="kaqs-platform.html" class="btn-primary">Перейти в платформу →</a>
+      <a href="#" onclick="window.print();return false;" class="btn-outline">Скачать PDF</a>
     </div>
 
   </main>
 
   <script>
+    const saved = JSON.parse(localStorage.getItem('kaqs_results') || '{}')
+    const target      = saved.index      || 67
+    const pct         = saved.pct        || { K: 60, A: 50, Q: 47, S: 67 }
+    const statusLabel = saved.statusLabel || 'Управляемая'
+    const insights    = saved.insights   || {}
+    const risks       = saved.risks      || []
+    const summary     = saved.summary    || ''
+
+    const axisNames = { K: 'Знания и прозрачность', A: 'Автоматизация', Q: 'Качество и контроль', S: 'Масштабируемость' }
+
+    function barColor(p) {
+      return p < 40 ? '#EF4444' : p < 60 ? '#F97316' : p < 75 ? '#EAB308' : '#3B82F6'
+    }
+
+    // Maturity label
+    const maturityEl = document.querySelector('.maturity-label')
+    if (maturityEl) maturityEl.textContent = statusLabel
+
+    // Score % text
+    const pctEl = document.querySelector('.score-pct')
+    if (pctEl) pctEl.textContent = target + '% от максимума'
+
+    // /100
+    const maxEl = document.querySelector('.score-max')
+    if (maxEl) maxEl.textContent = '/100'
+
     // Score animation
-    const target = 67
     const el = document.getElementById('score-animated')
     const bar = document.getElementById('score-bar')
     let current = 0
@@ -986,9 +808,57 @@
     const interval = setInterval(() => {
       current = Math.min(current + step, target)
       el.textContent = current
-      bar.style.width = (current / 120 * 100) + '%'
+      bar.style.width = current + '%'
       if (current >= target) clearInterval(interval)
     }, 16)
+
+    // Modules — от Claude или fallback
+    const moduleGrid = document.getElementById('module-grid')
+    if (moduleGrid) {
+      moduleGrid.innerHTML = ['K','A','Q','S'].map(axis => {
+        const p = pct[axis] || 50
+        const color = barColor(p)
+        const insight = insights[axis] || `Уровень ${p}%.`
+        return `
+          <div class="module-card">
+            <div class="mod-head">
+              <div><span class="mod-key">${axis}</span><span class="mod-name">${axisNames[axis]}</span></div>
+              <span class="mod-score">${p}%</span>
+            </div>
+            <div class="mod-bar">
+              <div class="mod-bar-fill" style="width:${p}%;background:${color};"></div>
+            </div>
+            <p class="mod-interpretation">${insight}</p>
+          </div>`
+      }).join('')
+    }
+
+    // Summary — от Claude или fallback
+    const summaryEl = document.getElementById('summary-text')
+    if (summaryEl) {
+      summaryEl.innerHTML = summary ||
+        `Индекс управляемости составил <strong style="color:var(--text)">${target}/100</strong>. Уровень: «${statusLabel}».`
+    }
+
+    // Risks — от Claude или fallback
+    const riskList = document.getElementById('risk-list')
+    if (riskList) {
+      const riskData = risks.length ? risks : [
+        { level:'P0', title:'Нет данных для анализа', desc:'Пройдите диагностику, чтобы увидеть персональные риски.', axis:'K' }
+      ]
+      riskList.innerHTML = riskData.map(r => {
+        const cls = r.level === 'P0' ? 'risk-p0' : r.level === 'P1' ? 'risk-p1' : 'risk-p2'
+        return `
+          <div class="risk-item">
+            <span class="risk-badge ${cls}">${r.level}</span>
+            <div class="risk-content">
+              <p class="risk-title">${r.title}</p>
+              <p class="risk-desc">${r.desc}</p>
+            </div>
+            <span class="risk-module">${r.axis}</span>
+          </div>`
+      }).join('')
+    }
 
     // View tabs
     function setView(view, btn) {
