@@ -547,6 +547,156 @@
     .progress-entry-score { font-size: 15px; font-weight: 700; }
     .progress-entry-delta { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; min-width: 28px; text-align: center; }
     .progress-first-msg   { padding: 20px; text-align: center; font-size: 13px; color: #3E4A5E; line-height: 1.6; }
+
+    /* ── AI ROADMAP SCREEN ── */
+    #screen-roadmap { overflow: hidden; display: flex; flex-direction: column; }
+    .rmap-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .rmap-hero {
+      background: linear-gradient(180deg, #08090D 0%, #0B0F14 100%);
+      padding: 20px 20px 24px; text-align: center;
+      border-bottom: 1px solid rgba(43,121,255,0.12);
+    }
+    .rmap-hero-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #2B79FF; margin-bottom: 16px;
+    }
+    .rmap-gauge-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+    .rmap-profile {
+      font-size: 14px; font-weight: 600; color: #C9A050;
+      letter-spacing: 0.04em; margin-bottom: 8px;
+    }
+    .rmap-summary {
+      font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;
+      max-width: 320px; margin: 0 auto;
+    }
+    .rmap-section { padding: 20px 16px 0; }
+    .rmap-section-title {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      margin-bottom: 12px;
+    }
+    .rmap-section-title-red { color: rgba(255,59,48,0.7); }
+    .rmap-section-title-gold { color: rgba(201,160,80,0.7); }
+    .rmap-zones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .rmap-zone-card {
+      background: #0E0F17; border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; padding: 12px;
+    }
+    .rmap-zone-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+    .rmap-zone-icon { font-size: 18px; }
+    .rmap-zone-score { font-size: 20px; font-weight: 700; }
+    .rmap-zone-name { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 8px; line-height: 1.3; }
+    .rmap-zone-bar { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .rmap-zone-bar-f { height: 100%; border-radius: 2px; width: 0; transition: width 0.8s ease; }
+    .rmap-red-item {
+      background: rgba(255,59,48,0.06); border: 1px solid rgba(255,59,48,0.14);
+      border-left: 3px solid rgba(255,59,48,0.5);
+      border-radius: 0 10px 10px 0; padding: 12px 14px; margin-bottom: 8px;
+    }
+    .rmap-red-item:first-of-type {
+      background: rgba(255,59,48,0.10); border-left-color: #FF3B30;
+    }
+    .rmap-red-title { font-size: 13px; font-weight: 600; color: #FF3B30; margin-bottom: 4px; }
+    .rmap-red-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+    .rmap-month-tabs {
+      display: flex; gap: 4px; margin-bottom: 14px;
+      background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px;
+    }
+    .rmap-mtab {
+      flex: 1; padding: 7px 4px; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.35); background: none; border: none;
+      border-radius: 7px; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+    .rmap-mtab.active { background: #2B79FF; color: #fff; }
+    .rmap-month-panel { display: none; }
+    .rmap-month-panel.rm-active { display: block; }
+    .rmap-month-theme {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8);
+      margin-bottom: 12px; line-height: 1.4; padding: 10px 14px;
+      background: rgba(43,121,255,0.08); border-left: 3px solid #2B79FF;
+      border-radius: 0 8px 8px 0;
+    }
+    .rmap-task {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; background: #0E0F17;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; margin-bottom: 6px;
+    }
+    .rmap-task-badge {
+      font-size: 8px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 6px; border-radius: 5px; flex-shrink: 0;
+      margin-top: 3px; white-space: nowrap;
+    }
+    .rmap-p-high { background: rgba(255,59,48,0.15); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25); }
+    .rmap-p-mid  { background: rgba(245,158,11,0.12); color: #F59E0B; border: 1px solid rgba(245,158,11,0.25); }
+    .rmap-p-low  { background: rgba(34,197,94,0.1); color: #22C55E; border: 1px solid rgba(34,197,94,0.2); }
+    .rmap-task-action { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 2px; }
+    .rmap-task-zone { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .rmap-transform-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; background: rgba(201,160,80,0.05);
+      border: 1px solid rgba(201,160,80,0.14);
+      border-radius: 10px; margin-bottom: 8px;
+    }
+    .rmap-transform-check {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(201,160,80,0.15); color: #C9A050;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rmap-transform-text { font-size: 13px; color: rgba(255,255,255,0.78); line-height: 1.5; }
+    .rmap-cta-wrap { padding: 16px 0 0; }
+    .rmap-loading {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 28px; text-align: center;
+    }
+    .rmap-loading-spinner {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 3px solid rgba(43,121,255,0.15);
+      border-top-color: #2B79FF;
+      animation: rmapSpin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes rmapSpin { to { transform: rotate(360deg); } }
+    .rmap-loading-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .rmap-loading-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    /* ── ROADMAP PAYMENT WALL ── */
+    .rmap-pay-wrap {
+      min-height: 100%; padding: 28px 20px 32px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+    }
+    .rmap-pay-badge {
+      display: inline-block; padding: 5px 14px;
+      background: rgba(43,121,255,0.1); border: 1px solid rgba(43,121,255,0.25);
+      border-radius: 20px; font-size: 11px; font-weight: 600;
+      color: #2B79FF; margin-bottom: 18px; letter-spacing: 0.04em;
+    }
+    .rmap-pay-title { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+    .rmap-pay-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; line-height: 1.5; }
+    .rmap-pay-price-block { margin-bottom: 24px; }
+    .rmap-pay-price { font-size: 44px; font-weight: 700; color: #2B79FF; line-height: 1; letter-spacing: -1px; }
+    .rmap-pay-price-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 5px; }
+    .rmap-pay-features { width: 100%; max-width: 320px; margin-bottom: 28px; text-align: left; }
+    .rmap-pay-feat {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; font-size: 13px; color: rgba(255,255,255,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .rmap-pay-feat:last-child { border-bottom: none; }
+    .rmap-pay-check { color: #22C55E; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .rmap-pay-actions { width: 100%; max-width: 320px; }
+    .rmap-pay-main-btn { width: 100%; font-size: 15px; padding: 15px; margin-bottom: 0; }
+    .rmap-pay-confirm { display: none; margin-top: 10px; }
+    .rmap-pay-confirm-btn {
+      width: 100%; padding: 13px; font-size: 14px; font-weight: 600;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+      color: #22C55E; border-radius: 12px; cursor: pointer; font-family: inherit;
+    }
+    .rmap-pay-note { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 14px; }
   </style>
 </head>
 
@@ -662,6 +812,9 @@
 
   <!-- REPORT SCREEN -->
   <div id="screen-report" class="screen"></div>
+
+  <!-- AI ROADMAP SCREEN -->
+  <div id="screen-roadmap" class="screen"></div>
 
   <!-- MAIN APP (tab-based, appears after diagnostics) -->
   <div id="screen-main" class="screen">
@@ -930,6 +1083,8 @@
     transitioning: false,
     results: null,
     jwt: localStorage.getItem('kaqs_jwt') || null,
+    aiReport: null,
+    aiReportPromise: null,
   };
 
   /* ── API: Авторизация ── */
@@ -1115,6 +1270,7 @@
     else if (S.screen === 'loss')      { goTo('main', 'back'); }
     else if (S.screen === 'paywall')   { goTo('loss', 'back'); }
     else if (S.screen === 'report')    { goTo('paywall', 'back'); }
+    else if (S.screen === 'roadmap')   { goTo('main', 'back'); tg.BackButton.hide(); }
   }
 
   /* ── BACK BUTTON (Telegram native) ── */
@@ -1264,6 +1420,9 @@
     setTimeout(() => document.getElementById('ld-s3').classList.add('show'), 2200);
     setTimeout(() => {
       S.results = calcResults();
+      S.aiReport = null;
+      S.aiReportPromise = null;
+      generateAiReport();
       showMainApp();
     }, 3300);
   }
@@ -1697,9 +1856,221 @@
     setupMainButton();
   }
 
+  /* ── AI REPORT: generate in background ── */
+  function generateAiReport() {
+    const { index, zoneScores } = S.results;
+    const zones = Object.fromEntries(ZONES.map((z, i) => [z.id, zoneScores[i]]));
+    const promise = fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ index, zones }),
+    })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(data => { S.aiReport = data; return data; })
+      .catch(() => { S.aiReport = false; return null; });
+    S.aiReportPromise = promise;
+    return promise;
+  }
+
+  /* ── SHOW ROADMAP SCREEN ── */
+  function _rmapTopbar() {
+    return `<div class="screen-topbar">
+      <button class="nav-back" onclick="handleBack()"><span class="nav-back-arrow">‹</span> Назад</button>
+      <div class="screen-topbar-title">Роадмэп 90 дней</div>
+    </div>`;
+  }
+
+  function showRoadmap() {
+    tg.HapticFeedback.impactOccurred('medium');
+    const el = $s('roadmap');
+    goTo('roadmap', 'fwd');
+    tg.BackButton.show();
+
+    if (!localStorage.getItem('kaqs_roadmap_paid')) {
+      el.innerHTML = _rmapTopbar() + renderPaymentWall();
+      return;
+    }
+    showRoadmapContent(el);
+  }
+
+  function showRoadmapContent(el) {
+    el = el || $s('roadmap');
+    const topbar = _rmapTopbar();
+
+    const apply = (data) => {
+      if (data && !data.error) {
+        el.innerHTML = topbar + renderRoadmapBody(data);
+        setTimeout(() => {
+          el.querySelectorAll('.rmap-zone-bar-f').forEach(b => { b.style.width = b.dataset.w + '%'; });
+          el.querySelectorAll('.rmap-month-panel')[0]?.classList.add('rm-active');
+          el.querySelectorAll('#rmap-tabs .rmap-mtab')[0]?.classList.add('active');
+        }, 80);
+      } else {
+        el.innerHTML = topbar + `<div class="rmap-loading">
+          <div style="font-size:32px;margin-bottom:16px">⚠️</div>
+          <div class="rmap-loading-title">Не удалось загрузить</div>
+          <div class="rmap-loading-sub">Проверьте соединение и попробуйте снова</div>
+          <button class="btn-primary" style="margin-top:24px" onclick="generateAiReport().then(d => showRoadmapContent())">Попробовать снова</button>
+        </div>`;
+      }
+    };
+
+    el.innerHTML = topbar + `<div class="rmap-loading">
+      <div class="rmap-loading-spinner"></div>
+      <div class="rmap-loading-title">Формируем ваш роадмэп</div>
+      <div class="rmap-loading-sub">Строим персональный план на 90 дней…</div>
+    </div>`;
+
+    if (S.aiReport !== null && S.aiReport !== false) { apply(S.aiReport); }
+    else if (S.aiReport === false) { apply(null); }
+    else if (S.aiReportPromise) { S.aiReportPromise.then(apply); }
+    else { generateAiReport().then(apply); }
+  }
+
+  function renderPaymentWall() {
+    return `<div class="rmap-scroll"><div class="rmap-pay-wrap">
+      <div class="rmap-pay-badge">🗺️ Роадмэп 90 дней</div>
+      <div class="rmap-pay-title">Персональный план<br>на 90 дней</div>
+      <div class="rmap-pay-sub">На основе результатов<br>вашей диагностики</div>
+      <div class="rmap-pay-price-block">
+        <div class="rmap-pay-price">14 990 ₽</div>
+        <div class="rmap-pay-price-sub">разовый платёж</div>
+      </div>
+      <div class="rmap-pay-features">
+        <div class="rmap-pay-feat"><span class="rmap-pay-check">✓</span> Анализ 5 зон управляемости</div>
+        <div class="rmap-pay-feat"><span class="rmap-pay-check">✓</span> Роадмэп на 3 месяца с задачами</div>
+        <div class="rmap-pay-feat"><span class="rmap-pay-check">✓</span> Красные зоны и риски бизнеса</div>
+        <div class="rmap-pay-feat"><span class="rmap-pay-check">✓</span> Что изменится через 90 дней</div>
+      </div>
+      <div class="rmap-pay-actions">
+        <button id="rmap-pay-btn" class="btn-primary rmap-pay-main-btn" onclick="openRoadmapPayment()">
+          Оплатить через ЮКассу
+        </button>
+        <div id="rmap-pay-confirm" class="rmap-pay-confirm">
+          <button class="rmap-pay-confirm-btn" onclick="confirmRoadmapPayment()">
+            ✓ Я оплатил — открыть роадмэп
+          </button>
+        </div>
+      </div>
+      <div class="rmap-pay-note">🔒 Безопасная оплата через ЮКасса</div>
+    </div></div>`;
+  }
+
+  function openRoadmapPayment() {
+    if (!ROADMAP_PAYMENT_URL) { showToast('Ссылка на оплату скоро будет'); return; }
+    tg.HapticFeedback.impactOccurred('medium');
+    tg.openLink(ROADMAP_PAYMENT_URL);
+    const confirm = document.getElementById('rmap-pay-confirm');
+    const btn = document.getElementById('rmap-pay-btn');
+    if (confirm) confirm.style.display = 'block';
+    if (btn) btn.textContent = 'Оплатить снова';
+  }
+
+  function confirmRoadmapPayment() {
+    tg.HapticFeedback.notificationOccurred('success');
+    localStorage.setItem('kaqs_roadmap_paid', '1');
+    showRoadmapContent($s('roadmap'));
+  }
+
+  /* ── RENDER ROADMAP BODY (returns HTML string) ── */
+  function renderRoadmapBody(data) {
+    const { index, zoneScores } = S.results;
+    const color = scoreColor(index);
+
+    const zoneCards = ZONES.map((z, i) => {
+      const sc = scoreColor(zoneScores[i]);
+      return `<div class="rmap-zone-card">
+        <div class="rmap-zone-top">
+          <span class="rmap-zone-icon">${z.icon}</span>
+          <span class="rmap-zone-score" style="color:${sc}">${zoneScores[i]}</span>
+        </div>
+        <div class="rmap-zone-name">${z.name}</div>
+        <div class="rmap-zone-bar"><div class="rmap-zone-bar-f" data-w="${zoneScores[i]}" style="background:${sc}"></div></div>
+      </div>`;
+    }).join('');
+
+    const redHtml = (data.redZones || []).map(rz => `
+      <div class="rmap-red-item">
+        <div class="rmap-red-title">${rz.title}</div>
+        <div class="rmap-red-desc">${rz.description}</div>
+      </div>`).join('');
+
+    const monthPanel = (month, n) => {
+      if (!month) return '';
+      const tasks = (month.tasks || []).map(t => {
+        const pc = t.priority === 'ВЫСОКИЙ' ? 'rmap-p-high' : t.priority === 'СРЕДНИЙ' ? 'rmap-p-mid' : 'rmap-p-low';
+        return `<div class="rmap-task">
+          <span class="rmap-task-badge ${pc}">${t.priority || '—'}</span>
+          <div class="rmap-task-body">
+            <div class="rmap-task-action">${t.action}</div>
+            <div class="rmap-task-zone">${t.zone}</div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div class="rmap-month-panel" data-month="${n}">
+        <div class="rmap-month-theme">${month.theme}</div>
+        ${tasks}
+      </div>`;
+    };
+
+    const transformHtml = (data.transformation || []).map(t => `
+      <div class="rmap-transform-item">
+        <div class="rmap-transform-check">✓</div>
+        <div class="rmap-transform-text">${t}</div>
+      </div>`).join('');
+
+    return `<div class="rmap-scroll">
+      <div class="rmap-hero">
+        <div class="rmap-hero-eyebrow">K-A-Q-S™ · Роадмэп 90 дней</div>
+        <div class="rmap-gauge-wrap">${buildDonutGauge(index, color)}</div>
+        <div class="rmap-profile">${data.profile || ''}</div>
+        <div class="rmap-summary">${data.summary || ''}</div>
+      </div>
+
+      <div class="rmap-section">
+        <div class="rmap-section-title">Диагностический профиль</div>
+        <div class="rmap-zones-grid">${zoneCards}</div>
+      </div>
+
+      <div class="rmap-section">
+        <div class="rmap-section-title rmap-section-title-red">⚠ Красные зоны</div>
+        ${redHtml}
+      </div>
+
+      <div class="rmap-section">
+        <div class="rmap-section-title">Роадмэп 90 дней</div>
+        <div class="rmap-month-tabs" id="rmap-tabs">
+          <button class="rmap-mtab" onclick="switchRmapMonth(1)">Месяц 1</button>
+          <button class="rmap-mtab" onclick="switchRmapMonth(2)">Месяц 2</button>
+          <button class="rmap-mtab" onclick="switchRmapMonth(3)">Месяц 3</button>
+        </div>
+        <div id="rmap-panels">
+          ${monthPanel(data.month1, 1)}
+          ${monthPanel(data.month2, 2)}
+          ${monthPanel(data.month3, 3)}
+        </div>
+      </div>
+
+      <div class="rmap-section">
+        <div class="rmap-section-title rmap-section-title-gold">✦ Что изменится через 90 дней</div>
+        ${transformHtml}
+      </div>
+
+      <div style="height:28px"></div>
+    </div>`;
+  }
+
+  /* ── MONTH TAB SWITCH ── */
+  function switchRmapMonth(n) {
+    tg.HapticFeedback.impactOccurred('light');
+    document.querySelectorAll('#rmap-tabs .rmap-mtab').forEach((btn, i) => btn.classList.toggle('active', i + 1 === n));
+    document.querySelectorAll('#rmap-panels .rmap-month-panel').forEach((p, i) => p.classList.toggle('rm-active', i + 1 === n));
+  }
+
   /* ── SHARE FUNCTIONS ── */
   const APP_URL     = 'https://mini-app-sandy-eight.vercel.app/';
-  const PAYMENT_URL = ''; // ← вставить ссылку ЮКассы / Prodamus когда будет готова
+  const PAYMENT_URL         = ''; // ← ссылка ЮКассы для старого пэйволла
+  const ROADMAP_PAYMENT_URL = 'https://yookassa.ru/my/i/ae-k5kDG2NuG/l'; // ← ЮКасса роадмэп 14 990 ₽
 
   let _toastTimer = null;
   function showToast(msg) {
@@ -2057,9 +2428,15 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2.5">
             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
           </svg>
-          <span class="ai-tips-label">AI-анализ слабых зон</span>
+          <span class="ai-tips-label">Анализ слабых зон</span>
         </div>
         ${sorted.slice(0,2).map(z => `<div class="ai-tip">${aiTips[z.id] || RISK_SOURCES[z.id]}</div>`).join('')}
+      </div>
+      <div class="rmap-cta-wrap fade-up" style="animation-delay:.28s">
+        <button class="btn-primary" onclick="showRoadmap()" style="width:100%;font-size:14px;padding:14px">
+          Смотреть роадмэп на 90 дней →
+        </button>
+        <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.25);margin-top:8px">На основе вашей диагностики</div>
       </div>
       <div style="height:10px"></div>
     `;
