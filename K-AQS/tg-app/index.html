@@ -697,6 +697,26 @@
       color: #22C55E; border-radius: 12px; cursor: pointer; font-family: inherit;
     }
     .rmap-pay-note { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 14px; }
+    .rmap-promo-wrap { margin-top: 16px; width: 100%; max-width: 320px; }
+    .rmap-promo-toggle {
+      background: none; border: none; color: rgba(255,255,255,0.3);
+      font-size: 12px; cursor: pointer; font-family: inherit;
+      text-decoration: underline; padding: 0;
+    }
+    .rmap-promo-row { display: flex; gap: 8px; margin-top: 10px; }
+    .rmap-promo-input {
+      flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 14px;
+      font-family: inherit; outline: none; letter-spacing: 0.05em;
+    }
+    .rmap-promo-input::placeholder { color: rgba(255,255,255,0.25); }
+    .rmap-promo-btn {
+      background: rgba(43,121,255,0.15); border: 1px solid rgba(43,121,255,0.3);
+      color: #2B79FF; border-radius: 10px; padding: 10px 14px;
+      font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      white-space: nowrap;
+    }
+    .rmap-promo-error { font-size: 12px; margin-top: 6px; color: #FF3B30; min-height: 16px; }
   </style>
 </head>
 
@@ -1953,6 +1973,16 @@
         </div>
       </div>
       <div class="rmap-pay-note">🔒 Безопасная оплата через ЮКасса</div>
+      <div class="rmap-promo-wrap">
+        <button class="rmap-promo-toggle" onclick="document.getElementById('rmap-promo-box').style.display='block';this.style.display='none'">У меня есть промокод</button>
+        <div id="rmap-promo-box" style="display:none">
+          <div class="rmap-promo-row">
+            <input id="rmap-promo-input" class="rmap-promo-input" type="text" placeholder="Введите промокод" autocomplete="off" autocorrect="off" autocapitalize="characters">
+            <button class="rmap-promo-btn" onclick="applyPromoCode()">Применить</button>
+          </div>
+          <div id="rmap-promo-error" class="rmap-promo-error"></div>
+        </div>
+      </div>
     </div></div>`;
   }
 
@@ -1970,6 +2000,28 @@
     tg.HapticFeedback.notificationOccurred('success');
     localStorage.setItem('kaqs_roadmap_paid', '1');
     showRoadmapContent($s('roadmap'));
+  }
+
+  const PROMO_CODE = 'KAQS2026';
+
+  function applyPromoCode() {
+    const input = document.getElementById('rmap-promo-input');
+    const error = document.getElementById('rmap-promo-error');
+    if (!input) return;
+    const val = input.value.trim().toUpperCase();
+    if (val === PROMO_CODE) {
+      tg.HapticFeedback.notificationOccurred('success');
+      localStorage.setItem('kaqs_roadmap_paid', '1');
+      showRoadmapContent($s('roadmap'));
+    } else {
+      tg.HapticFeedback.notificationOccurred('error');
+      if (error) error.textContent = 'Неверный промокод';
+      input.style.borderColor = 'rgba(255,59,48,0.5)';
+      setTimeout(() => {
+        if (error) error.textContent = '';
+        input.style.borderColor = '';
+      }, 2000);
+    }
   }
 
   /* ── RENDER ROADMAP BODY (returns HTML string) ── */
