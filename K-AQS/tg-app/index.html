@@ -1880,10 +1880,21 @@
   function generateAiReport() {
     const { index, zoneScores } = S.results;
     const zones = Object.fromEntries(ZONES.map((z, i) => [z.id, zoneScores[i]]));
+
+    const answers = QUESTIONS.map((q, qi) => {
+      const idx = S.answers[qi];
+      if (idx < 0) return null;
+      return {
+        zone:     ZONES[Math.floor(qi / 4)].name,
+        question: q,
+        answer:   getAnswers(qi)[idx]?.label || '',
+      };
+    }).filter(Boolean);
+
     const promise = fetch('/api/generate-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ index, zones }),
+      body: JSON.stringify({ index, zones, answers }),
     })
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(data => { S.aiReport = data; return data; })

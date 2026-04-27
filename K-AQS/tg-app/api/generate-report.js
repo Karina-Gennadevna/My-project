@@ -8,7 +8,7 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API not configured' });
 
-  const { index, zones } = req.body || {};
+  const { index, zones, answers } = req.body || {};
   if (!zones || typeof index !== 'number') return res.status(400).json({ error: 'Missing data' });
 
   const zoneLines = [
@@ -19,11 +19,17 @@ module.exports = async function handler(req, res) {
     `Контроль собственника: ${zones.control}/100`,
   ].join(', ');
 
+  const answersText = Array.isArray(answers) && answers.length
+    ? '\n\nКонкретные ответы собственника:\n' + answers.map(a =>
+        `[${a.zone}] ${a.question}\n→ "${a.answer}"`
+      ).join('\n')
+    : '';
+
   const prompt = `Ты эксперт по системам управления малым и средним бизнесом. Проанализируй результаты диагностики и составь персональный план развития.
 
 Индекс управляемости: ${index}/100
 Результаты по зонам: ${zoneLines}
-Шкала: 0–39 критично, 40–59 нестабильно, 60–74 средне, 75–89 хорошо, 90–100 системно.
+Шкала: 0–39 критично, 40–59 нестабильно, 60–74 средне, 75–89 хорошо, 90–100 системно.${answersText}
 
 Зоны диагностики:
 - Финансы: финансовый учёт, P&L, кэш-фло, понимание прибыли
