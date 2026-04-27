@@ -3,6 +3,9 @@
   "functions": {
     "api/generate-report.js": {
       "maxDuration": 30
+    },
+    "api/create-payment.js": {
+      "maxDuration": 15
     }
   }
 }
